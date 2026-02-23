@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Tangerine Music Club - Entrance Exam Registration</title>
 
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -50,10 +52,20 @@ button:hover {
 </style>
 
 <script>
-function redirectAfterSubmit() {
-    setTimeout(function() {
+(function(){
+    emailjs.init("10hWpZipaYA13RA3p");
+})();
+
+function sendEmail(event) {
+    event.preventDefault();
+
+    emailjs.sendForm("service_gp5w7pv", "template_9vvankg", "#registrationForm")
+    .then(function(response) {
         window.location.href = "success.html";
-    }, 800);
+    }, function(error) {
+        alert("Submission failed. Please try again.");
+        console.log(error);
+    });
 }
 </script>
 
@@ -65,21 +77,15 @@ function redirectAfterSubmit() {
 
 <h2>Entrance Exam Registration</h2>
 
-<form action="https://formsubmit.co/ganjuyinyue@outlook.com" 
-      method="POST" 
-      target="_blank"
-      onsubmit="redirectAfterSubmit()">
+<form id="registrationForm" onsubmit="sendEmail(event)">
 
-<input type="hidden" name="_subject" value="New Entrance Exam Registration - Tangerine Music Club">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_autoresponse" value="Thank you for registering for the Tangerine Music Club Entrance Examination. We have successfully received your application. Please wait for further notification.">
+<input type="text" name="name" placeholder="Full Name" required>
 
-<input type="text" name="Full Name" placeholder="Full Name" required>
-<input type="text" name="Grade / Major" placeholder="Grade / Major" required>
-<input type="email" name="Applicant Email" placeholder="Applicant Email (for confirmation)" required>
+<input type="text" name="grade" placeholder="Grade / Major" required>
 
-<select name="Department">
+<input type="email" name="email" placeholder="Applicant Email" required>
+
+<select name="department">
 <option value="Primary">Music Production - Primary</option>
 <option value="Advanced">Music Production - Advanced</option>
 </select>
