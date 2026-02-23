@@ -1,99 +1,151 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>柑橘音乐 | 官方网站</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f8f8f8;
-        }
+<meta charset="UTF-8">
+<title>柑橘音乐 | Official Website</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 
-        header {
-            background-color: orange;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        nav {
-            background-color: #333;
-            padding: 10px;
-            text-align: center;
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ff8c00, #ff512f);
+    color: white;
+}
 
-        nav a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-        }
+header {
+    text-align: center;
+    padding: 80px 20px;
+}
 
-        .container {
-            padding: 40px;
-            max-width: 900px;
-            margin: auto;
-        }
+header h1 {
+    font-size: 48px;
+    font-weight: 600;
+}
 
-        .card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+header p {
+    margin-top: 10px;
+    font-size: 18px;
+    opacity: 0.9;
+}
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #222;
-            color: white;
-        }
-    </style>
+nav {
+    text-align: center;
+    padding: 20px;
+}
+
+nav a {
+    color: white;
+    margin: 0 20px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.container {
+    background: white;
+    color: #333;
+    border-radius: 20px 20px 0 0;
+    padding: 60px 30px;
+}
+
+.section {
+    max-width: 1000px;
+    margin: auto;
+    margin-bottom: 60px;
+}
+
+.section h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #ff512f;
+}
+
+.card {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.button {
+    display: inline-block;
+    padding: 12px 25px;
+    background: #ff512f;
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.button:hover {
+    background: #ff8c00;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    background: #111;
+    color: white;
+}
+</style>
 </head>
 
 <body>
 
 <header>
     <h1>柑橘音乐</h1>
-    <p>用音乐连接热爱</p>
+    <p>Tangerine Music Club</p>
 </header>
 
 <nav>
-    <a href="#about">关于我们</a>
-    <a href="#news">最新推文</a>
-    <a href="#jobs">招聘信息</a>
+    <a href="#about">About</a>
+    <a href="#news">News</a>
+    <a href="#exam">Entrance Exam</a>
 </nav>
 
 <div class="container">
 
-    <section id="about">
-        <div class="card">
-            <h2>关于我们</h2>
-            <p>柑橘音乐致力于打造校园音乐品牌...</p>
-        </div>
-    </section>
+<div class="section" id="about">
+    <h2>About Us</h2>
+    <div class="card">
+        柑橘音乐致力于打造专业校园音乐制作平台。
+    </div>
+</div>
 
-    <section id="news">
-        <div class="card">
-            <h2>最新推文</h2>
-            <p>🎵 2026春季音乐笔试报名开启！</p>
-            <p>🎶 柑橘音乐校园巡演计划发布</p>
-        </div>
-    </section>
+<div class="section" id="news">
+    <h2>Latest News</h2>
+    <div class="card">
+        🎵 2026 Production Department Entrance Exam Now Open
+    </div>
+</div>
 
-    <section id="jobs">
-        <div class="card">
-            <h2>招聘信息</h2>
-            <p>📌 运营实习生（长期）</p>
-            <p>📌 视觉设计志愿者</p>
-        </div>
-    </section>
+<div class="section" id="exam">
+    <h2>Entrance Examination Registration</h2>
+    <div class="card">
+        Primary – Music Production Department
+        <br>
+        Full Score: 150 | Time Limit: 120 minutes
+        <br>
+        <a href="register.html" class="button">Register Now</a>
+    </div>
+</div>
 
 </div>
 
 <footer>
-    © 2026 柑橘音乐 | All Rights Reserved
+© 2026 Tangerine Music Club
 </footer>
 
 </body>
