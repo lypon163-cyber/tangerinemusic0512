@@ -59,10 +59,21 @@ button:hover {
 function sendEmail(event) {
     event.preventDefault();
 
-    emailjs.sendForm("service_gp5w7pv", "template_9vvankg", "#registrationForm")
-    .then(function(response) {
+    const form = document.getElementById("registrationForm");
+
+    // 1️⃣ 发送给管理员
+    emailjs.sendForm("service_gp5w7pv", "template_300kjc8", form)
+    .then(function() {
+
+        // 2️⃣ 再发送给申请者
+        return emailjs.sendForm("service_gp5w7pv", "template_lchb6gi", form);
+
+    })
+    .then(function() {
+        // 3️⃣ 全部成功后跳转
         window.location.href = "success.html";
-    }, function(error) {
+    })
+    .catch(function(error) {
         alert("Submission failed. Please try again.");
         console.log(error);
     });
@@ -85,9 +96,10 @@ function sendEmail(event) {
 
 <input type="email" name="email" placeholder="Applicant Email" required>
 
-<select name="department">
-<option value="Primary">Music Production - Primary</option>
-<option value="Advanced">Music Production - Advanced</option>
+<select name="department" required>
+<option value="">Select Department</option>
+<option value="Music Production - Primary">Music Production - Primary</option>
+<option value="Music Production - Advanced">Music Production - Advanced</option>
 </select>
 
 <button type="submit">Submit Registration</button>
