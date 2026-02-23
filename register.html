@@ -2,63 +2,94 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Entrance Exam Registration</title>
+<title>Tangerine Music Club - Entrance Exam Registration</title>
+
 <style>
 body {
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     background: #f5f5f5;
     padding: 50px;
 }
-form {
-    background: white;
-    padding: 30px;
+
+.container {
     max-width: 500px;
     margin: auto;
-    border-radius: 10px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 input, select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
+
 button {
+    width: 100%;
     padding: 12px;
     background: orange;
     color: white;
     border: none;
-    width: 100%;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff7a00;
 }
 </style>
 </head>
 
 <body>
 
-<h2 style="text-align:center;">Entrance Exam Registration</h2>
+<div class="container">
+
+<h2>Entrance Exam Registration</h2>
 
 <form action="https://formsubmit.co/ganjuyinyue@outlook.com" method="POST">
 
+<!-- 邮件标题 -->
 <input type="hidden" name="_subject" value="New Entrance Exam Registration - Tangerine Music Club">
 
-<input type="hidden" name="_autoresponse" value="Thank you for registering for the Tangerine Music Club Entrance Examination. We have successfully received your application. Please wait for further notification.">
+<!-- 表格格式邮件 -->
+<input type="hidden" name="_template" value="table">
 
-<input type="hidden" name="_next" value="success.html">
+<!-- 提交成功后跳转（这里必须写完整网址） -->
+<input type="hidden" name="_next" value="https://lypon163-cyber.github.io/tangerinemusic0512/success.html">
 
+<!-- 关闭验证码 -->
 <input type="hidden" name="_captcha" value="false">
 
-<input type="text" name="name" placeholder="Full Name" required>
+<!-- 自动回复给报名者 -->
+<input type="hidden" name="_autoresponse" value="Thank you for registering for the Tangerine Music Club Entrance Examination. We have successfully received your application. Please wait for further notification.">
 
-<input type="text" name="grade" placeholder="Grade / Major" required>
+<!-- 报名信息 -->
+<input type="text" name="Full Name" placeholder="Full Name" required>
 
-<input type="email" name="email" placeholder="Email" required>
+<input type="text" name="Grade / Major" placeholder="Grade / Major" required>
 
-<select name="department">
-<option>Music Production - Primary</option>
-<option>Music Production - Advanced</option>
+<input type="email" name="Applicant Email" placeholder="Applicant Email (for confirmation)" required>
+
+<select name="Department">
+<option value="Primary">Music Production - Primary</option>
+<option value="Advanced">Music Production - Advanced</option>
 </select>
 
-<button type="submit">Submit</button>
+<button type="submit">Submit Registration</button>
 
 </form>
+
+</div>
 
 </body>
 </html>
