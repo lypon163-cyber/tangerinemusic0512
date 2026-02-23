@@ -48,6 +48,15 @@ button:hover {
     background: #ff7a00;
 }
 </style>
+
+<script>
+function redirectAfterSubmit() {
+    setTimeout(function() {
+        window.location.href = "success.html";
+    }, 800);
+}
+</script>
+
 </head>
 
 <body>
@@ -56,28 +65,18 @@ button:hover {
 
 <h2>Entrance Exam Registration</h2>
 
-<form action="https://formsubmit.co/ganjuyinyue@outlook.com" method="POST">
+<form action="https://formsubmit.co/ganjuyinyue@outlook.com" 
+      method="POST" 
+      target="_blank"
+      onsubmit="redirectAfterSubmit()">
 
-<!-- 邮件标题 -->
 <input type="hidden" name="_subject" value="New Entrance Exam Registration - Tangerine Music Club">
-
-<!-- 表格格式邮件 -->
 <input type="hidden" name="_template" value="table">
-
-<!-- 提交成功后跳转（这里必须写完整网址） -->
-<input type="hidden" name="_next" value="https://lypon163-cyber.github.io/tangerinemusic0512/success.html">
-
-<!-- 关闭验证码 -->
 <input type="hidden" name="_captcha" value="false">
-
-<!-- 自动回复给报名者 -->
 <input type="hidden" name="_autoresponse" value="Thank you for registering for the Tangerine Music Club Entrance Examination. We have successfully received your application. Please wait for further notification.">
 
-<!-- 报名信息 -->
 <input type="text" name="Full Name" placeholder="Full Name" required>
-
 <input type="text" name="Grade / Major" placeholder="Grade / Major" required>
-
 <input type="email" name="Applicant Email" placeholder="Applicant Email (for confirmation)" required>
 
 <select name="Department">
