@@ -1,149 +1,171 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tangerine Music Club - Entrance Exam Registration</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>柑橘音乐 | 入学登记</title>
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
-<style>
-body {
-    font-family: 'Poppins', Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* 优化了一下背景，显得更现代 */
-    padding: 50px 20px;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-}
+    <style>
+        /* 全局样式优化 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.container {
-    width: 100%;
-    max-width: 500px;
-    background: white;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
+        body {
+            font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+            /* 使用与主页一致的渐变色 */
+            background: linear-gradient(135deg, #ff8c00, #ff512f);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #333;
-}
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center;
+        }
 
-input, select {
-    width: 100%;
-    padding: 14px;
-    margin: 10px 0 20px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    box-sizing: border-box; /* 确保 padding 不会撑破宽度 */
-    font-size: 15px;
-    transition: border-color 0.3s ease;
-}
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
 
-input:focus, select:focus {
-    outline: none;
-    border-color: #ff8c00; /* 聚焦时变成柑橘色 */
-}
+        p.subtitle {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
 
-button {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #ff8c00, #ff512f);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
+        /* 表单输入框样式 */
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+            transition: 0.3s;
+        }
 
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 81, 47, 0.3);
-}
+        input:focus, select:focus {
+            border-color: #ff512f;
+            box-shadow: 0 0 5px rgba(255, 81, 47, 0.2);
+        }
 
-/* 增加一个提交时的加载状态样式 */
-button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-</style>
+        /* 提交按钮样式 */
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff8c00, #ff512f);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 81, 47, 0.3);
+        }
 
-<script>
-// 初始化 EmailJS
-(function(){
-    // 确保这里的 Public Key 是正确的
-    emailjs.init("10hWpZipaYA13RA3p");
-})();
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 81, 47, 0.4);
+        }
 
-function sendEmail(event) {
-    event.preventDefault(); // 阻止表单默认刷新
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-    const form = document.getElementById("registrationForm");
-    const submitBtn = document.getElementById("submitBtn");
-
-    // 优化：点击后禁用按钮并更改文字，防止用户手抖多次点击发送重复邮件
-    submitBtn.disabled = true;
-    submitBtn.innerText = "Sending...";
-
-    // 1️⃣ 发送给管理员
-    // 请确保 "service_gp5w7pv" 和 "template_300kjc8" 在你的后台是处于 Active 状态
-    emailjs.sendForm("service_gp5w7pv", "template_300kjc8", form)
-    .then(function() {
-        console.log("Admin email sent successfully.");
-        // 2️⃣ 再发送给申请者确认邮件
-        return emailjs.sendForm("service_gp5w7pv", "template_lchb6gi", form);
-    })
-    .then(function() {
-        console.log("Applicant email sent successfully.");
-        // 3️⃣ 全部成功后跳转
-        window.location.href = "success.html";
-    })
-    .catch(function(error) {
-        // 发生错误时恢复按钮状态，并提示详细信息
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Submit Registration";
-        alert("Submission failed. Please check the console for details.");
-        console.error("EmailJS Error:", error);
-    });
-}
-</script>
-
+        /* 底部版权信息 */
+        .footer-text {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #bbb;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="container">
+    <h2>Entrance Exam</h2>
+    <p class="subtitle">Tangerine Music Club Registration</p>
 
-<h2>Entrance Exam Registration</h2>
+    <form id="registrationForm">
+        <input type="text" name="name" placeholder="Full Name" required>
+        
+        <input type="text" name="grade" placeholder="Grade / Major" required>
+        
+        <input type="email" name="email" placeholder="Applicant Email" required>
 
-<form id="registrationForm" onsubmit="sendEmail(event)">
+        <select name="department" required>
+            <option value="" disabled selected>Select Department</option>
+            <option value="Music Production - Primary">Music Production - Primary</option>
+            <option value="Music Production - Advanced">Music Production - Advanced</option>
+        </select>
 
-    <input type="text" name="name" placeholder="Full Name" required>
+        <button type="submit" id="submitBtn">Submit Registration</button>
+    </form>
 
-    <input type="text" name="grade" placeholder="Grade / Major" required>
-
-    <input type="email" name="email" placeholder="Applicant Email" required>
-
-    <select name="department" required>
-        <option value="" disabled selected>Select Department</option>
-        <option value="Music Production - Primary">Music Production - Primary</option>
-        <option value="Music Production - Advanced">Music Production - Advanced</option>
-    </select>
-
-    <button type="submit" id="submitBtn">Submit Registration</button>
-
-</form>
-
+    <p class="footer-text">© 2026 Tangerine Music Club</p>
 </div>
+
+<script>
+    // 1. 初始化 EmailJS (使用你的 Public Key)
+    (function() {
+        emailjs.init("10hWpZipaYA13RA3p");
+    })();
+
+    // 2. 监听表单提交事件
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止页面刷新
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerText = "Sending... Please wait";
+
+        console.log("Starting to send emails...");
+
+        // --- 步骤 A: 发送给管理员 ---
+        emailjs.sendForm('service_gp5w7pv', 'template_300kjc8', this)
+            .then(function() {
+                console.log('SUCCESS: Admin notified');
+                
+                // --- 步骤 B: 发送给申请者 ---
+                // 如果你只有一个模板，可以删掉下面这一行，直接执行跳转
+                return emailjs.sendForm('service_gp5w7pv', 'template_lchb6gi', document.getElementById('registrationForm'));
+            })
+            .then(function() {
+                console.log('SUCCESS: Applicant notified');
+                
+                // --- 步骤 C: 全部成功，跳转到成功页面 ---
+                window.location.href = "success.html"; 
+            })
+            .catch(function(error) {
+                console.error('FAILED...', error);
+                alert("Submission failed! Error: " + JSON.stringify(error));
+                
+                // 失败了就把按钮恢复，让用户可以重试
+                btn.disabled = false;
+                btn.innerText = "Submit Registration";
+            });
+    });
+</script>
 
 </body>
 </html>
