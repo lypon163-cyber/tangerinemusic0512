@@ -1,40 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<title>Registration Successful</title>
-<style>
-body {
-    font-family: Arial;
-    text-align: center;
-    padding: 100px;
-    background: #f5f5f5;
-}
-.box {
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    display: inline-block;
-}
-a {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: orange;
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful | Tangerine Music</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            /* 使用与主站统一的渐变色 */
+            background: linear-gradient(135deg, #ff8c00, #ff512f);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        .box {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 100%;
+            /* 入场动画：轻微上浮 */
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        h1 {
+            color: #ff512f;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ff8c00, #ff512f);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 81, 47, 0.3);
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 81, 47, 0.4);
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="box">
-    <h1>Registration Successful 🎉</h1>
-    <p>Your application has been received.</p>
-    <p>Please check your email for confirmation.</p>
-    <a href="index.html">Back to Home</a>
+    <span class="icon">🎉</span>
+    <h1>Registration Successful</h1>
+    <p>Your application has been received by the Tangerine Music Club.</p>
+    <p>Please check your <b>Email inbox</b> (including the spam folder) for confirmation.</p>
+    
+    <a href="index.html" class="back-btn">Back to Home</a>
 </div>
 
 </body>
