@@ -1,81 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tangerine Music Club - Entrance Exam Registration</title>
 
-https://cdn.emailjs.com/dist/email.min.js
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    padding: 50px;
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* 优化了一下背景，显得更现代 */
+    padding: 50px 20px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
 }
 
 .container {
+    width: 100%;
     max-width: 500px;
-    margin: auto;
     background: white;
-    padding: 30px;
+    padding: 40px 30px;
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
 h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    color: #333;
 }
 
 input, select {
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
+    padding: 14px;
+    margin: 10px 0 20px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
+    box-sizing: border-box; /* 确保 padding 不会撑破宽度 */
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #ff8c00; /* 聚焦时变成柑橘色 */
 }
 
 button {
     width: 100%;
-    padding: 12px;
-    background: orange;
+    padding: 14px;
+    background: linear-gradient(135deg, #ff8c00, #ff512f);
     color: white;
     border: none;
     border-radius: 8px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 button:hover {
-    background: #ff7a00;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 81, 47, 0.3);
+}
+
+/* 增加一个提交时的加载状态样式 */
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 </style>
 
 <script>
+// 初始化 EmailJS
 (function(){
+    // 确保这里的 Public Key 是正确的
     emailjs.init("10hWpZipaYA13RA3p");
 })();
 
 function sendEmail(event) {
-    event.preventDefault();
+    event.preventDefault(); // 阻止表单默认刷新
 
     const form = document.getElementById("registrationForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // 优化：点击后禁用按钮并更改文字，防止用户手抖多次点击发送重复邮件
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Sending...";
 
     // 1️⃣ 发送给管理员
+    // 请确保 "service_gp5w7pv" 和 "template_300kjc8" 在你的后台是处于 Active 状态
     emailjs.sendForm("service_gp5w7pv", "template_300kjc8", form)
     .then(function() {
-
-        // 2️⃣ 再发送给申请者
+        console.log("Admin email sent successfully.");
+        // 2️⃣ 再发送给申请者确认邮件
         return emailjs.sendForm("service_gp5w7pv", "template_lchb6gi", form);
-
     })
     .then(function() {
+        console.log("Applicant email sent successfully.");
         // 3️⃣ 全部成功后跳转
         window.location.href = "success.html";
     })
     .catch(function(error) {
-        alert("Submission failed. Please try again.");
-        console.log(error);
+        // 发生错误时恢复按钮状态，并提示详细信息
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit Registration";
+        alert("Submission failed. Please check the console for details.");
+        console.error("EmailJS Error:", error);
     });
 }
 </script>
@@ -90,19 +127,19 @@ function sendEmail(event) {
 
 <form id="registrationForm" onsubmit="sendEmail(event)">
 
-<input type="text" name="name" placeholder="Full Name" required>
+    <input type="text" name="name" placeholder="Full Name" required>
 
-<input type="text" name="grade" placeholder="Grade / Major" required>
+    <input type="text" name="grade" placeholder="Grade / Major" required>
 
-<input type="email" name="email" placeholder="Applicant Email" required>
+    <input type="email" name="email" placeholder="Applicant Email" required>
 
-<select name="department" required>
-<option value="">Select Department</option>
-<option value="Music Production - Primary">Music Production - Primary</option>
-<option value="Music Production - Advanced">Music Production - Advanced</option>
-</select>
+    <select name="department" required>
+        <option value="" disabled selected>Select Department</option>
+        <option value="Music Production - Primary">Music Production - Primary</option>
+        <option value="Music Production - Advanced">Music Production - Advanced</option>
+    </select>
 
-<button type="submit">Submit Registration</button>
+    <button type="submit" id="submitBtn">Submit Registration</button>
 
 </form>
 
