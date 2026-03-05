@@ -1,42 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>柑橘音乐 | Official Website</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 
 <style>
+/* --- 全局样式 --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    /* 开启平滑滚动，让导航栏锚点跳转更优雅 */
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #ff8c00, #ff512f);
     color: white;
+    /* 保证页面即使内容少也能撑满屏幕高度 */
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
 }
 
+/* --- 头部与导航栏 --- */
 header {
     text-align: center;
-    padding: 80px 20px;
+    padding: 80px 20px 40px;
 }
 
 header h1 {
     font-size: 48px;
     font-weight: 600;
+    letter-spacing: 2px;
 }
 
 header p {
     margin-top: 10px;
     font-size: 18px;
     opacity: 0.9;
+    font-weight: 300;
 }
 
 nav {
     text-align: center;
-    padding: 20px;
+    padding: 0 20px 40px;
 }
 
 nav a {
@@ -44,60 +58,120 @@ nav a {
     margin: 0 20px;
     text-decoration: none;
     font-weight: 600;
+    font-size: 16px;
+    position: relative;
+    padding-bottom: 5px;
 }
 
+/* 导航栏下划线悬浮动效 */
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+nav a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+/* --- 主体内容区 --- */
 .container {
     background: white;
     color: #333;
-    border-radius: 20px 20px 0 0;
+    border-radius: 30px 30px 0 0;
     padding: 60px 30px;
+    flex: 1; /* 让容器自动撑满剩余空间 */
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .section {
-    max-width: 1000px;
+    max-width: 900px;
     margin: auto;
     margin-bottom: 60px;
 }
 
 .section h2 {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     font-size: 28px;
     color: #ff512f;
+    font-weight: 600;
+    border-left: 4px solid #ff512f;
+    padding-left: 15px;
 }
 
+/* --- 卡片组件 --- */
 .card {
-    background: #f5f5f5;
-    padding: 20px;
+    background: #f9f9f9;
+    padding: 25px;
     border-radius: 15px;
     margin-bottom: 20px;
-    transition: 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+    line-height: 1.6;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
+/* 新闻链接特殊样式 */
+.news-link {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.card:hover .news-link {
+    color: #ff512f;
+}
+
+/* --- 按钮组件 --- */
 .button {
     display: inline-block;
-    padding: 12px 25px;
-    background: #ff512f;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #ff8c00, #ff512f);
     color: white;
     border-radius: 30px;
     text-decoration: none;
     margin-top: 15px;
-    transition: 0.3s;
+    font-weight: 600;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: none;
+    cursor: pointer;
 }
 
 .button:hover {
-    background: #ff8c00;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 81, 47, 0.4);
 }
 
+/* --- 页脚 --- */
 footer {
     text-align: center;
     padding: 30px;
     background: #111;
-    color: white;
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* --- 移动端响应式设计 --- */
+@media (max-width: 768px) {
+    header { padding: 50px 20px 20px; }
+    header h1 { font-size: 36px; }
+    nav { padding-bottom: 30px; }
+    nav a { margin: 0 10px; font-size: 14px; }
+    .container { padding: 40px 20px; border-radius: 20px 20px 0 0; }
+    .section h2 { font-size: 24px; }
+    .card { padding: 20px; }
 }
 </style>
 </head>
@@ -117,46 +191,40 @@ footer {
 
 <div class="container">
 
-<div class="section" id="about">
-    <h2>About Us</h2>
-    <div class="card">
-        柑橘音乐是浙江大学生音乐爱好者交流平台，专注于原创音乐、现场演出、音画互动等领域。
+    <div class="section" id="about">
+        <h2>About Us</h2>
+        <div class="card">
+            柑橘音乐是浙江大学生音乐爱好者交流平台，专注于原创音乐、现场演出、音画互动等领域。
+        </div>
     </div>
-</div>
 
-<div class="card">
-    <h2>News Center</h2>
-
-    <p>
-        <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank">
-            柑橘音乐秋季招新：和我一起，把音乐梦唱成现实
-        </a>
-    </p>
-
-    <p>
-        <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank">
-            第一视角带你看音乐节演出！！！
-        </a>
-    </p>
-
-</div>
-
-
-<div class="section" id="exam">
-    <h2>Entrance Examination Registration</h2>
-    <div class="card">
-        Primary – Music Production Department
-        <br>
-        Full Score: 150 | Time Limit: 120 minutes
-        <br>
-        <a href="register.html" class="button">Register Now</a>
+    <div class="section" id="news">
+        <h2>News Center</h2>
+        <div class="card">
+            <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="news-link">
+                🎵 柑橘音乐秋季招新：和我一起，把音乐梦唱成现实
+            </a>
+        </div>
+        <div class="card">
+            <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="news-link">
+                🎸 第一视角带你看音乐节演出！！！
+            </a>
+        </div>
     </div>
-</div>
+
+    <div class="section" id="exam">
+        <h2>Entrance Examination</h2>
+        <div class="card">
+            <h3 style="margin-bottom: 10px; color: #333;">Primary – Music Production Department</h3>
+            <p style="color: #666; margin-bottom: 15px;">Full Score: 150 | Time Limit: 120 minutes</p>
+            <a href="register.html" class="button">Register Now</a>
+        </div>
+    </div>
 
 </div>
 
 <footer>
-© 2026 Tangerine Music Club
+    © 2026 Tangerine Music Club
 </footer>
 
 </body>
