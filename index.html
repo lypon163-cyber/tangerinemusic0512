@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -23,7 +25,6 @@ body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #ff8c00, #ff512f);
     color: white;
-    /* 保证页面即使内容少也能撑满屏幕高度 */
     min-height: 100vh; 
     display: flex;
     flex-direction: column;
@@ -63,7 +64,6 @@ nav a {
     padding-bottom: 5px;
 }
 
-/* 导航栏下划线悬浮动效 */
 nav a::after {
     content: '';
     position: absolute;
@@ -86,7 +86,7 @@ nav a:hover::after {
     color: #333;
     border-radius: 30px 30px 0 0;
     padding: 60px 30px;
-    flex: 1; /* 让容器自动撑满剩余空间 */
+    flex: 1;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
 }
 
@@ -185,6 +185,20 @@ nav a:hover::after {
 
 @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
+/* --- 查询框输入样式 --- */
+.q-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-family: inherit;
+}
+.q-input:focus {
+    border-color: #ff512f;
+}
+
 /* 新闻链接特殊样式 */
 .news-link {
     display: block;
@@ -260,7 +274,7 @@ footer {
     <div class="section" id="about">
         <h2>About Us</h2>
         <div class="card">
-            柑橘音乐2026年招新复试成绩已发布，请申请人自行通过下方入口查询！
+            柑橘音乐2026年招新初试成绩已发布，请各位考生通过下方查询入口查看结果！
         </div>
     </div>
 
@@ -299,10 +313,30 @@ footer {
 
     <div class="section" id="exam">
         <h2>Entrance Examination</h2>
-        <div class="card">
-            <h3 style="margin-bottom: 10px; color: #333;">柑橘音乐2026春季招新初试笔试报名</h3>
-            <p style="color: #666; margin-bottom: 15px;">满分：100 | 时间：120分钟</p>
-            <a href="register.html" class="button">Register Now</a>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            
+            <div class="card" style="margin-bottom: 0;">
+                <h3 style="margin-bottom: 10px; color: #333;">春季招新初试报名</h3>
+                <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Music Production Department<br>满分：100 | 时间：120分钟</p>
+                <a href="register.html" class="button">立即报名</a>
+            </div>
+
+            <div class="card" style="margin-bottom: 0;">
+                <h3 style="margin-bottom: 10px; color: #333;">初试成绩查询</h3>
+                <input type="text" id="q_name" class="q-input" placeholder="姓名">
+                <input type="text" id="q_id" class="q-input" placeholder="学号">
+                <button onclick="quickQuery()" class="button" style="margin-top: 5px; width: 100%;">立即查询</button>
+
+                <div id="q_res" style="display:none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; font-size: 13px; text-align: center;">
+                        <div>成绩<br><b id="q_score" style="color:#ff512f; font-size: 18px;">-</b></div>
+                        <div>排名<br><b id="q_rank" style="color:#ff512f; font-size: 18px;">-</b></div>
+                        <div>结果<br><b id="q_status" style="color:#ff512f; font-size: 18px;">-</b></div>
+                    </div>
+                </div>
+                <p id="q_err" style="display:none; color: #999; font-size: 12px; margin-top: 10px; text-align: center;">未查到记录，请核对姓名与学号。</p>
+            </div>
+
         </div>
     </div>
 
@@ -315,20 +349,50 @@ footer {
 <script>
     // 电台播放切换逻辑
     function changeMusic(url) {
-        // 1. 切换播放地址
         document.getElementById('music-player').src = url;
-
-        // 2. 切换列表高亮样式
         const items = document.querySelectorAll('.track-item');
         items.forEach(item => item.classList.remove('active'));
         event.currentTarget.classList.add('active');
-
-        // 3. 重启旋转动画效果
         const vinyl = document.getElementById('vinyl');
         vinyl.style.animation = 'none';
         setTimeout(() => {
             vinyl.style.animation = 'rotate 5s linear infinite';
         }, 10);
+    }
+
+    // 成绩查询逻辑
+    async function quickQuery() {
+        const name = document.getElementById('q_name').value.trim();
+        const id = document.getElementById('q_id').value.trim();
+        const resBox = document.getElementById('q_res');
+        const errBox = document.getElementById('q_err');
+        const btn = event.currentTarget;
+
+        if (!name || !id) { alert("请完整填写姓名和学号"); return; }
+
+        btn.innerText = "查询中...";
+        // 对接您的专属 API ID
+        const api = `https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${name}&id=${id}`;
+
+        try {
+            const response = await fetch(api);
+            const data = await response.json();
+
+            if (data && data.length > 0) {
+                document.getElementById('q_score').innerText = data[0].score;
+                document.getElementById('q_rank').innerText = data[0].rank;
+                document.getElementById('q_status').innerText = data[0].status;
+                resBox.style.display = 'block';
+                errBox.style.display = 'none';
+            } else {
+                resBox.style.display = 'none';
+                errBox.style.display = 'block';
+            }
+        } catch (e) {
+            alert("网络超时，请检查网络连接");
+        } finally {
+            btn.innerText = "立即查询";
+        }
     }
 </script>
 
