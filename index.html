@@ -4,347 +4,340 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tangerine Music | 柑橘音乐</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --apple-bg: #f5f5f7;
-            --apple-card: #ffffff;
-            --apple-text: #1d1d1f;
-            --apple-gray: #86868b;
-            --tangerine: #ff6600;
-            --success: #34c759;
-            --radius: 22px;
+            --bg: #fbfbfd;
+            --card: #ffffff;
+            --text: #1d1d1f;
+            --gray: #86868b;
+            --accent: #ff6600;
+            --border: rgba(0,0,0,0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        html { scroll-behavior: smooth; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--apple-bg);
-            color: var(--apple-text);
-            line-height: 1.5;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg);
+            /* 解决“太空”感：加入极细的工业网格背景 */
+            background-image: radial-gradient(var(--border) 1px, transparent 0);
+            background-size: 40px 40px;
+            color: var(--text);
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- 苹果式顶部导航 --- */
+        /* 顶部导航 - 增加精致线条感 */
         nav {
-            position: fixed; top: 0; width: 100%; height: 48px;
-            background: rgba(245, 245, 247, 0.8);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: fixed; top: 0; width: 100%; height: 50px;
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(20px);
             z-index: 1000; display: flex; justify-content: center; align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border);
         }
         nav a {
-            color: var(--apple-text); text-decoration: none;
-            font-size: 12px; font-weight: 400; margin: 0 20px;
-            opacity: 0.8; transition: 0.3s; letter-spacing: 0.5px;
+            color: var(--text); text-decoration: none; font-size: 11px; font-weight: 600;
+            margin: 0 25px; letter-spacing: 1px; opacity: 0.6; transition: 0.3s;
         }
-        nav a:hover { opacity: 1; color: var(--tangerine); }
+        nav a:hover { opacity: 1; color: var(--accent); }
 
-        /* --- 主容器 --- */
-        header { padding: 120px 20px 60px; text-align: center; }
-        header h1 { font-size: clamp(40px, 8vw, 64px); font-weight: 700; letter-spacing: -2px; margin-bottom: 10px; }
-        header p { font-size: 21px; color: var(--apple-gray); font-weight: 400; }
+        header { padding: 140px 20px 80px; text-align: center; }
+        header h1 { font-size: 64px; font-weight: 800; letter-spacing: -3px; margin-bottom: 15px; }
+        header p { font-size: 20px; color: var(--gray); max-width: 600px; margin: 0 auto; line-height: 1.4; }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 100px; }
-        .section-title { font-size: 32px; font-weight: 700; margin: 60px 0 30px; letter-spacing: -0.5px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 100px; }
 
-        /* --- Bento Grid 组件 --- */
-        .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        /* Bento Grid 布局优化：增加层次感 */
+        .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
         .card {
-            background: var(--apple-card); border-radius: var(--radius);
-            padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(0,0,0,0.03);
+            background: var(--card); border-radius: 24px; padding: 32px;
+            border: 1px solid var(--border); transition: all 0.5s cubic-bezier(0.15, 0.83, 0.66, 1);
+            position: relative; overflow: hidden;
         }
-        .card:hover { transform: scale(1.015); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--accent); }
 
-        /* --- 按钮与输入 --- */
-        .button {
-            background: var(--tangerine); color: white; border-radius: 40px;
-            padding: 12px 28px; font-weight: 600; font-size: 14px;
-            border: none; cursor: pointer; transition: 0.3s;
-            text-decoration: none; display: inline-block; text-align: center;
-        }
-        .button:hover { opacity: 0.9; transform: translateY(-1px); }
-        .button-secondary { background: #e8e8ed; color: var(--apple-text); }
+        /* 模块大小分配 */
+        .col-8 { grid-column: span 8; }
+        .col-4 { grid-column: span 4; }
+        .col-12 { grid-column: span 12; }
 
-        .q-input {
-            width: 100%; padding: 16px; margin-bottom: 12px;
-            background: #f5f5f7; border: none; border-radius: 14px;
-            font-size: 16px; transition: 0.3s; font-family: inherit;
-        }
-        .q-input:focus { background: #ededf0; box-shadow: 0 0 0 3px rgba(255,102,0,0.1); }
+        .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: block; }
+        h2 { font-size: 28px; font-weight: 700; margin-bottom: 20px; letter-spacing: -1px; }
 
-        /* --- 电台 (Apple Music Style) --- */
-        .player-card { grid-column: span 2; display: flex; align-items: center; gap: 40px; }
-        .vinyl-container {
-            width: 140px; height: 140px; flex-shrink: 0;
-            background: #111; border-radius: 14px; overflow: hidden;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        /* 按钮与输入框 - 苹果质感 */
+        .btn {
+            background: var(--text); color: white; border-radius: 12px;
+            padding: 14px 28px; font-weight: 600; font-size: 14px;
+            border: none; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block;
         }
-        .vinyl-record {
-            width: 100%; height: 100%;
-            background: url('https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop') center/cover;
-            animation: rotate 8s linear infinite; animation-play-state: running;
+        .btn:hover { background: var(--accent); transform: scale(1.02); }
+        .btn-ghost { background: #f5f5f7; color: var(--text); margin-left: 10px; }
+
+        .input-group { margin-bottom: 15px; }
+        input {
+            width: 100%; padding: 18px; background: #f5f5f7; border: 1px solid transparent;
+            border-radius: 14px; font-size: 16px; transition: 0.3s;
         }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .track-list { flex: 1; }
-        .track-item {
-            padding: 14px; border-radius: 12px; cursor: pointer;
-            font-size: 14px; display: flex; justify-content: space-between; transition: 0.2s;
-        }
+        input:focus { background: white; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(255,102,0,0.1); }
+
+        /* 电台模块优化 */
+        .radio-flex { display: flex; align-items: center; gap: 40px; }
+        .album-art { width: 160px; height: 160px; background: #000; border-radius: 18px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); flex-shrink: 0; }
+        .track-list { flex: 1; border-left: 1px solid var(--border); padding-left: 30px; }
+        .track-item { padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; }
         .track-item:hover { background: #f5f5f7; }
-        .track-item.active { color: var(--tangerine); font-weight: 600; background: #fff5f2; }
+        .track-item.active { color: var(--accent); font-weight: 700; background: #fff5f2; }
 
-        /* --- 摸底测试 (iOS Style) --- */
-        .quiz-progress { height: 5px; background: #e8e8ed; border-radius: 3px; margin-bottom: 30px; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--tangerine); width: 0%; transition: 0.5s ease; }
+        /* 测试题样式优化 */
         .quiz-option {
-            background: #f5f5f7; padding: 18px; border-radius: 16px;
-            margin-bottom: 12px; cursor: pointer; transition: 0.2s; font-size: 15px;
-            border: 2px solid transparent;
+            background: #f5f5f7; padding: 20px; border-radius: 16px; margin-bottom: 12px;
+            cursor: pointer; transition: 0.2s; border: 2px solid transparent; font-weight: 500;
         }
-        .quiz-option:hover { background: #e8e8ed; }
-        .quiz-option.selected { background: white; border-color: var(--tangerine); color: var(--tangerine); font-weight: 600; }
+        .quiz-option:hover { background: #eeeeef; }
+        .quiz-option.selected { border-color: var(--accent); background: white; color: var(--accent); }
+        .progress-box { height: 6px; background: #eee; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 
-        /* --- 响应式 --- */
-        @media (max-width: 768px) {
-            .bento-grid { grid-template-columns: 1fr; }
-            .player-card { grid-column: span 1; flex-direction: column; text-align: center; }
-            header h1 { font-size: 40px; }
-        }
+        /* 查询结果动效 */
+        #q_res { display: none; margin-top: 30px; padding: 25px; background: #f9f9fb; border-radius: 18px; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        footer { text-align: center; padding: 80px 20px; color: var(--apple-gray); font-size: 13px; }
+        footer { text-align: center; padding: 100px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); margin-top: 50px; }
+
+        @media (max-width: 850px) { .col-8, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; text-align: center; } .track-list { border: none; padding: 0; } }
     </style>
 </head>
 
 <body>
     <nav>
-        <a href="#news">NEWS</a>
-        <a href="#radio">RADIO</a>
-        <a href="#exam">EXAM</a>
-        <a href="#quiz">QUIZ</a>
+        <a href="#news">NEWS</a><a href="#radio">RADIO</a><a href="#exam">EXAM</a><a href="#quiz">QUIZ</a>
     </nav>
 
     <header>
-        <h1>柑橘音乐 2026</h1>
-        <p>让工程思维注入艺术灵感</p>
+        <h1>Tangerine Music.</h1>
+        <p>连接音频工程与艺术灵魂的终极据点</p>
     </header>
 
     <div class="container">
-        <h2 class="section-title" id="news">最新动态</h2>
-        <div class="bento-grid">
-            <div class="card">
-                <span style="font-size:11px; font-weight:700; color:var(--tangerine); letter-spacing:1px;">LATEST NEWS</span>
-                <h3 style="margin: 12px 0 8px;">2026 招新正式开启</h3>
-                <p style="color:var(--apple-gray); font-size:14px; margin-bottom:20px; line-height:1.6;">探索声音的无限可能。我们不仅在寻找歌手，更在寻找拥有工程架构思维的制作人。</p>
-                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="button">查看详情</a>
+        <div class="grid-layout" id="news">
+            <div class="card col-8">
+                <span class="section-tag">Hot News</span>
+                <h2>2026 秋季招新正式开启</h2>
+                <p style="color:var(--gray); margin-bottom:30px; line-height:1.6;">如果你痴迷于 Logic Pro 的信号流，或对现场扩声有独到见解，柑橘音乐的大门正为你敞开。这不只是一场招新，这是一次对未来制作人的筛选。</p>
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn">阅读招新简章</a>
             </div>
-            <div class="card">
-                <h3 style="margin-bottom:8px;">音乐节幕后 VLOG</h3>
-                <p style="color:var(--apple-gray); font-size:14px; margin-bottom:20px; line-height:1.6;">直击舞台背后的技术心跳，看一首曲目是如何从 DAW 走向现场。</p>
-                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="button button-secondary">立即观看</a>
+            <div class="card col-4">
+                <span class="section-tag">Backstage</span>
+                <h2>音乐节 VLOG</h2>
+                <p style="color:var(--gray); font-size:14px; margin-bottom:25px;">第一视角拆解大型舞台的音频链路搭建。</p>
+                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn btn-ghost">立即观看</a>
             </div>
-        </div>
 
-        <h2 class="section-title" id="radio">听见柑橘</h2>
-        <div class="card player-card">
-            <div class="vinyl-container"><div class="vinyl-record" id="v-disk"></div></div>
-            <div class="track-list">
-                <div class="track-item active" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66', this)">
-                    <span>01. SPACE WALK</span><span>03:45</span>
-                </div>
-                <div class="track-item" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66', this)">
-                    <span>02. Moonlight</span><span>04:12</span>
-                </div>
-                <iframe id="music-player" frameborder="no" border="0" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:20px; border-radius:14px;"></iframe>
-            </div>
-        </div>
-
-        <h2 class="section-title" id="exam">录取与考核</h2>
-        <div class="bento-grid">
-            <div class="card">
-                <h3>成绩查询</h3>
-                <p style="color:var(--apple-gray); font-size:13px; margin: 10px 0 20px;">请输入你的官方登记姓名与学号</p>
-                <input type="text" id="q_name" class="q-input" placeholder="姓名">
-                <input type="text" id="q_id" class="q-input" placeholder="学号">
-                <button onclick="quickQuery()" class="button" id="q_btn" style="width:100%;">同步结果</button>
-
-                <div id="q_res" style="display:none; margin-top:30px; border-top:1px solid #f5f5f7; padding-top:25px; animation: fadeIn 0.5s;">
-                    <div style="display:flex; justify-content:space-around; text-align:center;">
-                        <div><span style="font-size:11px; color:var(--apple-gray); font-weight:600;">SCORE</span><br><b id="q_score" style="font-size:26px;">-</b></div>
-                        <div><span style="font-size:11px; color:var(--apple-gray); font-weight:600;">RANK</span><br><b id="q_rank" style="font-size:26px;">-</b></div>
-                        <div><span style="font-size:11px; color:var(--apple-gray); font-weight:600;">RESULT</span><br><b id="q_status" style="font-size:26px;">-</b></div>
+            <div class="card col-12" id="radio">
+                <span class="section-tag">Tangerine Station</span>
+                <div class="radio-flex">
+                    <div class="album-art"><img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover; border-radius:18px;"></div>
+                    <div class="track-list">
+                        <div class="track-item active" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66', this)">
+                            <span>01. SPACE WALK - Production Demo</span><span>03:45</span>
+                        </div>
+                        <div class="track-item" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66', this)">
+                            <span>02. Moonlight - Final Mix</span><span>04:12</span>
+                        </div>
+                        <iframe id="player" frameborder="no" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:20px; border-radius:14px;"></iframe>
                     </div>
-                    <div id="q_follow_up"></div>
-                </div>
-                <p id="q_err" style="display:none; color:var(--tangerine); font-size:12px; margin-top:20px; text-align:center;">未找到记录，请核对信息是否正确</p>
-            </div>
-
-            <div class="card" style="display:flex; flex-direction:column; justify-content:center; text-align:center; background: linear-gradient(135deg, #fff, #fff5f2);">
-                <h3 style="margin-bottom:15px;">加入我们</h3>
-                <p style="color:var(--apple-gray); font-size:14px; margin-bottom:30px; line-height:1.7;">如果你对 Production 充满热情，<br>柑橘音乐的大门永远为你敞开。</p>
-                <a href="register.html" class="button">前往报名系统</a>
-            </div>
-        </div>
-
-        <h2 class="section-title" id="quiz">能力预估</h2>
-        <div class="card">
-            <div class="quiz-progress"><div class="progress-bar" id="p-bar"></div></div>
-            <div id="quiz-box">
-                <div id="question-area" style="min-height:180px;"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px;">
-                    <span id="q-number" style="font-size:12px; color:var(--apple-gray); font-weight:500;">1 / 10</span>
-                    <button onclick="nextQuestion()" class="button" id="next-btn">下一题</button>
                 </div>
             </div>
-            <div id="quiz-result" style="display:none; text-align:center; padding: 20px 0;">
-                <p style="color:var(--apple-gray); font-size:14px; margin-bottom:10px;">你的预估得分</p>
-                <h3 style="font-size:56px; margin-bottom:20px; letter-spacing:-2px;" id="res-score">0</h3>
-                <div id="res-eval" style="background:#f5f5f7; padding:25px; border-radius:18px; line-height:1.8; color:var(--apple-gray); font-size:14px;"></div>
-                <button onclick="location.reload()" class="button button-secondary" style="margin-top:30px;">重新测试</button>
+
+            <div class="card col-4" id="exam">
+                <span class="section-tag">Portal</span>
+                <h2>成绩查询</h2>
+                <div class="input-group"><input type="text" id="name" placeholder="姓名"></div>
+                <div class="input-group"><input type="text" id="stu_id" placeholder="学号"></div>
+                <button onclick="runQuery()" class="btn" id="query_btn" style="width:100%">同步云端数据</button>
+                <p id="error_tips" style="display:none; color:var(--accent); font-size:12px; margin-top:15px; text-align:center;">未找到记录，请核对信息</p>
+            </div>
+
+            <div class="card col-8">
+                <div id="q_res">
+                    <div style="display:flex; justify-content:space-around; text-align:center;">
+                        <div><span style="font-size:11px; color:var(--gray)">SCORE</span><br><b id="res_score" style="font-size:32px;">-</b></div>
+                        <div><span style="font-size:11px; color:var(--gray)">RANK</span><br><b id="res_rank" style="font-size:32px;">-</b></div>
+                        <div><span style="font-size:11px; color:var(--gray)">STATUS</span><br><b id="res_status" style="font-size:32px;">-</b></div>
+                    </div>
+                    <div id="res_detail" style="margin-top:25px; border-top:1px solid var(--border); padding-top:20px;"></div>
+                </div>
+                <div id="placeholder_res" style="height:100%; display:flex; align-items:center; justify-content:center; color:var(--gray); font-size:14px;">
+                    等待查询指令输入...
+                </div>
+            </div>
+
+            <div class="card col-12" id="quiz">
+                <span class="section-tag">Skill Assessment</span>
+                <div class="progress-box"><div class="progress-fill" id="p_fill"></div></div>
+                <div id="quiz_box">
+                    <div id="q_text" style="min-height:100px;">加载题目中...</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:40px;">
+                        <span id="q_num" style="font-size:12px; color:var(--gray); font-weight:600;">1 / 10</span>
+                        <button onclick="handleNext()" class="btn" id="next_btn">下一题</button>
+                    </div>
+                </div>
+                <div id="quiz_result" style="display:none; text-align:center;">
+                    <h3 style="font-size:64px; margin-bottom:10px; letter-spacing:-2px;" id="final_score">0</h3>
+                    <div id="final_eval" style="color:var(--gray); margin-bottom:30px;">评估计算中...</div>
+                    <button onclick="location.reload()" class="btn btn-ghost">换一组题挑战</button>
+                </div>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>Copyright © 2026 Tangerine Music Club. All rights reserved.</p>
-        <p style="margin-top:8px;">Designed for Sound Engineering & Production</p>
+        <p>© 2026 Tangerine Music Club. 保持热爱，保持共鸣。</p>
     </footer>
 
     <script>
-        // 电台逻辑
-        function changeMusic(url, el) {
-            document.getElementById('music-player').src = url;
+        // 1. 电台播放逻辑
+        function playMusic(url, el) {
+            document.getElementById('player').src = url;
             document.querySelectorAll('.track-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            const disk = document.getElementById('v-disk');
-            disk.style.animation = 'none';
-            setTimeout(() => disk.style.animation = 'rotate 8s linear infinite', 10);
         }
 
-        // 成绩查询逻辑 (SheetDB)
-        async function quickQuery() {
-            const name = document.getElementById('q_name').value.trim();
-            const id = document.getElementById('q_id').value.trim();
-            const btn = document.getElementById('q_btn');
+        // 2. 成绩查询逻辑 (修复版)
+        async function runQuery() {
+            const nameInput = document.getElementById('name').value.trim();
+            const idInput = document.getElementById('stu_id').value.trim();
+            const btn = document.getElementById('query_btn');
             const resBox = document.getElementById('q_res');
-            const errBox = document.getElementById('q_err');
-            const followBox = document.getElementById('q_follow_up');
+            const placeholder = document.getElementById('placeholder_res');
+            const errorTips = document.getElementById('error_tips');
 
-            if(!name || !id) { alert("请填写完整信息"); return; }
-            btn.innerText = "同步数据中...";
+            if(!nameInput || !idInput) { alert("姓名和学号不能为空哦"); return; }
+            
+            btn.innerText = "正在握手服务器...";
+            errorTips.style.display = 'none';
 
             try {
-                const api = `https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
+                // 请确保你的 SheetDB 这里的列名必须是 name 和 id (小写)
+                const api = `https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${encodeURIComponent(nameInput)}&id=${encodeURIComponent(idInput)}`;
                 const response = await fetch(api);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
-                    const res = data[0];
-                    document.getElementById('q_score').innerText = res.score;
-                    document.getElementById('q_rank').innerText = res.rank;
-                    const st = document.getElementById('q_status');
-                    st.innerText = res.status;
+                    const student = data[0];
+                    placeholder.style.display = 'none';
                     resBox.style.display = 'block';
-                    errBox.style.display = 'none';
+                    
+                    document.getElementById('res_score').innerText = student.score;
+                    document.getElementById('res_rank').innerText = student.rank;
+                    const st = document.getElementById('res_status');
+                    st.innerText = student.status;
 
-                    if (res.status.trim() === "通过") {
+                    const detail = document.getElementById('res_detail');
+                    if (student.status.trim() === "通过") {
                         st.style.color = "#34c759";
                         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                        followBox.innerHTML = `
-                            <div style="background:#f5f5f7; padding:20px; border-radius:18px; margin-top:25px; text-align:left; border-left:4px solid var(--tangerine);">
-                                <h4 style="color:var(--tangerine); margin-bottom:8px;">🍊 复试指令 (Advanced Production)</h4>
-                                <p style="font-size:13px; color:var(--apple-gray); line-height:1.6;">
-                                    恭喜通过初试！复试将于 <b>4月1日/2日 18:00</b> 在 <b>3307 教室</b>举行。<br>
-                                    请携带身份证、黑笔及直尺。复试将侧重考察工程信号流与架构思维，期待你的表现。
-                                </p>
-                            </div>`;
+                        detail.innerHTML = `<p style="font-size:14px; color:var(--text); line-height:1.8;"><b>🍊 复试指令：</b><br>恭喜进入复试！请于 4月1日 18:00 准时抵达 3307 教室。复试现场提供工程模板，你需要展示你的混音思路与动态处理技巧。带好黑笔与直尺。</p>`;
                     } else {
-                        st.style.color = var(--apple-gray);
-                        followBox.innerHTML = `<p style="font-size:12px; color:var(--apple-gray); margin-top:25px; text-align:center;">感谢你对柑橘音乐的热爱。虽然本次未能晋级，但你的作品我们都已认真聆听。期待下次重逢。🍊</p>`;
+                        st.style.color = var(--gray);
+                        detail.innerHTML = `<p style="font-size:14px; color:var(--gray); text-align:center;">虽然本次初试未能晋级，但你的声音已经留在柑橘的记录中。期待下次重逢。</p>`;
                     }
                 } else {
                     resBox.style.display = 'none';
-                    errBox.style.display = 'block';
+                    placeholder.style.display = 'flex';
+                    errorTips.style.display = 'block';
                 }
-            } catch (e) { alert("网络异常，请稍后重试"); }
-            finally { btn.innerText = "查询结果"; }
+            } catch (err) {
+                console.error("Query Error:", err);
+                alert("由于网络原因查询失败，请检查控制台或稍后再试。");
+            } finally {
+                btn.innerText = "同步云端数据";
+            }
         }
 
-        // 摸底测试 (20 抽 10)
-        const pool = [
-            { q: "在数字音乐制作中，DAW 的含义是？", o: ["Digital Audio Workstation", "Digital Audio Web", "Dynamic Audio Work", "Digital Arrangement Work"], a: 0 },
-            { q: "下列哪一个软件属于常见的 DAW？", o: ["FL Studio", "Photoshop", "Blender", "Premiere Pro"], a: 0 },
-            { q: "MIDI 文件的主要特点是？", o: ["只包含音频波形", "记录演奏信息而不是声音", "只能播放鼓", "只能在钢琴上使用"], a: 1 },
-            { q: "在音乐制作中，BPM 指的是？", o: ["音量大小", "每分钟节拍数", "音频采样率", "音轨数量"], a: 1 },
-            { q: "EQ 的主要作用是？", o: ["改变节奏", "调整音色频率", "增加混响", "提高音量"], a: 1 },
-            { q: "Compressor（压缩器）的主要作用是？", o: ["调整音高", "控制动态范围", "添加回声", "改变节拍"], a: 1 },
-            { q: "下列哪个频段通常对应“低频”？", o: ["20–250 Hz", "500–1000 Hz", "2k–5k Hz", "10k Hz 以上"], a: 0 },
-            { q: "在混音中，“Pan”通常指？", o: ["音量", "声像位置", "节奏", "音高"], a: 1 },
-            { q: "下列哪一种是常见音频文件格式？", o: ["WAV", "DOCX", "PPT", "XLS"], a: 0 },
-            { q: "采样率 44.1kHz 表示？", o: ["每秒采样 44100 次", "每秒采样 441 次", "每分钟采样 44100 次", "每秒 44 次"], a: 0 },
-            { q: "在电子音乐制作中，Loop 指的是？", o: ["单次演奏", "可循环播放的片段", "音量自动化", "乐器名称"], a: 1 },
-            { q: "Reverb（混响）主要用于？", o: ["模拟空间环境", "提高音高", "减少噪声", "改变节奏"], a: 0 },
-            { q: "常见的电子音乐节拍是？", o: ["2/4", "3/4", "4/4", "5/8"], a: 2 },
-            { q: "Synthesizer（合成器）的作用是？", o: ["录制人声", "合成声音", "调整音量", "剪辑视频"], a: 1 },
-            { q: "在 DAW 中，Track 指的是？", o: ["音轨", "鼓组", "歌曲名称", "音符"], a: 0 },
-            { q: "Sidechain 压缩常见于？", o: ["古典音乐", "EDM", "民乐", "合唱"], a: 1 },
-            { q: "Automation 指的是？", o: ["自动编曲", "参数随时间变化控制", "自动作曲", "自动录音"], a: 1 },
-            { q: "在混音中，人声通常主要位于？", o: ["中间声像", "左侧", "右侧", "随机"], a: 0 },
-            { q: "音频剪辑中，“Fade in”指的是？", o: ["声音逐渐变强", "声音突然变大", "声音逐渐变弱", "声音反向"], a: 0 },
-            { q: "Mastering 的主要目标是？", o: ["写旋律", "调整整体音质与响度", "编写歌词", "录制乐器"], a: 1 }
+        // 3. 模拟测试系统 (20抽10 刷新版)
+        const masterPool = [
+            { q: "在数字音乐制作中，DAW 的全称是？", o: ["Digital Audio Workstation", "Digital Audio Web", "Dynamic Audio Work", "Digital Arrangement Work"], a: 0 },
+            { q: "FL Studio, Logic Pro, Ableton Live 统称为什么？", o: ["DAW", "VPC", "MIDI", "VST"], a: 0 },
+            { q: "MIDI 协议主要传输的是什么？", o: ["音频信号", "控制指令数据", "采样波形", "电流"], a: 1 },
+            { q: "BPM 的含义是？", o: ["音量分贝", "每分钟节拍数", "采样频率", "比特率"], a: 1 },
+            { q: "使用 EQ 时，切掉 100Hz 以下通常是为了解决什么？", o: ["高频刺耳", "低频浑浊", "人声太小", "混响太重"], a: 1 },
+            { q: "压缩器 (Compressor) 的主要目的是？", o: ["增加混响", "控制动态范围", "改变音高", "提高采样率"], a: 1 },
+            { q: "人耳能听到的频率范围大约是？", o: ["20Hz - 20kHz", "1Hz - 100kHz", "500Hz - 5kHz", "100Hz - 10kHz"], a: 0 },
+            { q: "Pan (声像) 控制的是声音在空间中的哪个位置？", o: ["远近", "左右", "高低", "明暗"], a: 1 },
+            { q: "以下哪个是无损音频格式？", o: ["WAV", "MP3", "WMA", "AAC"], a: 0 },
+            { q: "44.1kHz 是常见的什么参数？", o: ["采样率", "位深度", "阻抗", "信噪比"], a: 0 },
+            { q: "Sidechain (侧链) 效果常用于哪种曲风处理 Kick 和 Bass？", o: ["EDM", "Jazz", "Folk", "Classical"], a: 0 },
+            { q: "Reverb (混响) 模拟的是什么？", o: ["回声频率", "物理空间反射", "录音电压", "音轨相位"], a: 1 },
+            { q: "4/4 拍是指？", o: ["四分音符为一拍，每小节四拍", "四分音符为四拍", "每小节四个八分音符", "二分音符为一拍"], a: 0 },
+            { q: "合成器中的 Oscillator 指的是？", o: ["滤波器", "振荡器", "放大器", "包络器"], a: 1 },
+            { q: "混音中，Overload 指的是？", o: ["信号过载爆音", "音量太小", "音轨太多", "效果器太少"], a: 0 },
+            { q: "自动化 (Automation) 可以控制什么？", o: ["只有音量", "几乎所有插件参数", "只有静音", "只有速度"], a: 1 },
+            { q: "Ghost Note 通常出现在什么乐器中？", o: ["键盘", "架子鼓/军鼓", "人声", "长笛"], a: 1 },
+            { q: "干声 (Dry Signal) 是指？", o: ["没有处理过的原始信号", "加了混响的信号", "录音坏了的信号", "低频信号"], a: 0 },
+            { q: "Fade Out 的效果是？", o: ["声音逐渐消失", "声音突然变大", "声音反向", "变调"], a: 0 },
+            { q: "Mastering (母带) 是制作的第几步？", o: ["第一步", "最后一步", "录音阶段", "创作阶段"], a: 1 }
         ];
 
-        let qSet = []; let cur = 0; let pt = 0; let sel = null;
+        let testSet = []; let current = 0; let userPt = 0; let selectedIdx = null;
 
-        function init() {
-            qSet = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
-            draw();
+        // 初始化函数：洗牌并选10题
+        function initTest() {
+            testSet = [...masterPool].sort(() => Math.random() - 0.5).slice(0, 10);
+            current = 0; userPt = 0;
+            showQ();
         }
 
-        function draw() {
-            const q = qSet[cur];
-            document.getElementById('question-area').innerHTML = `
-                <p style="font-size:18px; font-weight:600; margin-bottom:25px; line-height:1.5;">${q.q}</p>
-                ${q.o.map((opt, i) => `<div class="quiz-option" onclick="choose(${i}, this)">${opt}</div>`).join('')}
+        function showQ() {
+            const q = testSet[current];
+            const qArea = document.getElementById('q_text');
+            qArea.innerHTML = `
+                <p style="font-size:18px; font-weight:700; margin-bottom:25px;">${q.q}</p>
+                ${q.o.map((o, i) => `<div class="quiz-option" onclick="pick(${i}, this)">${o}</div>`).join('')}
             `;
-            document.getElementById('q-number').innerText = `${cur + 1} / 10`;
-            document.getElementById('p-bar').style.width = `${(cur / 10) * 100}%`;
-            document.getElementById('next-btn').innerText = cur === 9 ? "查看评估结果" : "下一题";
+            document.getElementById('q_num').innerText = `${current + 1} / 10`;
+            document.getElementById('p_fill').style.width = `${(current / 10) * 100}%`;
+            document.getElementById('next_btn').innerText = (current === 9) ? "完成评估" : "下一题";
+            selectedIdx = null;
         }
 
-        function choose(i, el) {
-            sel = i;
-            document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+        function pick(idx, el) {
+            selectedIdx = idx;
+            document.querySelectorAll('.quiz-option').forEach(item => item.classList.remove('selected'));
             el.classList.add('selected');
         }
 
-        function nextQuestion() {
-            if(sel === null) return;
-            if(sel === qSet[cur].a) pt += 10;
-            cur++; sel = null;
-            if(cur < 10) draw(); else finish();
+        function handleNext() {
+            if(selectedIdx === null) { alert("请先选择一个答案"); return; }
+            if(selectedIdx === testSet[current].a) userPt += 10;
+            
+            current++;
+            if(current < 10) {
+                showQ();
+            } else {
+                showFinal();
+            }
         }
 
-        function finish() {
-            document.getElementById('quiz-box').style.display = 'none';
-            document.getElementById('p-bar').style.width = '100%';
-            const r = document.getElementById('quiz-result');
-            r.style.display = 'block';
-            document.getElementById('res-score').innerText = pt;
-            let ev = "";
-            if(pt >= 90) ev = "🔥 <b>Pro 级制作人</b><br>你对技术名词的掌握极其精准，初试对你来说只是走个过场。3307 教室见！";
-            else if(pt >= 60) ev = "🍊 <b>合格的柑橘新血</b><br>基础扎实，对数字音乐有清晰认知。建议复试前再巩固一下信号流逻辑。";
-            else ev = "🎸 <b>纯粹的音乐玩家</b><br>热情满分，但技术底层架构还需打磨。建议多关注公众号科普文章。";
-            document.getElementById('res-eval').innerHTML = ev;
-            if(pt >= 80) confetti({ particleCount: 100, spread: 60 });
+        function showFinal() {
+            document.getElementById('quiz_box').style.display = 'none';
+            document.getElementById('p_fill').style.width = '100%';
+            const resArea = document.getElementById('quiz_result');
+            resArea.style.display = 'block';
+            document.getElementById('final_score').innerText = userPt + " PT";
+            
+            let evalMsg = "";
+            if(userPt >= 90) evalMsg = "🔥 <b>Pro 级耳朵</b><br>你对制作术语了如指掌，期待在录音棚见到你。";
+            else if(userPt >= 60) evalMsg = "🍊 <b>合格制作人</b><br>基础稳健，但在信号流细节上可以再精进。";
+            else evalMsg = "🎸 <b>纯粹的热爱者</b><br>热情可嘉，建议多关注我们的技术推文补齐底层知识。";
+            document.getElementById('final_eval').innerHTML = evalMsg;
+            if(userPt >= 80) confetti({ particleCount: 100, spread: 60 });
         }
 
-        init();
+        // 确保页面加载完后执行
+        window.onload = () => {
+            initTest();
+            console.log("柑橘音乐官网已就绪 - 工业极简 2.0");
+        };
     </script>
 </body>
 </html>
