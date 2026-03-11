@@ -1,409 +1,209 @@
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>柑橘音乐 | Official Website</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>柑橘音乐 | Official Website</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- 全局样式 --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff8c00, #ff512f);
+            color: white;
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+        }
+        /* --- 头部与导航栏 --- */
+        header { text-align: center; padding: 80px 20px 40px; }
+        header h1 { font-size: 48px; font-weight: 600; letter-spacing: 2px; }
+        header p { margin-top: 10px; font-size: 18px; opacity: 0.9; font-weight: 300; }
+        nav { text-align: center; padding: 0 20px 40px; }
+        nav a { color: white; margin: 0 20px; text-decoration: none; font-weight: 600; font-size: 16px; position: relative; padding-bottom: 5px; }
+        nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: white; transition: all 0.3s ease; }
+        nav a:hover::after { width: 100%; left: 0; }
 
-<style>
-/* --- 全局样式 --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        /* --- 主体内容区 --- */
+        .container { background: white; color: #333; border-radius: 30px 30px 0 0; padding: 60px 30px; flex: 1; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1); }
+        .section { max-width: 900px; margin: auto; margin-bottom: 60px; }
+        .section h2 { margin-bottom: 25px; font-size: 28px; color: #ff512f; font-weight: 600; border-left: 4px solid #ff512f; padding-left: 15px; }
 
-html {
-    /* 开启平滑滚动，让导航栏锚点跳转更优雅 */
-    scroll-behavior: smooth;
-}
+        .card { background: #f9f9f9; padding: 25px; border-radius: 15px; margin-bottom: 20px; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid #eee; line-height: 1.6; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ff8c00, #ff512f);
-    color: white;
-    min-height: 100vh; 
-    display: flex;
-    flex-direction: column;
-}
+        /* --- 电台 --- */
+        .radio-card { background: #1a1a1a; color: white; display: flex; flex-wrap: wrap; gap: 20px; padding: 30px; align-items: center; border-radius: 15px; }
+        .vinyl-record { width: 120px; height: 120px; background: url('https://image.freepik.com/free-vector/black-vinyl-record-isolated-white-background_1217-1011.jpg') center/cover; border-radius: 50%; animation: rotate 5s linear infinite; position: relative; flex-shrink: 0; margin: 0 auto; }
+        .vinyl-record::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: #ff512f; border-radius: 50%; border: 3px solid #000; }
+        .playlist { flex: 1; min-width: 280px; }
+        .track-item { background: #2a2a2a; padding: 10px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.3s; border-left: 3px solid transparent; }
+        .track-item:hover, .track-item.active { background: #333; border-left-color: #ff512f; }
+        .player-wrapper { width: 100%; margin-top: 15px; border-radius: 10px; overflow: hidden; height: 80px; }
 
-/* --- 头部与导航栏 --- */
-header {
-    text-align: center;
-    padding: 80px 20px 40px;
-}
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-header h1 {
-    font-size: 48px;
-    font-weight: 600;
-    letter-spacing: 2px;
-}
+        /* --- 查询样式 --- */
+        .q-input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; outline: none; font-family: inherit; transition: 0.3s; }
+        .q-input:focus { border-color: #ff512f; box-shadow: 0 0 8px rgba(255,81,47,0.1); }
+        .news-link { display: block; text-decoration: none; color: #333; font-weight: 500; }
+        .card:hover .news-link { color: #ff512f; }
 
-header p {
-    margin-top: 10px;
-    font-size: 18px;
-    opacity: 0.9;
-    font-weight: 300;
-}
+        .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #ff8c00, #ff512f); color: white; border-radius: 30px; text-decoration: none; margin-top: 15px; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; border: none; cursor: pointer; }
+        .button:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 81, 47, 0.4); }
 
-nav {
-    text-align: center;
-    padding: 0 20px 40px;
-}
+        footer { text-align: center; padding: 30px; background: #111; color: #aaa; font-size: 14px; }
 
-nav a {
-    color: white;
-    margin: 0 20px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-    position: relative;
-    padding-bottom: 5px;
-}
-
-nav a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 50%;
-    background-color: white;
-    transition: all 0.3s ease;
-}
-
-nav a:hover::after {
-    width: 100%;
-    left: 0;
-}
-
-/* --- 主体内容区 --- */
-.container {
-    background: white;
-    color: #333;
-    border-radius: 30px 30px 0 0;
-    padding: 60px 30px;
-    flex: 1;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.section {
-    max-width: 900px;
-    margin: auto;
-    margin-bottom: 60px;
-}
-
-.section h2 {
-    margin-bottom: 25px;
-    font-size: 28px;
-    color: #ff512f;
-    font-weight: 600;
-    border-left: 4px solid #ff512f;
-    padding-left: 15px;
-}
-
-/* --- 卡片组件 --- */
-.card {
-    background: #f9f9f9;
-    padding: 25px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #eee;
-    line-height: 1.6;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
-
-/* --- 电台专属样式 --- */
-.radio-card {
-    background: #1a1a1a;
-    color: white;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 30px;
-    align-items: center;
-}
-
-.vinyl-record {
-    width: 120px;
-    height: 120px;
-    background: url('https://image.freepik.com/free-vector/black-vinyl-record-isolated-white-background_1217-1011.jpg') center/cover;
-    border-radius: 50%;
-    animation: rotate 5s linear infinite;
-    position: relative;
-    flex-shrink: 0;
-    margin: 0 auto;
-}
-
-.vinyl-record::after {
-    content: "";
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px; height: 30px;
-    background: #ff512f;
-    border-radius: 50%;
-    border: 3px solid #000;
-}
-
-.playlist {
-    flex: 1;
-    min-width: 280px;
-}
-
-.track-item {
-    background: #2a2a2a;
-    padding: 10px 15px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: 0.3s;
-    border-left: 3px solid transparent;
-}
-
-.track-item:hover, .track-item.active {
-    background: #333;
-    border-left-color: #ff512f;
-}
-
-.player-wrapper {
-    width: 100%;
-    margin-top: 15px;
-    border-radius: 10px;
-    overflow: hidden;
-    height: 80px;
-}
-
-@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* --- 查询框输入样式 --- */
-.q-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    font-family: inherit;
-}
-.q-input:focus {
-    border-color: #ff512f;
-}
-
-/* 新闻链接特殊样式 */
-.news-link {
-    display: block;
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.card:hover .news-link {
-    color: #ff512f;
-}
-
-/* --- 按钮组件 --- */
-.button {
-    display: inline-block;
-    padding: 12px 30px;
-    background: linear-gradient(135deg, #ff8c00, #ff512f);
-    color: white;
-    border-radius: 30px;
-    text-decoration: none;
-    margin-top: 15px;
-    font-weight: 600;
-    transition: transform 0.3s, box-shadow 0.3s;
-    border: none;
-    cursor: pointer;
-}
-
-.button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(255, 81, 47, 0.4);
-}
-
-/* --- 页脚 --- */
-footer {
-    text-align: center;
-    padding: 30px;
-    background: #111;
-    color: #aaa;
-    font-size: 14px;
-}
-
-/* --- 移动端响应式设计 --- */
-@media (max-width: 768px) {
-    header { padding: 50px 20px 20px; }
-    header h1 { font-size: 36px; }
-    nav { padding-bottom: 30px; }
-    nav a { margin: 0 10px; font-size: 14px; }
-    .container { padding: 40px 20px; border-radius: 20px 20px 0 0; }
-    .section h2 { font-size: 24px; }
-    .card { padding: 20px; }
-    .radio-card { flex-direction: column; text-align: center; }
-}
-</style>
+        @media (max-width: 768px) {
+            header h1 { font-size: 36px; }
+            .radio-card { flex-direction: column; text-align: center; }
+        }
+    </style>
 </head>
 
 <body>
+    <header>
+        <h1>柑橘音乐</h1>
+        <p>Tangerine Music Club</p>
+    </header>
 
-<header>
-    <h1>柑橘音乐</h1>
-    <p>Tangerine Music Club</p>
-</header>
+    <nav>
+        <a href="#about">About</a>
+        <a href="#news">News</a>
+        <a href="#radio">Radio</a>
+        <a href="#exam">Entrance Exam</a>
+    </nav>
 
-<nav>
-    <a href="#about">About</a>
-    <a href="#news">News</a>
-    <a href="#radio">Radio</a>
-    <a href="#exam">Entrance Exam</a>
-</nav>
-
-<div class="container">
-
-    <div class="section" id="about">
-        <h2>About Us</h2>
-        <div class="card">
-            柑橘音乐2026年招新初试成绩已发布，请各位考生通过下方查询入口查看结果！
-        </div>
-    </div>
-
-    <div class="section" id="news">
-        <h2>News Center</h2>
-        <div class="card">
-            <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="news-link">
-                🎵 柑橘音乐秋季招新：和我一起，把音乐梦唱成现实
-            </a>
-        </div>
-        <div class="card">
-            <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="news-link">
-                🎸 第一视角带你看音乐节演出！！！
-            </a>
-        </div>
-    </div>
-
-    <div class="section" id="radio">
-        <h2>Tangerine Radio</h2>
-        <div class="card radio-card">
-            <div class="vinyl-record" id="vinyl"></div>
-            
-            <div class="playlist">
-                <div class="track-item active" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66')">
-                    01. SPACE WALK - 成品展示
-                </div>
-                <div class="track-item" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66')">
-                    02. Moonlight - 成品展示
-                </div>
-                <div class="player-wrapper">
-                    <iframe id="music-player" frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66"></iframe>
-                </div>
+    <div class="container">
+        <div class="section" id="about">
+            <h2>About Us</h2>
+            <div class="card">
+                柑橘音乐2026年招新初试成绩已发布，请各位考生通过下方查询入口查看结果！
             </div>
         </div>
-    </div>
 
-    <div class="section" id="exam">
-        <h2>Entrance Examination</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-            
-            <div class="card" style="margin-bottom: 0;">
-                <h3 style="margin-bottom: 10px; color: #333;">春季招新初试报名</h3>
-                <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Music Production Department<br>满分：100 | 时间：120分钟</p>
-                <a href="register.html" class="button">立即报名</a>
+        <div class="section" id="news">
+            <h2>News Center</h2>
+            <div class="card">
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="news-link">
+                    🎵 柑橘音乐秋季招新：和我一起，把音乐梦唱成现实
+                </a>
             </div>
+            <div class="card">
+                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="news-link">
+                    🎸 第一视角带你看音乐节演出！！！
+                </a>
+            </div>
+        </div>
 
-            <div class="card" style="margin-bottom: 0;">
-                <h3 style="margin-bottom: 10px; color: #333;">初试成绩查询</h3>
-                <input type="text" id="q_name" class="q-input" placeholder="姓名">
-                <input type="text" id="q_id" class="q-input" placeholder="学号">
-                <button onclick="quickQuery()" class="button" style="margin-top: 5px; width: 100%;">立即查询</button>
-
-                <div id="q_res" style="display:none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; font-size: 13px; text-align: center;">
-                        <div>成绩<br><b id="q_score" style="color:#ff512f; font-size: 18px;">-</b></div>
-                        <div>排名<br><b id="q_rank" style="color:#ff512f; font-size: 18px;">-</b></div>
-                        <div>结果<br><b id="q_status" style="color:#ff512f; font-size: 18px;">-</b></div>
+        <div class="section" id="radio">
+            <h2>Tangerine Radio</h2>
+            <div class="card radio-card">
+                <div class="vinyl-record" id="vinyl"></div>
+                <div class="playlist">
+                    <div class="track-item active" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66')">
+                        01. SPACE WALK - 成品展示
+                    </div>
+                    <div class="track-item" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66')">
+                        02. Moonlight - 成品展示
+                    </div>
+                    <div class="player-wrapper">
+                        <iframe id="music-player" frameborder="no" border="0" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66"></iframe>
                     </div>
                 </div>
-                <p id="q_err" style="display:none; color: #999; font-size: 12px; margin-top: 10px; text-align: center;">未查到记录，请核对姓名与学号。</p>
             </div>
+        </div>
 
+        <div class="section" id="exam">
+            <h2>Entrance Examination</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div class="card" style="margin-bottom: 0;">
+                    <h3 style="margin-bottom: 10px; color: #333;">春季招新初试报名</h3>
+                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Music Production Department<br>满分：100 | 时间：120分钟</p>
+                    <a href="register.html" class="button">立即报名</a>
+                </div>
+
+                <div class="card" style="margin-bottom: 0;">
+                    <h3 style="margin-bottom: 10px; color: #333;">初试成绩查询</h3>
+                    <input type="text" id="q_name" class="q-input" placeholder="姓名">
+                    <input type="text" id="q_id" class="q-input" placeholder="学号">
+                    <button onclick="quickQuery()" class="button" id="q_btn" style="margin-top: 5px; width: 100%;">立即查询</button>
+
+                    <div id="q_res" style="display:none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; font-size: 13px; text-align: center;">
+                            <div>成绩<br><b id="q_score" style="color:#ff512f; font-size: 18px;">-</b></div>
+                            <div>排名<br><b id="q_rank" style="color:#ff512f; font-size: 18px;">-</b></div>
+                            <div>结果<br><b id="q_status" style="color:#ff512f; font-size: 18px;">-</b></div>
+                        </div>
+                    </div>
+                    <p id="q_err" style="display:none; color: #999; font-size: 12px; margin-top: 10px; text-align: center;">未查到记录，请核对姓名与学号。</p>
+                </div>
+            </div>
         </div>
     </div>
 
-</div>
+    <footer>© 2026 Tangerine Music Club</footer>
 
-<footer>
-    © 2026 Tangerine Music Club
-</footer>
-
-<script>
-    // 电台播放切换逻辑
-    function changeMusic(url) {
-        document.getElementById('music-player').src = url;
-        const items = document.querySelectorAll('.track-item');
-        items.forEach(item => item.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        const vinyl = document.getElementById('vinyl');
-        vinyl.style.animation = 'none';
-        setTimeout(() => {
-            vinyl.style.animation = 'rotate 5s linear infinite';
-        }, 10);
-    }
-
-  async function quickQuery() {
-    const name = document.getElementById('q_name').value.trim();
-    const id = document.getElementById('q_id').value.trim();
-    const resBox = document.getElementById('q_res');
-    const errBox = document.getElementById('q_err');
-    const btn = event.currentTarget;
-
-    if (!name || !id) { alert("请完整填写姓名和学号"); return; }
-
-    btn.innerText = "查询中...";
-    // 对接您的专属 API ID
-    const api = `https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${name}&id=${id}`;
-
-    try {
-        const response = await fetch(api);
-        const data = await response.json();
-
-        if (data && data.length > 0) {
-            const result = data[0];
-            document.getElementById('q_score').innerText = result.score;
-            document.getElementById('q_rank').innerText = result.rank;
-            
-            // 结果颜色逻辑
-            const statusEl = document.getElementById('q_status');
-            statusEl.innerText = result.status;
-
-            // 如果包含“通过”二字，显示绿色；否则（不通过）显示灰色
-            if (result.status.includes("通过")) {
-                statusEl.style.color = "#28a745"; // 成功的绿色
-                statusEl.style.fontWeight = "bold";
-            } else {
-                statusEl.style.color = "#888888"; // 沉稳的灰色
-                statusEl.style.fontWeight = "normal";
-            }
-            
-            resBox.style.display = 'block';
-            errBox.style.display = 'none';
-        } else {
-            resBox.style.display = 'none';
-            errBox.style.display = 'block';
+    <script>
+        function changeMusic(url) {
+            document.getElementById('music-player').src = url;
+            const items = document.querySelectorAll('.track-item');
+            items.forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const vinyl = document.getElementById('vinyl');
+            vinyl.style.animation = 'none';
+            setTimeout(() => { vinyl.style.animation = 'rotate 5s linear infinite'; }, 10);
         }
-    } catch (e) {
-        alert("网络超时，请稍后再试");
-    } finally {
-        btn.innerText = "立即查询";
-    }
-}
+
+        async function quickQuery() {
+            const name = document.getElementById('q_name').value.trim();
+            const id = document.getElementById('q_id').value.trim();
+            const resBox = document.getElementById('q_res');
+            const errBox = document.getElementById('q_err');
+            const btn = document.getElementById('q_btn');
+
+            if (!name || !id) {
+                alert("请完整填写姓名和学号");
+                return;
+            }
+
+            btn.innerText = "查询中...";
+            const api = `https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
+
+            try {
+                const response = await fetch(api);
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    const result = data[0];
+                    document.getElementById('q_score').innerText = result.score;
+                    document.getElementById('q_rank').innerText = result.rank;
+                    
+                    const statusEl = document.getElementById('q_status');
+                    statusEl.innerText = result.status;
+
+                    if (result.status.includes("通过")) {
+                        statusEl.style.color = "#28a745"; 
+                        statusEl.style.fontWeight = "bold";
+                    } else {
+                        statusEl.style.color = "#888888";
+                        statusEl.style.fontWeight = "normal";
+                    }
+                    
+                    resBox.style.display = 'block';
+                    errBox.style.display = 'none';
+                } else {
+                    resBox.style.display = 'none';
+                    errBox.style.display = 'block';
+                }
+            } catch (e) {
+                alert("网络超时，请稍后再试");
+            } finally {
+                btn.innerText = "立即查询";
+            }
+        }
+    </script>
+</body>
+</html>
