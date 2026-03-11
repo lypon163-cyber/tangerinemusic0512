@@ -22,8 +22,36 @@
 
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 100px; }
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-        .card { background: var(--card); border-radius: 24px; padding: 32px; border: 1px solid var(--border); transition: all 0.5s cubic-bezier(0.15, 0.83, 0.66, 1); position: relative; overflow: hidden; }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--accent); }
+        /* 1. 基础状态：极简、深邃 */
+.card {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 32px;
+    /* 重点：将边框颜色调浅，让位给阴影 */
+    border: 1px solid rgba(0,0,0,0.05); 
+    
+    /* 重点：多重柔和阴影 */
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.02), 
+        0 2px 4px -1px rgba(0, 0, 0, 0.01),
+        0 10px 15px -3px rgba(0, 0, 0, 0.03);
+        
+    /* 丝滑的贝塞尔曲线过渡 */
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+    position: relative;
+    overflow: hidden;
+}
+
+/* 2. 悬停状态：明显的浮起感 */
+.card:hover {
+    transform: translateY(-6px); /* 向上位移 */
+    border-color: var(--accent); /* 橙色边框激活 */
+    
+    /* 重点：扩大阴影范围，模拟光线被遮挡后的扩散 */
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.05), 
+        0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
         
         .col-8 { grid-column: span 8; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; } .col-12 { grid-column: span 12; }
         .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: block; }
