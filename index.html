@@ -49,7 +49,9 @@
         /* --- 查询样式 --- */
         .q-input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; outline: none; font-family: inherit; transition: 0.3s; }
         .q-input:focus { border-color: #ff512f; box-shadow: 0 0 8px rgba(255,81,47,0.1); }
-        
+        .news-link { display: block; text-decoration: none; color: #333; font-weight: 500; }
+        .card:hover .news-link { color: #ff512f; }
+
         .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #ff8c00, #ff512f); color: white; border-radius: 30px; text-decoration: none; margin-top: 15px; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; border: none; cursor: pointer; }
         .button:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 81, 47, 0.4); }
 
@@ -80,6 +82,20 @@
             <h2>About Us</h2>
             <div class="card">
                 柑橘音乐2026年招新初试成绩已发布，请各位考生通过下方查询入口查看结果！
+            </div>
+        </div>
+
+        <div class="section" id="news">
+            <h2>News Center</h2>
+            <div class="card">
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="news-link">
+                    🎵 柑橘音乐秋季招新：和我一起，把音乐梦唱成现实
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="news-link">
+                    🎸 第一视角带你看音乐节演出！！！
+                </a>
             </div>
         </div>
 
@@ -157,7 +173,6 @@
             }
 
             btn.innerText = "查询中...";
-            // 修正后的 API 链接
             const api = `https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
 
             try {
@@ -174,12 +189,10 @@
                     resBox.style.display = 'block';
                     errBox.style.display = 'none';
 
-                    // 通过判断逻辑
                     if (result.status.includes("通过") && !result.status.includes("不")) {
                         statusEl.style.color = "#28a745"; 
                         statusEl.style.fontWeight = "bold";
                         
-                        // 1. 触发撒花
                         confetti({
                             particleCount: 150,
                             spread: 70,
@@ -187,23 +200,23 @@
                             colors: ['#ff8c00', '#ff512f', '#ffd700']
                         });
 
-                        // 2. 注入复试须知
                         followUpBox.innerHTML = `
                             <div style="text-align: left; background: #fff5f2; padding: 20px; border-radius: 15px; border-left: 5px solid #ff512f; margin-top: 20px; box-shadow: 0 4px 15px rgba(255,81,47,0.05);">
-                                <h4 style="color: #ff512f; margin-bottom: 12px; font-size: 16px;">🍊 复试安排</h4>
+                                <h4 style="color: #ff512f; margin-bottom: 12px; font-size: 16px;">🍊 复试安排 (Advanced Production Exam)</h4>
                                 <div style="font-size: 13px; color: #444; line-height: 1.7;">
-                                    <p style="margin-bottom: 8px;">同学你好，恭喜你顺利进入复试。本次复试旨在考察你的<b>工程架构思维与声音设计能力</b>。</p>
+                                    <p style="margin-bottom: 8px;">同学你好，恭喜你通过初试！顺利进入复试。本次复试旨在考察你的<b>工程架构思维与声音设计能力</b>。</p>
                                     <p><b>📅 第一场：</b>2026年4月1日 18:00</p>
                                     <p><b>📅 第二场：</b>2026年4月2日 18:00</p>
-                                    <p style="font-size: 11px; color: #888; margin-bottom: 8px;">(注：具体时间请留意后续短信)</p>
+                                    <p style="font-size: 11px; color: #888; margin-bottom: 8px;">(注：具体分配时间请留意后续短信通知)</p>
                                     <p><b>📍 地点：</b>3307 教室</p>
                                     <hr style="border: none; border-top: 1px solid #eee; margin: 10px 0;">
                                     <p style="color: #d9534f; font-weight: bold; margin-bottom: 5px;">⚠️ 注意事项：</p>
-                                    <ul style="padding-left: 18px;">
-                                        <li>时长120分钟。严禁携带手机、AI 工具。</li>
-                                        <li>必备：证件、黑色中性笔、直尺。</li>
-                                        <li><b>诚信准则：</b>对 AI 辅助零容忍。</li>
+                                    <ul style="padding-left: 18px; margin-bottom: 10px;">
+                                        <li>时长120分钟。严禁携带手机、翻译机及任何 AI 辅助工具。</li>
+                                        <li>必备：本人有效身份证件、黑色中性笔、直尺（含绘图题）。</li>
+                                        <li><b>诚信准则：</b>对技术诚信零容忍。</li>
                                     </ul>
+                                    <p style="font-style: italic; color: #666;">建议提前复习声音工程、合成器相关知识。期待你的表现！</p>
                                 </div>
                             </div>`;
                         followUpBox.style.display = 'block';
@@ -211,8 +224,8 @@
                         statusEl.style.color = "#888888";
                         statusEl.style.fontWeight = "normal";
                         followUpBox.innerHTML = `
-                            <div style="margin-top: 20px; color: #999; font-size: 12px; text-align: center;">
-                                感谢你对柑橘音乐的热爱。期待下次相遇。🍊
+                            <div style="margin-top: 20px; color: #999; font-size: 12px; line-height: 1.6; text-align: center;">
+                                感谢你对柑橘音乐的热爱。<br>虽然本次初试未能更进一步，但你的作品我们都已认真聆听。<br>期待在下一个音乐现场与你重逢。🍊
                             </div>`;
                         followUpBox.style.display = 'block';
                     }
@@ -221,7 +234,7 @@
                     errBox.style.display = 'block';
                 }
             } catch (e) {
-                alert("网络错误，请稍后再试");
+                alert("查询出错，请稍后再试");
             } finally {
                 btn.innerText = "立即查询";
             }
