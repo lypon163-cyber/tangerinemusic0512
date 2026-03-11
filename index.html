@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>柑橘音乐 | Official Website</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         /* --- 全局样式 --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -187,6 +188,15 @@
                     if (result.status.includes("通过")) {
                         statusEl.style.color = "#28a745"; 
                         statusEl.style.fontWeight = "bold";
+                        
+                        // 2. 触发撒花特效
+                        confetti({
+                            particleCount: 150,
+                            spread: 70,
+                            origin: { y: 0.6 },
+                            colors: ['#ff8c00', '#ff512f', '#ffd700']
+                        });
+
                     } else {
                         statusEl.style.color = "#888888";
                         statusEl.style.fontWeight = "normal";
