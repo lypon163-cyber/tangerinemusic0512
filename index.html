@@ -18,47 +18,47 @@
             display: flex;
             flex-direction: column;
         }
-        /* --- 头部与导航栏 --- */
+        /* --- 导航与头部 --- */
         header { text-align: center; padding: 80px 20px 40px; }
         header h1 { font-size: 48px; font-weight: 600; letter-spacing: 2px; }
         header p { margin-top: 10px; font-size: 18px; opacity: 0.9; font-weight: 300; }
         nav { text-align: center; padding: 0 20px 40px; }
-        nav a { color: white; margin: 0 20px; text-decoration: none; font-weight: 600; font-size: 16px; position: relative; padding-bottom: 5px; }
+        nav a { color: white; margin: 0 20px; text-decoration: none; font-weight: 600; font-size: 14px; position: relative; padding-bottom: 5px; text-transform: uppercase; }
         nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: white; transition: all 0.3s ease; }
         nav a:hover::after { width: 100%; left: 0; }
 
-        /* --- 主体内容区 --- */
-        .container { background: white; color: #333; border-radius: 30px 30px 0 0; padding: 60px 30px; flex: 1; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1); }
-        .section { max-width: 900px; margin: auto; margin-bottom: 60px; }
-        .section h2 { margin-bottom: 25px; font-size: 28px; color: #ff512f; font-weight: 600; border-left: 4px solid #ff512f; padding-left: 15px; }
+        /* --- 主体容器 --- */
+        .container { background: white; color: #333; border-radius: 40px 40px 0 0; padding: 60px 20px; flex: 1; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1); }
+        .section { max-width: 900px; margin: 0 auto 60px; }
+        .section h2 { margin-bottom: 25px; font-size: 26px; color: #ff512f; font-weight: 600; border-left: 5px solid #ff512f; padding-left: 15px; }
 
-        .card { background: #f9f9f9; padding: 25px; border-radius: 15px; margin-bottom: 20px; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid #eee; line-height: 1.6; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .card { background: #fdfdfd; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: 1px solid #eee; transition: 0.3s; line-height: 1.6; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
 
-        /* --- 电台 --- */
-        .radio-card { background: #1a1a1a; color: white; display: flex; flex-wrap: wrap; gap: 20px; padding: 30px; align-items: center; border-radius: 15px; }
-        .vinyl-record { width: 120px; height: 120px; background: url('https://image.freepik.com/free-vector/black-vinyl-record-isolated-white-background_1217-1011.jpg') center/cover; border-radius: 50%; animation: rotate 5s linear infinite; position: relative; flex-shrink: 0; margin: 0 auto; }
-        .vinyl-record::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: #ff512f; border-radius: 50%; border: 3px solid #000; }
-        .playlist { flex: 1; min-width: 280px; }
-        .track-item { background: #2a2a2a; padding: 10px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.3s; border-left: 3px solid transparent; }
-        .track-item:hover, .track-item.active { background: #333; border-left-color: #ff512f; }
-        .player-wrapper { width: 100%; margin-top: 15px; border-radius: 10px; overflow: hidden; height: 80px; }
+        /* --- 按钮与输入框 --- */
+        .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #ff8c00, #ff512f); color: white; border-radius: 30px; text-decoration: none; font-weight: 600; transition: 0.3s; border: none; cursor: pointer; text-align: center; }
+        .button:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 81, 47, 0.3); }
+        .q-input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; outline: none; font-family: inherit; }
+        .q-input:focus { border-color: #ff512f; background: #fffaf9; }
 
+        /* --- 电台模块 --- */
+        .radio-card { background: #1a1a1a; color: white; display: flex; flex-wrap: wrap; gap: 20px; padding: 30px; align-items: center; border-radius: 20px; }
+        .vinyl-record { width: 100px; height: 100px; background: url('https://image.freepik.com/free-vector/black-vinyl-record-isolated-white-background_1217-1011.jpg') center/cover; border-radius: 50%; animation: rotate 5s linear infinite; flex-shrink: 0; margin: 0 auto; position: relative; }
+        .vinyl-record::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 25px; height: 25px; background: #ff512f; border-radius: 50%; border: 3px solid #000; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .track-item { background: #2a2a2a; padding: 10px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; font-size: 13px; transition: 0.3s; border-left: 3px solid transparent; }
+        .track-item.active { background: #333; border-left-color: #ff512f; }
 
-        /* --- 查询样式 --- */
-        .q-input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; outline: none; font-family: inherit; transition: 0.3s; }
-        .q-input:focus { border-color: #ff512f; box-shadow: 0 0 8px rgba(255,81,47,0.1); }
-        .news-link { display: block; text-decoration: none; color: #333; font-weight: 500; }
-        .card:hover .news-link { color: #ff512f; }
+        /* --- 摸底测试样式 --- */
+        .quiz-option { display: block; background: #fff; border: 1px solid #ddd; padding: 12px 15px; margin-bottom: 10px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .quiz-option:hover, .quiz-option.selected { border-color: #ff512f; background: #fff5f2; }
+        .quiz-progress { height: 6px; background: #eee; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #ff8c00, #ff512f); width: 0%; transition: 0.3s; }
 
-        .button { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #ff8c00, #ff512f); color: white; border-radius: 30px; text-decoration: none; margin-top: 15px; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; border: none; cursor: pointer; }
-        .button:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 81, 47, 0.4); }
-
-        footer { text-align: center; padding: 30px; background: #111; color: #aaa; font-size: 14px; }
+        footer { text-align: center; padding: 40px; background: #111; color: #666; font-size: 12px; }
 
         @media (max-width: 768px) {
-            header h1 { font-size: 36px; }
+            header h1 { font-size: 32px; }
             .radio-card { flex-direction: column; text-align: center; }
         }
     </style>
@@ -71,29 +71,22 @@
     </header>
 
     <nav>
-        <a href="#about">About</a>
         <a href="#news">News</a>
         <a href="#radio">Radio</a>
-        <a href="#exam">Entrance Exam</a>
+        <a href="#exam">Examination</a>
+        <a href="#quiz">Pre-Test</a>
     </nav>
 
     <div class="container">
-        <div class="section" id="about">
-            <h2>About Us</h2>
-            <div class="card">
-                柑橘音乐2026年招新初试成绩已发布，请各位考生通过下方查询入口查看结果！
-            </div>
-        </div>
-
         <div class="section" id="news">
             <h2>News Center</h2>
             <div class="card">
-                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="news-link">
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" style="text-decoration:none; color:#333; font-weight:500;">
                     🎵 柑橘音乐秋季招新：和我一起，把音乐梦唱成现实
                 </a>
             </div>
             <div class="card">
-                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="news-link">
+                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" style="text-decoration:none; color:#333; font-weight:500;">
                     🎸 第一视角带你看音乐节演出！！！
                 </a>
             </div>
@@ -103,16 +96,10 @@
             <h2>Tangerine Radio</h2>
             <div class="card radio-card">
                 <div class="vinyl-record" id="vinyl"></div>
-                <div class="playlist">
-                    <div class="track-item active" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66')">
-                        01. SPACE WALK - 成品展示
-                    </div>
-                    <div class="track-item" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66')">
-                        02. Moonlight - 成品展示
-                    </div>
-                    <div class="player-wrapper">
-                        <iframe id="music-player" frameborder="no" border="0" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66"></iframe>
-                    </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <div class="track-item active" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66', this)">01. SPACE WALK - 成品展示</div>
+                    <div class="track-item" onclick="changeMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66', this)">02. Moonlight - 成品展示</div>
+                    <iframe id="music-player" frameborder="no" border="0" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:15px; border-radius:10px;"></iframe>
                 </div>
             </div>
         </div>
@@ -120,27 +107,47 @@
         <div class="section" id="exam">
             <h2>Entrance Examination</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                <div class="card" style="margin-bottom: 0;">
-                    <h3 style="margin-bottom: 10px; color: #333;">春季招新初试报名</h3>
-                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Music Production Department<br>满分：100 | 时间：120分钟</p>
-                    <a href="register.html" class="button">立即报名</a>
+                <div class="card">
+                    <h3>春季招新初试报名</h3>
+                    <p style="color: #666; font-size: 13px; margin: 10px 0 20px;">Music Production Dept.<br>时长：120min | 满分：100</p>
+                    <a href="register.html" class="button" style="width: 100%;">立即报名</a>
                 </div>
 
-                <div class="card" style="margin-bottom: 0;">
-                    <h3 style="margin-bottom: 10px; color: #333;">初试成绩查询</h3>
-                    <input type="text" id="q_name" class="q-input" placeholder="姓名">
+                <div class="card">
+                    <h3>初试成绩查询</h3>
+                    <input type="text" id="q_name" class="q-input" placeholder="姓名" style="margin-top:10px;">
                     <input type="text" id="q_id" class="q-input" placeholder="学号">
-                    <button onclick="quickQuery()" class="button" id="q_btn" style="margin-top: 5px; width: 100%;">立即查询</button>
+                    <button onclick="quickQuery()" class="button" id="q_btn" style="width: 100%;">立即查询</button>
 
-                    <div id="q_res" style="display:none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; font-size: 13px; text-align: center;">
-                            <div>成绩<br><b id="q_score" style="color:#ff512f; font-size: 18px;">-</b></div>
-                            <div>排名<br><b id="q_rank" style="color:#ff512f; font-size: 18px;">-</b></div>
-                            <div>结果<br><b id="q_status" style="color:#ff512f; font-size: 18px;">-</b></div>
+                    <div id="q_res" style="display:none; margin-top: 20px; padding-top: 20px; border-top: 1px dashed #eee;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; text-align: center; font-size: 13px;">
+                            <div>成绩<br><b id="q_score" style="color:#ff512f; font-size: 20px;">-</b></div>
+                            <div>排名<br><b id="q_rank" style="color:#ff512f; font-size: 20px;">-</b></div>
+                            <div>结果<br><b id="q_status" style="color:#ff512f; font-size: 20px;">-</b></div>
                         </div>
                         <div id="q_follow_up"></div>
                     </div>
-                    <p id="q_err" style="display:none; color: #999; font-size: 12px; margin-top: 10px; text-align: center;">未查到记录，请核对姓名与学号。</p>
+                    <p id="q_err" style="display:none; color: #999; font-size: 12px; margin-top: 15px; text-align: center;">未查到记录，请检查信息是否正确。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="quiz">
+            <h2>Pre-Exam Quiz (Random 10)</h2>
+            <div class="card">
+                <div class="quiz-progress"><div class="progress-bar" id="p-bar"></div></div>
+                <div id="quiz-box">
+                    <div id="question-area" style="min-height: 200px;"></div>
+                    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="q-number" style="font-size: 12px; color: #999;">Question 1 / 10</span>
+                        <button onclick="nextQuestion()" class="button" id="next-btn" style="padding: 8px 20px;">下一题</button>
+                    </div>
+                </div>
+                <div id="quiz-result" style="display:none; text-align: center; padding: 20px 0;">
+                    <p style="font-size: 14px; color: #666;">评估得分</p>
+                    <h3 id="res-score" style="font-size: 48px; color: #ff512f; margin: 10px 0;">0</h3>
+                    <div id="res-eval" style="background:#f9f9f9; padding:20px; border-radius:15px; font-size: 14px; line-height:1.8;"></div>
+                    <button onclick="location.reload()" class="button" style="margin-top:20px;">再测一组</button>
                 </div>
             </div>
         </div>
@@ -149,100 +156,146 @@
     <footer>© 2026 Tangerine Music Club</footer>
 
     <script>
-        function changeMusic(url) {
+        /* --- 电台逻辑 --- */
+        function changeMusic(url, el) {
             document.getElementById('music-player').src = url;
-            const items = document.querySelectorAll('.track-item');
-            items.forEach(item => item.classList.remove('active'));
-            if(event) event.currentTarget.classList.add('active');
-            const vinyl = document.getElementById('vinyl');
-            vinyl.style.animation = 'none';
-            setTimeout(() => { vinyl.style.animation = 'rotate 5s linear infinite'; }, 10);
+            document.querySelectorAll('.track-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            const v = document.getElementById('vinyl');
+            v.style.animation = 'none';
+            setTimeout(() => v.style.animation = 'rotate 5s linear infinite', 10);
         }
 
+        /* --- 成绩查询逻辑 (含严格校验) --- */
         async function quickQuery() {
             const name = document.getElementById('q_name').value.trim();
             const id = document.getElementById('q_id').value.trim();
+            const btn = document.getElementById('q_btn');
             const resBox = document.getElementById('q_res');
             const errBox = document.getElementById('q_err');
-            const btn = document.getElementById('q_btn');
-            const followUpBox = document.getElementById('q_follow_up');
+            const followBox = document.getElementById('q_follow_up');
 
-            if (!name || !id) {
-                alert("请完整填写姓名和学号");
-                return;
-            }
-
+            if(!name || !id) { alert("请填写完整信息"); return; }
             btn.innerText = "查询中...";
-            const api = `https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
 
             try {
+                const api = `https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
                 const response = await fetch(api);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
-                    const result = data[0];
-                    document.getElementById('q_score').innerText = result.score;
-                    document.getElementById('q_rank').innerText = result.rank;
+                    const res = data[0];
+                    document.getElementById('q_score').innerText = res.score;
+                    document.getElementById('q_rank').innerText = res.rank;
                     const statusEl = document.getElementById('q_status');
-                    statusEl.innerText = result.status;
+                    statusEl.innerText = res.status;
 
                     resBox.style.display = 'block';
                     errBox.style.display = 'none';
 
-                    // --- 核心修复：精准匹配状态文字 ---
-                    const finalStatus = result.status.trim();
-
-                    if (finalStatus === "通过") {
-                        statusEl.style.color = "#28a745"; 
-                        statusEl.style.fontWeight = "bold";
-                        
-                        confetti({
-                            particleCount: 150,
-                            spread: 70,
-                            origin: { y: 0.6 },
-                            colors: ['#ff8c00', '#ff512f', '#ffd700']
-                        });
-
-                        followUpBox.innerHTML = `
-                            <div style="text-align: left; background: #fff5f2; padding: 20px; border-radius: 15px; border-left: 5px solid #ff512f; margin-top: 20px; box-shadow: 0 4px 15px rgba(255,81,47,0.05);">
-                                <h4 style="color: #ff512f; margin-bottom: 12px; font-size: 16px;">🍊 复试安排 (Advanced Production Exam)</h4>
-                                <div style="font-size: 13px; color: #444; line-height: 1.7;">
-                                    <p style="margin-bottom: 8px;">同学你好，恭喜你通过初试！顺利进入复试。本次复试旨在考察你的<b>工程架构思维与声音设计能力</b>。</p>
-                                    <p><b>📅 第一场：</b>2026年4月1日 18:00</p>
-                                    <p><b>📅 第二场：</b>2026年4月2日 18:00</p>
-                                    <p style="font-size: 11px; color: #888; margin-bottom: 8px;">(注：具体分配时间请留意后续短信通知)</p>
-                                    <p><b>📍 地点：</b>3307 教室</p>
-                                    <hr style="border: none; border-top: 1px solid #eee; margin: 10px 0;">
-                                    <p style="color: #d9534f; font-weight: bold; margin-bottom: 5px;">⚠️ 注意事项：</p>
-                                    <ul style="padding-left: 18px; margin-bottom: 10px;">
-                                        <li>时长120分钟。严禁携带手机、翻译机及任何 AI 辅助工具。</li>
-                                        <li>必备：本人有效身份证件、黑色中性笔、直尺（含绘图题）。</li>
-                                        <li><b>诚信准则：</b>对技术诚信零容忍。一旦发现 AI 辅助痕迹或雷同卷，将立即取消成绩。</li>
-                                    </ul>
-                                    <p style="font-style: italic; color: #666;">建议提前复习声音工程、合成器相关知识。期待你的表现！</p>
-                                </div>
+                    // 核心逻辑：只有状态正好是“通过”两个字，才触发成功页面
+                    if (res.status.trim() === "通过") {
+                        statusEl.style.color = "#28a745";
+                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                        followBox.innerHTML = `
+                            <div style="text-align: left; background: #fff5f2; padding: 20px; border-radius: 15px; border-left: 5px solid #ff512f; margin-top: 20px;">
+                                <h4 style="color: #ff512f; margin-bottom: 10px;">🍊 复试安排 (Advanced Production)</h4>
+                                <p style="font-size: 13px; color: #444; line-height: 1.6;">
+                                    恭喜通过初试！复试重点考察<b>工程架构思维</b>。<br>
+                                    📅 <b>时间：</b>4月1日/2日 18:00 (以短信为准)<br>
+                                    📍 <b>地点：</b>3307 教室<br>
+                                    ⚠️ <b>注意：</b>禁带手机/AI工具，需带身份证、黑笔、直尺。对技术诚信零容忍。
+                                </p>
                             </div>`;
-                        followUpBox.style.display = 'block';
                     } else {
-                        // 只要不满足“通过”，统统显示鼓励奖
-                        statusEl.style.color = "#888888";
-                        statusEl.style.fontWeight = "normal";
-                        followUpBox.innerHTML = `
+                        statusEl.style.color = "#888";
+                        followBox.innerHTML = `
                             <div style="margin-top: 20px; color: #999; font-size: 12px; line-height: 1.6; text-align: center;">
                                 感谢你对柑橘音乐的热爱。<br>虽然本次初试未能更进一步，但你的作品我们都已认真聆听。<br>期待在下一个音乐现场与你重逢。🍊
                             </div>`;
-                        followUpBox.style.display = 'block';
                     }
                 } else {
                     resBox.style.display = 'none';
                     errBox.style.display = 'block';
                 }
-            } catch (e) {
-                alert("网络繁忙，请稍后再试");
-            } finally {
-                btn.innerText = "立即查询";
-            }
+            } catch (e) { alert("网络异常，请稍后再试"); }
+            finally { btn.innerText = "立即查询"; }
         }
+
+        /* --- 摸底测试逻辑 (20抽10) --- */
+        const pool = [
+            { q: "在数字音乐制作中，DAW 的含义是？", o: ["Digital Audio Workstation", "Digital Audio Web", "Dynamic Audio Work", "Digital Arrangement Work"], a: 0 },
+            { q: "下列哪一个软件属于常见的 DAW？", o: ["FL Studio", "Photoshop", "Blender", "Premiere Pro"], a: 0 },
+            { q: "MIDI 文件的主要特点是？", o: ["只包含音频波形", "记录演奏信息而不是声音", "只能播放鼓", "只能在钢琴上使用"], a: 1 },
+            { q: "在音乐制作中，BPM 指的是？", o: ["音量大小", "每分钟节拍数", "音频采样率", "音轨数量"], a: 1 },
+            { q: "EQ 的主要作用是？", o: ["改变节奏", "调整音色频率", "增加混响", "提高音量"], a: 1 },
+            { q: "Compressor（压缩器）的主要作用是？", o: ["调整音高", "控制动态范围", "添加回声", "改变节拍"], a: 1 },
+            { q: "下列哪个频段通常对应“低频”？", o: ["20–250 Hz", "500–1000 Hz", "2k–5k Hz", "10k Hz 以上"], a: 0 },
+            { q: "在混音中，“Pan”通常指？", o: ["音量", "声像位置", "节奏", "音高"], a: 1 },
+            { q: "下列哪一种是常见音频文件格式？", o: ["WAV", "DOCX", "PPT", "XLS"], a: 0 },
+            { q: "采样率 44.1kHz 表示？", o: ["每秒采样 44100 次", "每秒采样 441 次", "每分钟采样 44100 次", "每秒 44 次"], a: 0 },
+            { q: "在电子音乐制作中，Loop 指的是？", o: ["单次演奏", "可循环播放的片段", "音量自动化", "乐器名称"], a: 1 },
+            { q: "Reverb（混响）主要用于？", o: ["模拟空间环境", "提高音高", "减少噪声", "改变节奏"], a: 0 },
+            { q: "常见的电子音乐节拍是？", o: ["2/4", "3/4", "4/4", "5/8"], a: 2 },
+            { q: "Synthesizer（合成器）的作用是？", o: ["录制人声", "合成声音", "调整音量", "剪辑视频"], a: 1 },
+            { q: "在 DAW 中，Track 指的是？", o: ["音轨", "鼓组", "歌曲名称", "音符"], a: 0 },
+            { q: "Sidechain 压缩常见于？", o: ["古典音乐", "EDM", "民乐", "合唱"], a: 1 },
+            { q: "Automation 指的是？", o: ["自动编曲", "参数随时间变化控制", "自动作曲", "自动录音"], a: 1 },
+            { q: "在混音中，人声通常主要位于？", o: ["中间声像", "左侧", "右侧", "随机"], a: 0 },
+            { q: "音频剪辑中，“Fade in”指的是？", o: ["声音逐渐变强", "声音突然变大", "声音逐渐变弱", "声音反向"], a: 0 },
+            { q: "Mastering 的主要目标是？", o: ["写旋律", "调整整体音质与响度", "编写歌词", "录制乐器"], a: 1 }
+        ];
+
+        let quizSet = [];
+        let currentIdx = 0;
+        let score = 0;
+        let selected = null;
+
+        function initQuiz() {
+            quizSet = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
+            renderQ();
+        }
+
+        function renderQ() {
+            const q = quizSet[currentIdx];
+            document.getElementById('question-area').innerHTML = `
+                <p style="font-weight: 600; margin-bottom: 20px;">${q.q}</p>
+                ${q.o.map((opt, i) => `<div class="quiz-option" onclick="selectOpt(${i}, this)">${opt}</div>`).join('')}
+            `;
+            document.getElementById('q-number').innerText = `Question ${currentIdx + 1} / 10`;
+            document.getElementById('p-bar').style.width = `${(currentIdx / 10) * 100}%`;
+            document.getElementById('next-btn').innerText = currentIdx === 9 ? "完成" : "下一题";
+        }
+
+        function selectOpt(idx, el) {
+            selected = idx;
+            document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function nextQuestion() {
+            if(selected === null) { alert("请选择一个答案"); return; }
+            if(selected === quizSet[currentIdx].a) score += 10;
+            currentIdx++;
+            selected = null;
+            if(currentIdx < 10) renderQ(); else showQuizResult();
+        }
+
+        function showQuizResult() {
+            document.getElementById('quiz-box').style.display = 'none';
+            document.getElementById('p-bar').style.width = '100%';
+            const r = document.getElementById('quiz-result');
+            r.style.display = 'block';
+            document.getElementById('res-score').innerText = score;
+            let ev = "";
+            if(score >= 90) ev = "🔥 <b>天选制作人！</b><br>你对技术名词的掌握极其精准，复试 3307 见！";
+            else if(score >= 60) ev = "🍊 <b>合格的柑橘新血！</b><br>基础扎实，复试前建议再巩固一下信号流逻辑。";
+            else ev = "🎸 <b>音乐爱好者！</b><br>你的热情满分，但技术细节还需打磨。建议多关注公众号科普。";
+            document.getElementById('res-eval').innerHTML = ev;
+            if(score >= 80) confetti({ particleCount: 80, spread: 50 });
+        }
+
+        initQuiz();
     </script>
 </body>
 </html>
