@@ -189,7 +189,10 @@
                     resBox.style.display = 'block';
                     errBox.style.display = 'none';
 
-                    if (result.status.includes("通过") && !result.status.includes("不")) {
+                    // --- 核心修复：精准匹配状态文字 ---
+                    const finalStatus = result.status.trim();
+
+                    if (finalStatus === "通过") {
                         statusEl.style.color = "#28a745"; 
                         statusEl.style.fontWeight = "bold";
                         
@@ -214,13 +217,14 @@
                                     <ul style="padding-left: 18px; margin-bottom: 10px;">
                                         <li>时长120分钟。严禁携带手机、翻译机及任何 AI 辅助工具。</li>
                                         <li>必备：本人有效身份证件、黑色中性笔、直尺（含绘图题）。</li>
-                                        <li><b>诚信准则：</b>对技术诚信零容忍。</li>
+                                        <li><b>诚信准则：</b>对技术诚信零容忍。一旦发现 AI 辅助痕迹或雷同卷，将立即取消成绩。</li>
                                     </ul>
                                     <p style="font-style: italic; color: #666;">建议提前复习声音工程、合成器相关知识。期待你的表现！</p>
                                 </div>
                             </div>`;
                         followUpBox.style.display = 'block';
                     } else {
+                        // 只要不满足“通过”，统统显示鼓励奖
                         statusEl.style.color = "#888888";
                         statusEl.style.fontWeight = "normal";
                         followUpBox.innerHTML = `
@@ -234,7 +238,7 @@
                     errBox.style.display = 'block';
                 }
             } catch (e) {
-                alert("查询出错，请稍后再试");
+                alert("网络繁忙，请稍后再试");
             } finally {
                 btn.innerText = "立即查询";
             }
