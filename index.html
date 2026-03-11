@@ -288,8 +288,8 @@
             r.style.display = 'block';
             document.getElementById('res-score').innerText = score;
             let ev = "";
-            if(score >= 90) ev = "🔥 <b>天选制作人！</b><br>你对技术名词的掌握极其精准，复试 3307 见！";
-            else if(score >= 60) ev = "🍊 <b>合格的柑橘新血！</b><br>基础扎实，复试前建议再巩固一下信号流逻辑。";
+            if(score >= 90) ev = "🔥 <b>天选制作人！</b><br>你对技术名词的掌握极其精准，有很大的可能通过初试哦！";
+            else if(score >= 60) ev = "🍊 <b>合格的柑橘新血！</b><br>基础扎实，初试前建议再巩固一下基本的知识。";
             else ev = "🎸 <b>音乐爱好者！</b><br>你的热情满分，但技术细节还需打磨。建议多关注公众号科普。";
             document.getElementById('res-eval').innerHTML = ev;
             if(score >= 80) confetti({ particleCount: 80, spread: 50 });
