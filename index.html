@@ -185,7 +185,7 @@
                     const statusEl = document.getElementById('q_status');
                     statusEl.innerText = result.status;
 
-                    if (result.status.includes("通过")) {
+                    if (result.status.includes("通过") && !result.status.includes("不")) {
                         statusEl.style.color = "#28a745"; 
                         statusEl.style.fontWeight = "bold";
                         
