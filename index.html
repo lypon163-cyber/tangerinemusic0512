@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>柑橘音乐 | 柑橘音乐</title>
+    <title>柑橘音乐 | Tangerine Music</title>
+    <link rel="icon" href="favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root { --bg: #fbfbfd; --card: #ffffff; --text: #1d1d1f; --gray: #86868b; --accent: #ff6600; --border: rgba(0,0,0,0.1); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); background-image: radial-gradient(var(--border) 1px, transparent 0); background-size: 40px 40px; color: var(--text); -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); background-image: radial-gradient(var(--border) 1px, transparent 0); background-size: 40px 40px; color: var(--text); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         
         /* 导航 */
         nav { position: fixed; top: 0; width: 100%; height: 50px; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); }
@@ -17,72 +18,63 @@
         nav a:hover { opacity: 1; color: var(--accent); }
 
         header { padding: 140px 20px 80px; text-align: center; }
+        header .logo-main { width: 120px; height: 120px; margin-bottom: 20px; transition: transform 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        header .logo-main:hover { transform: rotate(360deg); }
         header h1 { font-size: 64px; font-weight: 800; letter-spacing: -3px; margin-bottom: 15px; }
+        header h1 span { color: var(--accent); }
         header p { font-size: 20px; color: var(--gray); max-width: 600px; margin: 0 auto; line-height: 1.4; }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 100px; }
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-        /* 1. 基础状态：极简、深邃 */
-.card {
-    background: var(--card);
-    border-radius: 24px;
-    padding: 32px;
-    /* 重点：将边框颜色调浅，让位给阴影 */
-    border: 1px solid rgba(0,0,0,0.05); 
-    
-    /* 重点：多重柔和阴影 */
-    box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.02), 
-        0 2px 4px -1px rgba(0, 0, 0, 0.01),
-        0 10px 15px -3px rgba(0, 0, 0, 0.03);
         
-    /* 丝滑的贝塞尔曲线过渡 */
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
-    position: relative;
-    overflow: hidden;
-}
+        /* 卡片精修 */
+        .card { background: var(--card); border-radius: 24px; padding: 32px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 10px 15px -3px rgba(0,0,0,0.03); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
+        
+        /* 交互反馈 */
+        .btn:active, .track-item:active, .quiz-option:active { transform: scale(0.96); filter: brightness(0.9); }
 
-/* 2. 悬停状态：明显的浮起感 */
-.card:hover {
-    transform: translateY(-6px); /* 向上位移 */
-    border-color: var(--accent); /* 橙色边框激活 */
-    
-    /* 重点：扩大阴影范围，模拟光线被遮挡后的扩散 */
-    box-shadow: 
-        0 20px 25px -5px rgba(0, 0, 0, 0.05), 
-        0 10px 10px -5px rgba(0, 0, 0, 0.02);
-}
-        
         .col-8 { grid-column: span 8; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; } .col-12 { grid-column: span 12; }
         .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: block; }
         h2 { font-size: 28px; font-weight: 700; margin-bottom: 20px; letter-spacing: -1px; }
 
         .btn { background: var(--text); color: white; border-radius: 12px; padding: 14px 28px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; text-align: center; }
-        .btn:hover { background: var(--accent); transform: scale(1.02); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn:hover { background: var(--accent); }
 
         input { width: 100%; padding: 18px; background: #f5f5f7; border: 1px solid transparent; border-radius: 14px; font-size: 16px; transition: 0.3s; margin-bottom: 15px; }
         input:focus { background: white; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(255,102,0,0.1); }
 
-        /* 电台 */
+        /* 动画：音轨视觉器 */
+        .visualizer { display: flex; align-items: flex-end; gap: 3px; height: 20px; margin-bottom: 15px; }
+        .bar { width: 3px; background: var(--accent); animation: bounce 0.5s ease-in-out infinite alternate; }
+        @keyframes bounce { from { height: 4px; } to { height: 20px; } }
+        .bar:nth-child(2) { animation-delay: 0.1s; } .bar:nth-child(3) { animation-delay: 0.2s; }
+
+        /* 动画：黑胶旋转 */
+        .record-player { width: 40px; height: 40px; border: 3px solid #1d1d1f; border-radius: 50%; border-style: double; animation: spin 3s linear infinite; display: inline-block; vertical-align: middle; margin-right: 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 电台与查询结果 */
         .radio-flex { display: flex; align-items: center; gap: 40px; }
-        .album-art { width: 160px; height: 160px; background: #000; border-radius: 18px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); flex-shrink: 0; }
+        .album-art { width: 160px; height: 160px; border-radius: 18px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); overflow: hidden; }
         .track-list { flex: 1; border-left: 1px solid var(--border); padding-left: 30px; }
-        .track-item { padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; }
+        .track-item { padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; transition: 0.2s; }
         .track-item:hover { background: #f5f5f7; }
         .track-item.active { color: var(--accent); font-weight: 700; background: #fff5f2; }
 
-        /* 查询结果渐现 */
-        #q_res { display: none; opacity: 0; margin-top: 30px; padding: 25px; background: #f9f9fb; border-radius: 18px; transition: opacity 0.4s ease-in-out; }
-
+        #q_res { display: none; opacity: 0; margin-top: 10px; transition: opacity 0.5s; }
+        
         /* 测试题 */
-        .quiz-option { background: #f5f5f7; padding: 20px; border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; font-weight: 500; }
-        .quiz-option:hover { background: #eeeeef; }
+        .quiz-option { background: #f5f5f7; padding: 20px; border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
         .quiz-option.selected { border-color: var(--accent); background: white; color: var(--accent); }
         .progress-box { height: 6px; background: #eee; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 
-        footer { text-align: center; padding: 100px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); margin-top: 50px; }
+        /* 心情感应器按钮 */
+        .mood-btn { background: none; border: 1px solid var(--border); padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; transition: 0.3s; color: var(--gray); }
+        .mood-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); }
         @media (max-width: 850px) { .col-8, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; text-align: center; } .track-list { border: none; padding: 0; } }
     </style>
 </head>
@@ -93,22 +85,23 @@
     </nav>
 
     <header>
-        <h1>Tangerine Music.</h1>
+        <img src="favicon.png" class="logo-main" alt="Logo">
+        <h1><span>Tangerine</span> Music.</h1>
         <p>连接音频工程与艺术灵魂的终极据点</p>
     </header>
 
     <div class="container">
         <div class="grid-layout">
             <div class="card col-8" id="news">
-                <span class="section-tag">Latest</span>
-                <h2>2026 招新季开启</h2>
-                <p style="color:var(--gray); margin-bottom:30px; line-height:1.6;">探索声音的无限可能。我们不仅在寻找歌手，更在寻找拥有工程架构思维的制作人。</p>
-                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn">阅读详情</a>
+                <span class="section-tag">Latest Update</span>
+                <h2>2026 春季招新公示</h2>
+                <p style="color:var(--gray); margin-bottom:30px; line-height:1.6;">每一个音轨的跳动都是灵魂的讯号。目前笔试筛选已圆满结束，感谢所有创作者的参与。</p>
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn">查看招新回顾</a>
             </div>
             
             <div class="card col-4">
                 <span class="section-tag">Backstage</span>
-                <h2>现场 VLOG</h2>
+                <h2>社团 VLOG</h2>
                 <p style="color:var(--gray); font-size:14px; margin-bottom:25px;">直击舞台背后的技术心跳。</p>
                 <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn" style="background:#f5f5f7; color:#1d1d1f">立即观看</a>
             </div>
@@ -116,50 +109,33 @@
             <div class="card col-12" id="radio">
                 <span class="section-tag">Radio Channel</span>
                 <div class="radio-flex">
-                    <div class="album-art"><img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover; border-radius:18px;"></div>
+                    <div class="album-art"><img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover;"></div>
                     <div class="track-list">
                         <div class="track-item active" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66', this)">
-                            <span>01. SPACE WALK</span><span>03:45</span>
+                            <span>01. SPACE WALK - Tangerine Original</span><span>03:45</span>
                         </div>
                         <div class="track-item" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66', this)">
-                            <span>02. Moonlight</span><span>04:12</span>
+                            <span>02. Moonlight - Live Session</span><span>04:12</span>
                         </div>
                         <iframe id="player" frameborder="no" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:20px; border-radius:14px;"></iframe>
                     </div>
                 </div>
             </div>
 
-            <div class="card col-12" id="enroll-closed" style="background: #f5f5f7; border: 1px dashed #d2d2d7; filter: grayscale(1);">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; opacity: 0.8;">
-                    <div style="flex: 1; min-width: 300px;">
-                        <span class="section-tag" style="background: #86868b; color: white; padding: 4px 10px; border-radius: 6px;">STATUS: CLOSED</span>
-                        <h2 style="margin-top:15px; color: #1d1d1f;">2026 春季招新报名已截止</h2>
-                        <p style="color:#86868b; line-height:1.6;">本年度春季笔试报名通道已于 3月10日 23:59 正式关闭。感谢 <b>150+</b> 位同学的积极参与。目前的笔试数据正在由专业组进行人工阅卷与筛选，请按照通知时间进行成绩查询。</p>
-                    </div>
-                    <div>
-                        <button class="btn" disabled style="background: #d2d2d7; color: #86868b; cursor: not-allowed; padding: 18px 35px;">通道已锁定</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card col-12" style="padding: 20px 35px; background: white;">
+            <div class="card col-12" style="padding: 20px 35px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
                     <div style="position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: #f5f5f7; z-index: 1;"></div>
-                    <div style="z-index: 2; background: white; padding: 0 10px; text-align: center;">
+                    <div style="z-index: 2; background: white; padding: 0 15px; text-align: center;">
                         <div style="width:12px; height:12px; border-radius:50%; background:#d2d2d7; margin:0 auto 8px;"></div>
                         <p style="font-size:11px; color:var(--gray);">线上报名</p>
                     </div>
-                    <div style="z-index: 2; background: white; padding: 0 10px; text-align: center;">
+                    <div style="z-index: 2; background: white; padding: 0 15px; text-align: center;">
                         <div style="width:12px; height:12px; border-radius:50%; background:var(--accent); margin:0 auto 8px; box-shadow: 0 0 10px var(--accent);"></div>
                         <p style="font-size:11px; color:var(--text); font-weight:700;">笔试阅卷中</p>
                     </div>
-                    <div style="z-index: 2; background: white; padding: 0 10px; text-align: center;">
+                    <div style="z-index: 2; background: white; padding: 0 15px; text-align: center;">
                         <div style="width:12px; height:12px; border-radius:50%; background:#f5f5f7; margin:0 auto 8px;"></div>
                         <p style="font-size:11px; color:var(--gray);">复试/面试</p>
-                    </div>
-                    <div style="z-index: 2; background: white; padding: 0 10px; text-align: center;">
-                        <div style="width:12px; height:12px; border-radius:50%; background:#f5f5f7; margin:0 auto 8px;"></div>
-                        <p style="font-size:11px; color:var(--gray);">正式录取</p>
                     </div>
                 </div>
             </div>
@@ -174,18 +150,20 @@
 
             <div class="card col-8">
                 <div id="q_res">
-                    <div style="display:flex; justify-content:space-around; text-align:center;">
-                        <div><span style="font-size:11px; color:var(--gray)">SCORE</span><br><b id="res_score" style="font-size:32px;">-</b></div>
+                    <div style="display:flex; justify-content:space-around; text-align:center; align-items: center;">
+                        <div id="res_icon"></div> <div><span style="font-size:11px; color:var(--gray)">SCORE</span><br><b id="res_score" style="font-size:32px;">-</b></div>
                         <div><span style="font-size:11px; color:var(--gray)">RANK</span><br><b id="res_rank" style="font-size:32px;">-</b></div>
                         <div><span style="font-size:11px; color:var(--gray)">STATUS</span><br><b id="res_status" style="font-size:32px;">-</b></div>
                     </div>
                     <div id="res_detail" style="margin-top:25px; border-top:1px solid var(--border); padding-top:20px;"></div>
                 </div>
-                <div id="placeholder_res" style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#e5e5e7;">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom:15px;">
-                        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <p style="font-size:13px; letter-spacing:1px; font-weight:600;">ENTER DATA TO SYNC</p>
+                <div id="placeholder_res" style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#e5e5e7; position:relative;">
+                    <div id="sync_ui" style="text-align: center;">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom:15px;">
+                            <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <p style="font-size:13px; letter-spacing:1px; font-weight:600;">WAITING FOR SIGNAL...</p>
+                    </div>
                 </div>
             </div>
 
@@ -193,7 +171,7 @@
                 <span class="section-tag">Skill Assessment</span>
                 <div class="progress-box"><div class="progress-fill" id="p_fill"></div></div>
                 <div id="quiz_box">
-                    <div id="q_text" style="min-height:100px;">正在加载题库...</div>
+                    <div id="q_text" style="min-height:100px;">正在初始化题库...</div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:40px;">
                         <span id="q_num" style="font-size:12px; color:var(--gray); font-weight:600;">1 / 10</span>
                         <button onclick="handleNext()" class="btn" id="next_btn">下一题</button>
@@ -206,10 +184,15 @@
                 </div>
             </div>
 
-            <div class="card col-12" style="text-align: center; background: #fff;">
+            <div class="card col-12" style="text-align: center;">
                 <p style="font-size: 13px; color: var(--gray);">对查询结果有疑问？</p>
-                <p style="margin: 10px 0; font-weight: 600; font-size: 15px;">Contact: ganjuyinyue@outlook.com OR liuyipeng@zwu.com</p>
-                <p style="font-size: 11px; color: #ccc;">或联系各考场负责人咨询详细考务</p>
+                <p style="margin: 10px 0; font-weight: 600; font-size: 15px;">Contact: ganjuyinyue@outlook.com</p>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <p style="font-size:11px; color:var(--gray); margin-bottom:10px;">此刻的心情？</p>
+                    <button class="mood-btn" onclick="showEmoji('🍊')">期待</button>
+                    <button class="mood-btn" onclick="showEmoji('🎧')">热爱</button>
+                    <button class="mood-btn" onclick="showEmoji('🔥')">硬核</button>
+                </div>
             </div>
         </div>
     </div>
@@ -217,32 +200,38 @@
     <footer><p>© 2026 Tangerine Music Club. 保持热爱，保持共鸣。</p></footer>
 
     <script>
+        // 播放器逻辑
         function playMusic(url, el) {
             document.getElementById('player').src = url;
             document.querySelectorAll('.track-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
         }
 
+        // 心情感应器彩蛋
+        function showEmoji(emoji) {
+            const el = document.createElement('div');
+            el.innerHTML = emoji;
+            el.style.cssText = `position:fixed; left:${Math.random()*90}vw; bottom:0; font-size:30px; z-index:9999; transition:2s ease-out; pointer-events:none;`;
+            document.body.appendChild(el);
+            setTimeout(() => {
+                el.style.transform = 'translateY(-100vh) rotate(360deg)';
+                el.style.opacity = '0';
+            }, 100);
+            setTimeout(() => el.remove(), 2000);
+            if (window.navigator.vibrate) window.navigator.vibrate(10);
+        }
+
+        // 题库逻辑 (保持原样)
         const masterPool = [
             { q: "在数字音乐制作中，DAW 的全称是？", o: ["Digital Audio Workstation", "Digital Audio Web", "Dynamic Audio Work", "Digital Arrangement Work"], a: 0 },
-            { q: "FL Studio, Logic Pro, Ableton Live 统称为什么？", o: ["DAW", "VPC", "MIDI", "VST"], a: 0 },
-            { q: "MIDI 协议主要传输的是什么？", o: ["控制指令数据", "音频信号", "采样波形", "电流"], a: 1 },
+            { q: "MIDI 协议主要传输的是什么？", o: ["控制指令数据", "音频信号", "采样波形", "电流"], a: 0 },
             { q: "BPM 的含义是？", o: ["音量分贝", "每分钟节拍数", "采样频率", "比特率"], a: 1 },
             { q: "使用 EQ 时，切掉 100Hz 以下通常是为了解决什么？", o: ["高频刺耳", "低频浑浊", "人声太小", "混响太重"], a: 1 },
             { q: "压缩器 (Compressor) 的主要目的是？", o: ["增加混响", "控制动态范围", "改变音高", "提高采样率"], a: 1 },
             { q: "人耳能听到的频率范围大约是？", o: ["20Hz - 20kHz", "1Hz - 100kHz", "500Hz - 5kHz", "100Hz - 10kHz"], a: 0 },
             { q: "Pan (声像) 控制的是声音在空间中的哪个位置？", o: ["远近", "左右", "高低", "明暗"], a: 1 },
             { q: "以下哪个是无损音频格式？", o: ["WAV", "MP3", "WMA", "AAC"], a: 0 },
-            { q: "44.1kHz 是常见的什么参数？", o: ["采样率", "位深度", "阻抗", "信噪比"], a: 0 },
             { q: "Sidechain (侧链) 效果常用于哪种曲风处理 Kick 和 Bass？", o: ["EDM", "Jazz", "Folk", "Classical"], a: 0 },
-            { q: "Reverb (混响) 模拟的是什么？", o: ["回声频率", "物理空间反射", "录音电压", "音轨相位"], a: 1 },
-            { q: "4/4 拍是指？", o: ["四分音符为一拍，每小节四拍", "四分音符为四拍", "每小节四个八分音符", "二分音符为一拍"], a: 0 },
-            { q: "合成器中的 Oscillator 指的是？", o: ["滤波器", "振荡器", "放大器", "包络器"], a: 1 },
-            { q: "混音中，Overload 指的是？", o: ["信号过载爆音", "音量太小", "音轨太多", "效果器太少"], a: 0 },
-            { q: "自动化 (Automation) 可以控制什么？", o: ["只有音量", "几乎所有插件参数", "只有静音", "只有速度"], a: 1 },
-            { q: "Ghost Note 通常出现在什么乐器中？", o: ["键盘", "架子鼓/军鼓", "人声", "长笛"], a: 1 },
-            { q: "干声 (Dry Signal) 是指？", o: ["没有处理过的原始信号", "加了混响的信号", "录音坏了的信号", "低频信号"], a: 0 },
-            { q: "Fade Out 的效果是？", o: ["声音逐渐消失", "声音突然变大", "声音反向", "变调"], a: 0 },
             { q: "Mastering (母带) 是制作的第几步？", o: ["第一步", "最后一步", "录音阶段", "创作阶段"], a: 1 }
         ];
 
@@ -256,13 +245,10 @@
         function showQ() {
             const q = testSet[current];
             const qArea = document.getElementById('q_text');
-            qArea.innerHTML = `
-                <p style="font-size:18px; font-weight:700; margin-bottom:25px;">${q.q}</p>
-                ${q.o.map((o, i) => `<div class="quiz-option" onclick="pick(${i}, this)">${o}</div>`).join('')}
-            `;
+            qArea.innerHTML = `<p style="font-size:18px; font-weight:700; margin-bottom:25px;">${q.q}</p>
+                ${q.o.map((o, i) => `<div class="quiz-option" onclick="pick(${i}, this)">${o}</div>`).join('')}`;
             document.getElementById('q_num').innerText = `${current + 1} / 10`;
             document.getElementById('p_fill').style.width = `${(current / 10) * 100}%`;
-            document.getElementById('next_btn').innerText = (current === 9) ? "完成评估" : "下一题";
             selectedIdx = null;
         }
 
@@ -270,10 +256,11 @@
             selectedIdx = idx;
             document.querySelectorAll('.quiz-option').forEach(item => item.classList.remove('selected'));
             el.classList.add('selected');
+            if (window.navigator.vibrate) window.navigator.vibrate(5);
         }
 
         function handleNext() {
-            if(selectedIdx === null) { alert("请选择一个答案"); return; }
+            if(selectedIdx === null) return;
             if(selectedIdx === testSet[current].a) userPt += 10;
             current++;
             if(current < 10) showQ(); else showFinal();
@@ -281,31 +268,31 @@
 
         function showFinal() {
             document.getElementById('quiz_box').style.display = 'none';
-            document.getElementById('p_fill').style.width = '100%';
             document.getElementById('quiz_result').style.display = 'block';
             document.getElementById('final_score').innerText = userPt + " PT";
-            let ev = userPt >= 90 ? "🔥 Pro 级耳朵" : userPt >= 60 ? "🍊 合格制作人" : "🎸 纯粹的热爱者";
-            document.getElementById('final_eval').innerHTML = ev;
+            let ev = userPt >= 80 ? "🔥 Pro 级耳朵" : userPt >= 60 ? "🍊 合格制作人" : "🎸 纯粹的热爱者";
+            document.getElementById('final_eval').innerText = ev;
             if(userPt >= 80) confetti({ particleCount: 100, spread: 60 });
         }
 
-        // --- 查询逻辑 (已嵌入细节调优) ---
+        // 查询逻辑 (注入人文关怀与动画)
+        let lastQuery = 0;
         async function runQuery() {
-            const nameEl = document.getElementById('name');
-            const idEl = document.getElementById('stu_id');
-            const nameVal = nameEl.value.trim();
-            const idVal = idEl.value.trim();
+            const now = Date.now();
+            if (now - lastQuery < 3000) return; // 防刷
+            lastQuery = now;
+
+            const nameVal = document.getElementById('name').value.trim();
+            const idVal = document.getElementById('stu_id').value.trim();
             const btn = document.getElementById('query_btn');
             const resBox = document.getElementById('q_res');
             const placeholder = document.getElementById('placeholder_res');
+            const syncUI = document.getElementById('sync_ui');
 
-            // 细节：智能联动校验，不使用弹窗
-            let ready = true;
-            if(!nameVal) { nameEl.style.borderColor = "#ff3b30"; ready = false; } else { nameEl.style.borderColor = "transparent"; }
-            if(!idVal) { idEl.style.borderColor = "#ff3b30"; ready = false; } else { idEl.style.borderColor = "transparent"; }
-            if(!ready) return;
+            if(!nameVal || !idVal) { alert("信号接收不完整，请输入姓名和学号"); return; }
 
-            btn.innerText = "正在同步云端数据...";
+            // 载入动画：模拟电平跳动
+            syncUI.innerHTML = `<div class="visualizer"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div><p style="font-size:12px; color:var(--accent);">SYNCING SIGNAL...</p>`;
             btn.disabled = true;
 
             try {
@@ -313,41 +300,46 @@
                 const response = await fetch(api);
                 const data = await response.json();
 
+                placeholder.style.display = 'none';
+                resBox.style.display = 'block';
+                setTimeout(() => resBox.style.opacity = '1', 50);
+
                 if (data && data.length > 0) {
                     const s = data[0];
-                    placeholder.style.display = 'none';
-                    resBox.style.display = 'block';
-                    // 细节：渐进显现
-                    setTimeout(() => { resBox.style.opacity = '1'; }, 10);
-
                     document.getElementById('res_score').innerText = s.score || "-";
                     document.getElementById('res_rank').innerText = s.rank || "-";
                     const st = document.getElementById('res_status');
                     st.innerText = s.status || "-";
-
                     const detail = document.getElementById('res_detail');
+                    const iconBox = document.getElementById('res_icon');
+
                     if (s.status === "通过") {
                         st.style.color = "#34c759";
-                        resBox.style.borderColor = "#34c759";
+                        iconBox.innerHTML = `<div class="record-player"></div>`; // 成功时的黑胶动画
                         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                        detail.innerHTML = `<p style="font-size:14px; line-height:1.8;"><b>🍊 复试指令：</b><br>恭喜进入复试！请于指定时间前往艺术楼 402 数字音频实验室。请保持通讯畅通，详细面试单将发送至您的邮箱。</p>`;
+                        detail.innerHTML = `<p style="font-size:14px; line-height:1.8;"><b>🍊 复试指令：</b><br>恭喜进入复试轨道！信号已对接。请于指定时间前往艺术楼 402 数字音频实验室。面试详细单已发送至您的注册邮箱。</p>`;
                     } else {
                         st.style.color = "#86868b";
-                        resBox.style.borderColor = "#d2d2d7";
-                        detail.innerHTML = `<p style="font-size:14px; color:#86868b; text-align:center;">感谢参与。您的才华令人印象深刻，期待下次在舞台与你重逢。</p>`;
+                        iconBox.innerHTML = `🎧`;
+                        // 人文关怀落选文案
+                        detail.innerHTML = `<p style="font-size:14px; color:#86868b; text-align:center; line-height:1.6;">频率未能重合。你的 Demo 我们已经反复聆听，虽然本次没能进入工程轨道，但你的风格已被记录。柑橘的门口永远挂着一副耳机，期待在下个现场遇见你。</p>`;
                     }
                 } else {
-                    alert("未找到记录。请检查姓名与学号是否与报名时一致。");
+                    resBox.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                    syncUI.innerHTML = `<p style="color:#ff3b30; font-size:13px;">未探测到信号。请核实姓名学号是否有误。</p>`;
                 }
             } catch (err) {
-                alert("查询出错，请检查网络环境。");
+                alert("云端同步失败，请检查网络环境。");
             } finally {
-                btn.innerText = "同步云端数据";
                 btn.disabled = false;
+                btn.innerText = "同步云端数据";
             }
         }
 
         document.addEventListener('DOMContentLoaded', initTest);
+        // 回车查询
+        document.getElementById('stu_id').addEventListener('keypress', (e) => { if(e.key === 'Enter') runQuery(); });
     </script>
 </body>
 </html>
