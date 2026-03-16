@@ -183,23 +183,38 @@
                     <button onclick="location.reload()" class="btn" style="background:#f5f5f7; color:#1d1d1f">换一组题挑战</button>
                 </div>
             </div>
-            <div class="card col-12" id="tangerine-lab" style="background: #0a0a0a; color: #fff; padding: 40px; border-radius: 24px; margin-top: 20px;">
+            <div class="card col-12" id="tangerine-lab" style="background: #111; color: #fff; padding: 40px; border-radius: 24px; margin-top: 20px; border: 1px solid #222;">
     
     <style>
-        .n-grid-container { overflow-x: auto; padding-bottom: 20px; cursor: crosshair; }
-        .n-grid { display: grid; grid-template-columns: repeat(32, 1fr); gap: 4px; min-width: 900px; }
-        .n-step { width: 100%; height: 35px; background: #1a1a1a; border-radius: 2px; cursor: pointer; transition: 0.1s; }
-        .n-step.active { background: #ff8c00; box-shadow: 0 0 10px #ff8c00; }
-        .n-step.playing { border: 1px solid #fff; filter: brightness(1.5); transform: scaleY(1.1); }
-        .n-step:nth-child(8n+1) { background: #252525; } /* 节拍辅助线 */
-        .lab-btn { background: none; border: 1px solid #ff8c00; color: #ff8c00; padding: 12px 60px; cursor: pointer; border-radius: 4px; letter-spacing: 4px; font-weight: bold; transition: 0.3s; }
+        .n-grid-container { overflow-x: auto; padding-bottom: 20px; }
+        .n-grid { display: grid; grid-template-columns: repeat(32, 1fr); gap: 2px; min-width: 900px; background: #000; padding: 2px; border-radius: 4px; }
+        
+        /* 基础格子：参考 FL Studio 的深色块 */
+        .n-step { width: 100%; height: 38px; background: #2a2a2e; border-radius: 1px; cursor: pointer; transition: 0.1s; }
+        
+        /* 每 4 步交替一次颜色，模拟 FL 的小节感 (1-4深, 5-8浅) */
+        .n-step:nth-child(32n+5), .n-step:nth-child(32n+6), .n-step:nth-child(32n+7), .n-step:nth-child(32n+8),
+        .n-step:nth-child(32n+13), .n-step:nth-child(32n+14), .n-step:nth-child(32n+15), .n-step:nth-child(32n+16),
+        .n-step:nth-child(32n+21), .n-step:nth-child(32n+22), .n-step:nth-child(32n+23), .n-step:nth-child(32n+24),
+        .n-step:nth-child(32n+29), .n-step:nth-child(32n+30), .n-step:nth-child(32n+31), .n-step:nth-child(32n+32) {
+            background: #3a3a3f;
+        }
+
+        /* 选中状态：柑橘橙 */
+        .n-step.active { background: #ff8c00 !important; box-shadow: inset 0 0 15px rgba(255,140,0,0.5); }
+        
+        /* 播放指针：高亮白 */
+        .n-step.playing { filter: brightness(1.8); position: relative; }
+        .n-step.playing::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border: 1.5px solid #fff; border-radius: 1px; }
+
+        .lab-btn { background: none; border: 1px solid #ff8c00; color: #ff8c00; padding: 12px 60px; cursor: pointer; border-radius: 4px; letter-spacing: 4px; font-weight: bold; transition: 0.3s; text-transform: uppercase; font-size: 12px; }
         .lab-btn:hover { background: #ff8c00; color: #fff; }
     </style>
 
-    <div style="text-align: center; margin-bottom: 30px;">
-        <span style="font-size: 10px; color: #ff8c00; letter-spacing: 2px; font-weight: 800; text-transform: uppercase;">Native Synthesizer</span>
+    <div style="text-align: center; margin-bottom: 25px;">
+        <span style="font-size: 10px; color: #ff8c00; letter-spacing: 2px; font-weight: 800;">STEP SEQUENCER</span>
         <h3 style="letter-spacing: 4px; font-weight: 200; color: #fff; margin: 5px 0 0 0;">TANGERINE NATIVE 32</h3>
-        <p style="font-size: 9px; opacity: 0.4; letter-spacing: 2px;">SYNTHETIC DRUM MACHINE // NO SAMPLES REQUIRED</p>
+        <p style="font-size: 9px; opacity: 0.4; letter-spacing: 2px; margin-top: 5px;">128 BPM // 4/4 HOUSE BEAT</p>
     </div>
 
     <div class="n-grid-container">
@@ -208,10 +223,96 @@
 
     <div style="text-align: center; margin-top: 20px;">
         <button id="native-play-btn" class="lab-btn">START ENGINE</button>
-        <div style="margin-top: 15px; display: flex; justify-content: center; gap: 20px; font-size: 10px; color: #444; letter-spacing: 1px;">
-            <span>R1: KICK</span><span>R2: SNARE</span><span>R3: HI-HAT</span><span>R4: BEEP</span>
+        <div style="margin-top: 15px; display: flex; justify-content: center; gap: 20px; font-size: 10px; color: #555; letter-spacing: 1px; font-weight: bold;">
+            <span>KICK</span><span>SNARE</span><span>HI-HAT</span><span>PERC</span>
         </div>
     </div>
+
+    <script>
+        (function() {
+            const nCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let nIsPlaying = false;
+            let nStep = 0;
+            let nNextTime = 0;
+            const nBpm = 128; 
+            const nStepTime = (60 / nBpm) / 4;
+
+            const playSynth = (type, time) => {
+                const osc = nCtx.createOscillator();
+                const gain = nCtx.createGain();
+                osc.connect(gain); gain.connect(nCtx.destination);
+                if (type === 0) { // Kick
+                    osc.frequency.setValueAtTime(150, time);
+                    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.4);
+                    gain.gain.setValueAtTime(1, time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.4);
+                    osc.start(time); osc.stop(time + 0.4);
+                } else if (type === 1) { // Snare
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(250, time);
+                    gain.gain.setValueAtTime(0.2, time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+                    osc.start(time); osc.stop(time + 0.15);
+                } else if (type === 2) { // Hi-hat
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(10000, time);
+                    gain.gain.setValueAtTime(0.05, time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+                    osc.start(time); osc.stop(time + 0.05);
+                } else { // Perc
+                    osc.frequency.setValueAtTime(600, time);
+                    gain.gain.setValueAtTime(0.08, time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+                    osc.start(time); osc.stop(time + 0.1);
+                }
+            };
+
+            const nGrid = document.getElementById('native-grid');
+            for (let i = 0; i < 4 * 32; i++) {
+                const div = document.createElement('div');
+                div.className = 'n-step';
+                div.dataset.row = Math.floor(i / 32);
+                div.dataset.col = i % 32;
+                div.onclick = () => {
+                    div.classList.toggle('active');
+                };
+                nGrid.appendChild(div);
+            }
+
+            const nScheduler = () => {
+                while (nNextTime < nCtx.currentTime + 0.1) {
+                    const allSteps = nGrid.querySelectorAll('.n-step');
+                    allSteps.forEach(s => {
+                        const col = parseInt(s.dataset.col);
+                        if (col === (nStep + 31) % 32) s.classList.remove('playing');
+                        if (col === nStep) {
+                            s.classList.add('playing');
+                            if (s.classList.contains('active')) playSynth(parseInt(s.dataset.row), nNextTime);
+                        }
+                    });
+                    nStep = (nStep + 1) % 32;
+                    nNextTime += nStepTime;
+                }
+                if (nIsPlaying) requestAnimationFrame(nScheduler);
+            };
+
+            document.getElementById('native-play-btn').onclick = async function() {
+                if (nCtx.state === 'suspended') await nCtx.resume();
+                nIsPlaying = !nIsPlaying;
+                if (nIsPlaying) {
+                    nStep = 0; nNextTime = nCtx.currentTime;
+                    nScheduler();
+                    this.innerText = "STOP ENGINE";
+                    this.style.background = "#ff8c00"; this.style.color = "#fff";
+                } else {
+                    this.innerText = "START ENGINE";
+                    this.style.background = "none"; this.style.color = "#ff8c00";
+                    nGrid.querySelectorAll('.n-step').forEach(s => s.classList.remove('playing'));
+                }
+            };
+        })();
+    </script>
+</div>
 
     <script>
         (function() {
