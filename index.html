@@ -13,13 +13,28 @@
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); background-image: radial-gradient(var(--border) 1px, transparent 0); background-size: 40px 40px; color: var(--text); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         
         /* 导航 */
-        nav { position: fixed; top: 0; width: 100%; height: 50px; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); }
-        nav a { color: var(--text); text-decoration: none; font-size: 11px; font-weight: 600; margin: 0 25px; letter-spacing: 1px; opacity: 0.6; transition: 0.3s; }
-        nav a:hover { opacity: 1; color: var(--accent); }
+        <nav style="position: fixed; top: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; border-bottom: 1px solid var(--border);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="logo.png" alt="Logo" style="height: 35px; width: auto;">
+        <span style="font-weight: 800; font-size: 16px; letter-spacing: 1px;">TANGERINE MUSIC</span>
+    </div>
+    <div style="display: flex;">
+        <a href="#news" style="margin: 0 15px; text-decoration: none; color: var(--text); font-size: 11px; font-weight: 600;">NEWS</a>
+        <a href="#radio" style="margin: 0 15px; text-decoration: none; color: var(--text); font-size: 11px; font-weight: 600;">RADIO</a>
+        <a href="#exam" style="margin: 0 15px; text-decoration: none; color: var(--text); font-size: 11px; font-weight: 600;">EXAM</a>
+        <a href="#tangerine-lab" style="margin: 0 15px; text-decoration: none; color: var(--orange); font-size: 11px; font-weight: 600;">LAB</a>
+    </div>
+</nav>
 
         header { padding: 140px 20px 80px; text-align: center; }
-        header .logo-main { width: 120px; height: 120px; margin-bottom: 20px; transition: transform 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
-        header .logo-main:hover { transform: rotate(360deg); }
+        /* 约在第 21 行 */
+header .logo-main { 
+    width: 120px; 
+    height: 120px; 
+    margin-bottom: 20px; 
+    transition: transform 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); 
+}
+header .logo-main:hover { transform: rotate(360deg); }
         header h1 { font-size: 64px; font-weight: 800; letter-spacing: -3px; margin-bottom: 15px; }
         header h1 span { color: var(--accent); }
         header p { font-size: 20px; color: var(--gray); max-width: 600px; margin: 0 auto; line-height: 1.4; }
@@ -183,50 +198,95 @@
                     <button onclick="location.reload()" class="btn" style="background:#f5f5f7; color:#1d1d1f">换一组题挑战</button>
                 </div>
             </div>
-            <div class="card col-12" id="tangerine-lab" style="background: #111; color: #fff; padding: 40px; border-radius: 24px; margin-top: 20px; border: 1px solid #222;">
-    
+          <div class="card col-12" id="tangerine-lab" style="background: #111; color: #fff; padding: 40px; border-radius: 24px; margin-top: 20px; border: 1px solid #222;">
     <style>
         .n-grid-container { overflow-x: auto; padding-bottom: 20px; }
         .n-grid { display: grid; grid-template-columns: repeat(32, 1fr); gap: 2px; min-width: 900px; background: #000; padding: 2px; border-radius: 4px; }
+        .n-step { width: 100%; height: 38px; background: #2a2a2e; border-radius: 1px; cursor: pointer; }
         
-        /* 基础格子：参考 FL Studio 的深色块 */
-        .n-step { width: 100%; height: 38px; background: #2a2a2e; border-radius: 1px; cursor: pointer; transition: 0.1s; }
-        
-        /* 每 4 步交替一次颜色，模拟 FL 的小节感 (1-4深, 5-8浅) */
+        /* FL Studio 风格：4步一跳的深浅色块 */
         .n-step:nth-child(32n+5), .n-step:nth-child(32n+6), .n-step:nth-child(32n+7), .n-step:nth-child(32n+8),
         .n-step:nth-child(32n+13), .n-step:nth-child(32n+14), .n-step:nth-child(32n+15), .n-step:nth-child(32n+16),
         .n-step:nth-child(32n+21), .n-step:nth-child(32n+22), .n-step:nth-child(32n+23), .n-step:nth-child(32n+24),
-        .n-step:nth-child(32n+29), .n-step:nth-child(32n+30), .n-step:nth-child(32n+31), .n-step:nth-child(32n+32) {
-            background: #3a3a3f;
-        }
+        .n-step:nth-child(32n+29), .n-step:nth-child(32n+30), .n-step:nth-child(32n+31), .n-step:nth-child(32n+32) { background: #3a3a3f; }
 
-        /* 选中状态：柑橘橙 */
         .n-step.active { background: #ff8c00 !important; box-shadow: inset 0 0 15px rgba(255,140,0,0.5); }
-        
-        /* 播放指针：高亮白 */
         .n-step.playing { filter: brightness(1.8); position: relative; }
         .n-step.playing::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border: 1.5px solid #fff; border-radius: 1px; }
-
-        .lab-btn { background: none; border: 1px solid #ff8c00; color: #ff8c00; padding: 12px 60px; cursor: pointer; border-radius: 4px; letter-spacing: 4px; font-weight: bold; transition: 0.3s; text-transform: uppercase; font-size: 12px; }
-        .lab-btn:hover { background: #ff8c00; color: #fff; }
     </style>
 
     <div style="text-align: center; margin-bottom: 25px;">
-        <span style="font-size: 10px; color: #ff8c00; letter-spacing: 2px; font-weight: 800;">STEP SEQUENCER</span>
-        <h3 style="letter-spacing: 4px; font-weight: 200; color: #fff; margin: 5px 0 0 0;">TANGERINE NATIVE 32</h3>
-        <p style="font-size: 9px; opacity: 0.4; letter-spacing: 2px; margin-top: 5px;">128 BPM // 4/4 HOUSE BEAT</p>
+        <h3 style="letter-spacing: 4px; font-weight: 200; color: #fff; margin: 0;">TANGERINE NATIVE 32</h3>
+        <p style="font-size: 9px; opacity: 0.4; letter-spacing: 2px; margin-top: 5px;">128 BPM // HOUSE BEAT</p>
     </div>
 
-    <div class="n-grid-container">
-        <div id="native-grid" class="n-grid"></div>
-    </div>
+    <div class="n-grid-container"><div id="native-grid" class="n-grid"></div></div>
 
     <div style="text-align: center; margin-top: 20px;">
-        <button id="native-play-btn" class="lab-btn">START ENGINE</button>
-        <div style="margin-top: 15px; display: flex; justify-content: center; gap: 20px; font-size: 10px; color: #555; letter-spacing: 1px; font-weight: bold;">
-            <span>KICK</span><span>SNARE</span><span>HI-HAT</span><span>PERC</span>
-        </div>
+        <button id="n-play-btn" style="background:none; border:1px solid #ff8c00; color:#ff8c00; padding:12px 60px; cursor:pointer; border-radius:4px; letter-spacing:4px; font-weight:bold; font-size:12px;">START ENGINE</button>
     </div>
+
+    <script>
+        (function() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            let isPlaying = false, step = 0, nextTime = 0;
+            const bpm = 128, stepTime = (60 / bpm) / 4;
+
+            const play = (type, time) => {
+                const osc = ctx.createOscillator(), g = ctx.createGain();
+                osc.connect(g); g.connect(ctx.destination);
+                if (type === 0) { // Kick
+                    osc.frequency.setValueAtTime(150, time); osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.4);
+                    g.gain.setValueAtTime(1, time); g.gain.exponentialRampToValueAtTime(0.01, time + 0.4);
+                    osc.start(time); osc.stop(time + 0.4);
+                } else if (type === 1) { // Snare
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(250, time);
+                    g.gain.setValueAtTime(0.2, time); g.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+                    osc.start(time); osc.stop(time + 0.15);
+                } else if (type === 2) { // Hi-hat
+                    osc.type = 'square'; osc.frequency.setValueAtTime(10000, time);
+                    g.gain.setValueAtTime(0.05, time); g.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+                    osc.start(time); osc.stop(time + 0.05);
+                } else { // Perc
+                    osc.frequency.setValueAtTime(600, time); g.gain.setValueAtTime(0.08, time);
+                    g.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+                    osc.start(time); osc.stop(time + 0.1);
+                }
+            };
+
+            const grid = document.getElementById('native-grid');
+            for (let i = 0; i < 128; i++) {
+                const d = document.createElement('div'); d.className = 'n-step';
+                d.dataset.row = Math.floor(i / 32); d.dataset.col = i % 32;
+                d.onclick = () => d.classList.toggle('active'); grid.appendChild(d);
+            }
+
+            const run = () => {
+                while (nextTime < ctx.currentTime + 0.1) {
+                    grid.querySelectorAll('.n-step').forEach(s => {
+                        const c = parseInt(s.dataset.col);
+                        if (c === (step + 31) % 32) s.classList.remove('playing');
+                        if (c === step) { s.classList.add('playing'); if (s.classList.contains('active')) play(parseInt(s.dataset.row), nextTime); }
+                    });
+                    step = (step + 1) % 32; nextTime += stepTime;
+                }
+                if (isPlaying) requestAnimationFrame(run);
+            };
+
+            document.getElementById('n-play-btn').onclick = async function() {
+                if (ctx.state === 'suspended') await ctx.resume();
+                isPlaying = !isPlaying;
+                if (isPlaying) { 
+                    step = 0; nextTime = ctx.currentTime; run(); 
+                    this.innerText = "STOP ENGINE"; this.style.background = "#ff8c00"; this.style.color = "#fff";
+                } else { 
+                    this.innerText = "START ENGINE"; this.style.background = "none"; this.style.color = "#ff8c00";
+                    grid.querySelectorAll('.n-step').forEach(s => s.classList.remove('playing'));
+                }
+            };
+        })();
+    </script>
+</div>
 
     <script>
         (function() {
