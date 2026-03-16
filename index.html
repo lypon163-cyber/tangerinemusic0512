@@ -366,5 +366,71 @@
         // 回车查询
         document.getElementById('stu_id').addEventListener('keypress', (e) => { if(e.key === 'Enter') runQuery(); });
     </script>
+    <div id="sequencer" class="card" style="margin-top: 40px; text-align: center;">
+    <h3 style="margin-bottom: 20px; font-weight: 300; letter-spacing: 2px;">TANGERINE BEAT BOX</h3>
+    <div id="grid" style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; max-width: 400px; margin: 0 auto;">
+        </div>
+    <button id="play-btn" style="margin-top: 20px; padding: 10px 30px; border-radius: 20px; border: none; background: #ff8c00; color: white; cursor: pointer;">START BEAT</button>
+</div>
+
+<style>
+    .step { width: 100%; aspect-ratio: 1/1; background: rgba(0,0,0,0.05); border-radius: 4px; cursor: pointer; transition: 0.2s; }
+    .step.active { background: #ff8c00; box-shadow: 0 0 15px #ff8c00; }
+    .step.playing { border: 2px solid #000; }
+</style>
+
+<script>
+    const grid = document.getElementById('grid');
+    const playBtn = document.getElementById('play-btn');
+    let isPlaying = false;
+    let currentStep = 0;
+
+    // 初始化 4x8 网格
+    for (let i = 0; i < 32; i++) {
+        const div = document.createElement('div');
+        div.classList.add('step');
+        div.addEventListener('click', () => div.classList.toggle('active'));
+        grid.appendChild(div);
+    }
+
+    // 极简 Web Audio 发声逻辑
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSound(freq) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    setInterval(() => {
+        if (!isPlaying) return;
+        const steps = document.querySelectorAll('.step');
+        const column = currentStep % 8;
+        
+        steps.forEach((s, i) => {
+            s.classList.remove('playing');
+            if (i % 8 === column) {
+                s.classList.add('playing');
+                if (s.classList.contains('active')) {
+                    // 每一行对应不同频率
+                    const row = Math.floor(i / 8);
+                    playSound([440, 330, 261, 196][row]);
+                }
+            }
+        });
+        currentStep = (currentStep + 1) % 8;
+    }, 200);
+
+    playBtn.addEventListener('click', () => {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        isPlaying = !isPlaying;
+        playBtn.innerText = isPlaying ? 'STOP' : 'START BEAT';
+    });
+</script>
 </body>
 </html>
