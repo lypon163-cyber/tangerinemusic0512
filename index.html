@@ -370,6 +370,13 @@
         <p style="font-size: 10px; opacity: 0.4; letter-spacing: 2px; margin-top: 5px;">BEAT STEPPER + INSTRUMENT LOOPS</p>
     </div>
     
+    <div class="card col-12" id="tangerine-lab">
+    <div style="text-align: center; margin-bottom: 25px;">
+        <span class="section-tag" style="color: var(--orange);">Hybrid Lab</span>
+        <h3 style="letter-spacing: 6px; font-weight: 200; color: #fff; margin: 0;">TANGERINE LAB V4.0</h3>
+        <p style="font-size: 10px; opacity: 0.4; letter-spacing: 2px; margin-top: 5px;">BEAT STEPPER + INSTRUMENT LOOPS</p>
+    </div>
+
     <div class="lab-wrapper" style="display: block;">
         <div style="margin-bottom: 30px;">
             <p style="font-size: 11px; color: #444; margin-bottom: 15px; border-left: 2px solid var(--orange); padding-left: 10px;">DRUM MACHINE (STEPPER)</p>
@@ -385,25 +392,25 @@
             <div class="instrument-group">
                 <p class="section-tag" style="font-size: 9px;">BASS LINE</p>
                 <div class="loop-selector" id="bass-group">
-                    <button class="loop-btn" onclick="toggleLoop('bass', 'LOOP—BASS A.wav', this)">BASS A</button>
-                    <button class="loop-btn" onclick="toggleLoop('bass', null, this)">MUTE</button>
+                    <button class="loop-btn" onclick="toggleLoop('bass', 'LOOPBASSA.wav', this)">BASS A</button>
+                    <button class="loop-btn active" onclick="toggleLoop('bass', null, this)">MUTE</button>
                 </div>
             </div>
             <div class="instrument-group">
                 <p class="section-tag" style="font-size: 9px;">CHORD PROGRESSION</p>
                 <div class="loop-selector" id="chord-group">
-                    <button class="loop-btn" onclick="toggleLoop('chord', 'LOOP—CHORD A.wav', this)">CHORD A</button>
-                    <button class="loop-btn" onclick="toggleLoop('chord', 'LOOP—CHORD B.wav', this)">CHORD B</button>
-                    <button class="loop-btn" onclick="toggleLoop('chord', null, this)">MUTE</button>
+                    <button class="loop-btn" onclick="toggleLoop('chord', 'LOOPCHORDA.wav', this)">CHORD A</button>
+                    <button class="loop-btn" onclick="toggleLoop('chord', 'LOOPCHORDB.wav', this)">CHORD B</button>
+                    <button class="loop-btn active" onclick="toggleLoop('chord', null, this)">MUTE</button>
                 </div>
             </div>
             <div class="instrument-group">
                 <p class="section-tag" style="font-size: 9px;">MAIN LEAD</p>
                 <div class="loop-selector" id="lead-group">
-                    <button class="loop-btn" onclick="toggleLoop('lead', 'LOOP—MAINLEAD A.wav', this)">LEAD A</button>
-                    <button class="loop-btn" onclick="toggleLoop('lead', 'LOOP—MAINLEAD B.wav', this)">LEAD B</button>
-                    <button class="loop-btn" onclick="toggleLoop('lead', 'LOOP—MAINLEAD C.wav', this)">LEAD C</button>
-                    <button class="loop-btn" onclick="toggleLoop('lead', null, this)">MUTE</button>
+                    <button class="loop-btn" onclick="toggleLoop('lead', 'LOOPMAINLEADA.wav', this)">LEAD A</button>
+                    <button class="loop-btn" onclick="toggleLoop('lead', 'LOOPMAINLEADB.wav', this)">LEAD B</button>
+                    <button class="loop-btn" onclick="toggleLoop('lead', 'LOOPMAINLEADC.wav', this)">LEAD C</button>
+                    <button class="loop-btn active" onclick="toggleLoop('lead', null, this)">MUTE</button>
                 </div>
             </div>
         </div>
@@ -430,145 +437,163 @@
 </style>
 
 <script>
-    // --- 核心引擎代码 ---
-    const drumConfig = [
-        { id: 'kick', name: 'KICK', file: 'Kick.wav' },
-        { id: 'snare', name: 'SNARE', file: 'Snare.wav' },
-        { id: 'hat', name: 'HAT', file: 'Hat .wav' }, // 注意原文件名空格
-        { id: 'clap', name: 'CLAP', file: 'Clap.wav' }
-    ];
+    // --- TANGERINE LAB V4.0 核心引擎 ---
+const drumConfig = [
+    { id: 'kick', name: 'KICK', file: 'Kick.wav' },
+    { id: 'snare', name: 'SNARE', file: 'Snare.wav' },
+    { id: 'hat', name: 'HAT', file: 'Hat.wav' }, // 已修正文件名
+    { id: 'clap', name: 'CLAP', file: 'Clap.wav' }
+];
 
-    const labAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const labBuffers = {};
-    let activeLoops = { bass: null, chord: null, lead: null };
-    let loopSources = { bass: null, chord: null, lead: null };
-    let labIsPlaying = false;
-    let labCurrentStep = 0;
-    let labNextStepTime = 0;
-    const bpm = 160;
-    const secondsPerStep = (60.0 / bpm) / 4;
+const labAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const labBuffers = {};
+let loopSources = { bass: null, chord: null, lead: null };
+let activeLoopFiles = { bass: null, chord: null, lead: null };
+let labIsPlaying = false;
+let labCurrentStep = 0;
+let labNextStepTime = 0;
+const bpm = 160;
+const secondsPerStep = (60.0 / bpm) / 4;
 
-    // 初始化鼓组 UI
-    const drumGrid = document.getElementById('drum-grid');
-    const drumLabels = document.getElementById('drum-labels');
+// 初始化鼓组 UI
+const drumGrid = document.getElementById('drum-grid');
+const drumLabels = document.getElementById('drum-labels');
+
+if (drumGrid && drumLabels) {
     drumConfig.forEach((track, r) => {
         const label = document.createElement('div');
-        label.className = 'track-label'; label.innerText = track.name;
+        label.className = 'track-label'; 
+        label.innerText = track.name;
         drumLabels.appendChild(label);
         for (let c = 0; c < 32; c++) {
             const step = document.createElement('div');
-            step.className = 'step'; step.dataset.row = r; step.dataset.col = c;
+            step.className = 'step'; 
+            step.dataset.row = r; 
+            step.dataset.col = c;
             step.onclick = () => step.classList.toggle('active');
             drumGrid.appendChild(step);
         }
     });
+}
 
-    async function loadSample(fileName) {
-        if (!fileName) return null;
-        const url = `./${encodeURIComponent(fileName)}`;
-        const response = await fetch(url);
+async function loadSample(fileName) {
+    if (!fileName) return null;
+    try {
+        const response = await fetch(`./${fileName}`); // 使用仓库根目录路径
         const arrayBuffer = await response.arrayBuffer();
         return await labAudioCtx.decodeAudioData(arrayBuffer);
+    } catch (e) {
+        console.error("加载失败:", fileName);
+        return null;
+    }
+}
+
+async function initLab() {
+    const status = document.getElementById('loadStatus');
+    status.innerText = "SYNCHRONIZING SAMPLES...";
+    try {
+        for (const t of drumConfig) {
+            labBuffers[t.id] = await loadSample(t.file);
+        }
+        labBuffers['fx'] = await loadSample('FX.wav');
+        status.innerText = "ENGINE ONLINE // 160 BPM";
+    } catch (e) {
+        status.innerText = "LOAD ERROR";
+    }
+}
+
+async function toggleLoop(type, fileName, btn) {
+    if (labAudioCtx.state === 'suspended') await labAudioCtx.resume();
+
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.loop-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    if (loopSources[type]) {
+        loopSources[type].stop();
+        loopSources[type] = null;
     }
 
-    async function initLab() {
-        const status = document.getElementById('loadStatus');
-        status.innerText = "SYNCHRONIZING SAMPLES...";
-        try {
-            // 预加载鼓组
-            for (const t of drumConfig) {
-                labBuffers[t.id] = await loadSample(t.file);
-            }
-            // 预加载 FX
-            labBuffers['fx'] = await loadSample('FX.wav');
-            status.innerText = "ENGINE ONLINE // 160 BPM";
-        } catch (e) {
-            status.innerText = "LOAD ERROR - CHECK FILENAMES";
-            console.error(e);
-        }
-    }
+    activeLoopFiles[type] = fileName;
 
-    // 处理长 Loop 的无缝切换
-    async function toggleLoop(type, fileName, btn) {
-        if (labAudioCtx.state === 'suspended') await labAudioCtx.resume();
-        
-        // UI 切换
-        const parent = btn.parentElement;
-        parent.querySelectorAll('.loop-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // 停止之前的
-        if (loopSources[type]) {
-            loopSources[type].stop();
-            loopSources[type] = null;
-        }
-
-        if (!fileName) return; // Mute 逻辑
-
-        // 加载并播放新的 Loop
+    if (labIsPlaying && fileName) {
         const buffer = await loadSample(fileName);
         if (buffer) {
             const source = labAudioCtx.createBufferSource();
             source.buffer = buffer;
-            source.loop = true; // 旋律部分设置为自动循环
+            source.loop = true;
             source.connect(labAudioCtx.destination);
             source.start(0);
             loopSources[type] = source;
         }
     }
+}
 
-    function playOneShot(id, file) {
-        if (labBuffers[id]) {
-            const source = labAudioCtx.createBufferSource();
-            source.buffer = labBuffers[id];
-            source.connect(labAudioCtx.destination);
-            source.start(0);
-        }
+function playOneShot(id, file) {
+    if (labBuffers[id]) {
+        const source = labAudioCtx.createBufferSource();
+        source.buffer = labBuffers[id];
+        source.connect(labAudioCtx.destination);
+        source.start(0);
     }
+}
 
-    function labScheduler() {
-        while (labNextStepTime < labAudioCtx.currentTime + 0.1) {
-            const steps = document.querySelectorAll('#drum-grid .step');
-            steps.forEach(s => {
-                const row = s.dataset.row;
-                const col = s.dataset.col;
-                if (col == (labCurrentStep + 31) % 32) s.classList.remove('playing');
-                if (col == labCurrentStep) {
-                    s.classList.add('playing');
-                    if (s.classList.contains('active') && labBuffers[drumConfig[row].id]) {
-                        const source = labAudioCtx.createBufferSource();
-                        source.buffer = labBuffers[drumConfig[row].id];
-                        source.connect(labAudioCtx.destination);
-                        source.start(labNextStepTime);
-                    }
+function labScheduler() {
+    while (labNextStepTime < labAudioCtx.currentTime + 0.1) {
+        const steps = document.querySelectorAll('#drum-grid .step');
+        steps.forEach(s => {
+            const row = s.dataset.row;
+            const col = s.dataset.col;
+            if (col == (labCurrentStep + 31) % 32) s.classList.remove('playing');
+            if (col == labCurrentStep) {
+                s.classList.add('playing');
+                if (s.classList.contains('active') && labBuffers[drumConfig[row].id]) {
+                    const source = labAudioCtx.createBufferSource();
+                    source.buffer = labBuffers[drumConfig[row].id];
+                    source.connect(labAudioCtx.destination);
+                    source.start(labNextStepTime);
                 }
-            });
-            labCurrentStep = (labCurrentStep + 1) % 32;
-            labNextStepTime += secondsPerStep;
-        }
-        if (labIsPlaying) requestAnimationFrame(labScheduler);
+            }
+        });
+        labCurrentStep = (labCurrentStep + 1) % 32;
+        labNextStepTime += secondsPerStep;
     }
+    if (labIsPlaying) requestAnimationFrame(labScheduler);
+}
 
-    document.getElementById('lab-play-btn').onclick = async () => {
-        if (labAudioCtx.state === 'suspended') await labAudioCtx.resume();
-        if (Object.keys(labBuffers).length === 0) await initLab();
-        
-        labIsPlaying = !labIsPlaying;
-        if (labIsPlaying) {
-            labNextStepTime = labAudioCtx.currentTime;
-            labScheduler();
-            document.getElementById('lab-play-btn').innerText = "Stop Engine";
-            document.getElementById('lab-play-btn').style.background = "var(--orange)";
-        } else {
-            // 停止所有旋律 Loop
-            Object.keys(loopSources).forEach(k => {
-                if(loopSources[k]) { loopSources[k].stop(); loopSources[k] = null; }
-            });
-            document.querySelectorAll('.loop-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('lab-play-btn').innerText = "Start Engine";
-            document.getElementById('lab-play-btn').style.background = "none";
+document.getElementById('lab-play-btn').onclick = async () => {
+    if (labAudioCtx.state === 'suspended') await labAudioCtx.resume();
+    if (Object.keys(labBuffers).length === 0) await initLab();
+
+    labIsPlaying = !labIsPlaying;
+    const masterBtn = document.getElementById('lab-play-btn');
+
+    if (labIsPlaying) {
+        labNextStepTime = labAudioCtx.currentTime;
+        labScheduler();
+        // 启动时同步加载已选 Loop
+        for (let type in activeLoopFiles) {
+            if (activeLoopFiles[type]) {
+                const b = await loadSample(activeLoopFiles[type]);
+                if(b) {
+                    const source = labAudioCtx.createBufferSource();
+                    source.buffer = b; source.loop = true;
+                    source.connect(labAudioCtx.destination);
+                    source.start(0);
+                    loopSources[type] = source;
+                }
+            }
         }
-    };
+        masterBtn.innerText = "Stop Engine";
+        masterBtn.style.background = "var(--orange)";
+    } else {
+        Object.keys(loopSources).forEach(k => {
+            if(loopSources[k]) { loopSources[k].stop(); loopSources[k] = null; }
+        });
+        masterBtn.innerText = "Start Engine";
+        masterBtn.style.background = "none";
+    }
+};
 </script>
 </body>
 </html>
