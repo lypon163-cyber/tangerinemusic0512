@@ -74,16 +74,17 @@
         .mood-btn { background: none; border: 1px solid var(--border); padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 12px; transition: 0.3s; color: var(--gray); }
         .mood-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* --- TANGERINE LAB V2.0 样式 --- */
+        /* --- TANGERINE LAB V3.0 新增样式 (保持兼容) --- */
         #tangerine-lab { background: var(--lab-bg); color: #fff; border: 1px solid #222; overflow: hidden; }
-        .sequencer-container { overflow-x: auto; width: 100%; padding-bottom: 15px; scrollbar-width: thin; }
-        .sequencer-container::-webkit-scrollbar { height: 4px; }
-        .sequencer-container::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        
+        .lab-wrapper { display: flex; gap: 15px; margin-top: 20px; }
+        .track-labels { display: flex; flex-direction: column; gap: 4px; }
+        .track-label { height: 42px; line-height: 42px; font-size: 10px; font-weight: 800; color: #444; text-align: right; width: 90px; text-transform: uppercase; white-space: nowrap; }
+        .sequencer-container { flex: 1; overflow-x: auto; padding-bottom: 10px; }
+        .sequencer-grid { display: grid; grid-template-columns: repeat(32, 1fr); gap: 4px; min-width: 900px; }
         .step { height: 42px; background: #1a1a1a; border-radius: 2px; cursor: pointer; transition: 0.1s; }
         .step.active { background: var(--orange); box-shadow: 0 0 12px var(--orange); }
         .step.playing { filter: brightness(1.6); transform: scaleY(1.1); border: 1px solid rgba(255,255,255,0.4); }
-        .step:nth-child(8n+1) { background: #252525; } /* 重拍提示 */
+        .step:nth-child(8n+1) { background: #252525; }
 
         footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); }
         @media (max-width: 850px) { .col-8, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; text-align: center; } .track-list { border: none; padding: 0; } }
@@ -213,13 +214,15 @@
             <div class="card col-12" id="tangerine-lab">
                 <div style="text-align: center; margin-bottom: 25px;">
                     <span class="section-tag" style="color: var(--orange);">Interactive Lab</span>
-                    <h3 style="letter-spacing: 6px; font-weight: 200; color: #fff; margin: 0;">TANGERINE LAB V2.0</h3>
-                    <p style="font-size: 10px; opacity: 0.4; letter-spacing: 2px; margin-top: 5px;">32-STEP SEQUENCER // 160 BPM</p>
+                    <h3 style="letter-spacing: 6px; font-weight: 200; color: #fff; margin: 0;">TANGERINE LAB V3.0</h3>
+                    <p style="font-size: 10px; opacity: 0.4; letter-spacing: 2px; margin-top: 5px;">MULTI-TRACK SEQUENCER // 160 BPM</p>
                 </div>
                 
-                <div class="sequencer-container">
-                    <div id="sequencer-grid" style="display: grid; grid-template-columns: repeat(32, 1fr); gap: 4px; min-width: 900px;">
-                        </div>
+                <div class="lab-wrapper">
+                    <div class="track-labels" id="track-labels"></div>
+                    <div class="sequencer-container">
+                        <div id="sequencer-grid" class="sequencer-grid"></div>
+                    </div>
                 </div>
 
                 <div style="text-align: center; margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
@@ -244,14 +247,14 @@
     <footer><p>© 2026 Tangerine Music Club. 保持热爱，保持共鸣。</p></footer>
 
     <script>
-        // 1. 播放器逻辑
+        // 1. 播放器逻辑 (原封不动)
         function playMusic(url, el) {
             document.getElementById('player').src = url;
             document.querySelectorAll('.track-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
         }
 
-        // 2. 心心情感应器
+        // 2. 心心情感应器 (原封不动)
         function showEmoji(emoji) {
             const el = document.createElement('div');
             el.innerHTML = emoji;
@@ -265,7 +268,7 @@
             if (window.navigator.vibrate) window.navigator.vibrate(10);
         }
 
-        // 3. 题库逻辑
+        // 3. 题库逻辑 (原封不动)
         const masterPool = [
             { q: "在数字音乐制作中，DAW 的全称是？", o: ["Digital Audio Workstation", "Digital Audio Web", "Dynamic Audio Work", "Digital Arrangement Work"], a: 0 },
             { q: "MIDI 协议主要传输的是什么？", o: ["控制指令数据", "音频信号", "采样波形", "电流"], a: 0 },
@@ -312,7 +315,7 @@
             if(userPt >= 80) confetti({ particleCount: 100, spread: 60 });
         }
 
-        // 4. 查询逻辑
+        // 4. 查询逻辑 (原封不动)
         let lastQuery = 0;
         async function runQuery() {
             const now = Date.now();
@@ -360,88 +363,93 @@
             } catch (err) { alert("云端同步失败，请检查网络环境。"); } finally { btn.disabled = false; btn.innerText = "同步云端数据"; }
         }
 
-        // --- 5. TANGERINE LAB V2.0 核心引擎 ---
+        // --- 5. TANGERINE LAB V3.0 新引擎 (替换旧版 LAB 逻辑) ---
+        const labConfig = [
+            { id: 'kick', name: '鼓 - Kick', file: 'Kick.wav' },
+            { id: 'snare', name: '鼓 - Snare', file: 'Snare.wav' },
+            { id: 'hat', name: '鼓 - Hihat', file: 'Hat .wav' },
+            { id: 'bass', name: '低音 - Bass', file: 'LOOP—BASS A.wav' },
+            { id: 'chord', name: '和声 - Chord', file: 'LOOP—CHORD A.wav' },
+            { id: 'lead_a', name: '旋律 - Lead A', file: 'LOOP—MAINLEAD A.wav' },
+            { id: 'lead_b', name: '旋律 - Lead B', file: 'LOOP—MAINLEAD B.wav' },
+            { id: 'clap', name: '打击 - Clap', file: 'Clap .wav' }
+        ];
+
         const labAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const labSamples = ['Kick.wav', 'Snare.wav', 'Clap.wav', 'Hat .wav', 'Close Hihat.wav', 'LOOP—BASS A.wav', 'LOOP—CHORD A.wav', 'LOOP—MAINLEAD A.wav'];
         const labBuffers = {};
         let labIsPlaying = false;
         let labCurrentStep = 0;
         let labNextStepTime = 0;
-        const labBpm = 160;
-        const labSecondsPerStep = (60.0 / labBpm) / 8; // 32步进
+        const labSecondsPerStep = (60.0 / 160) / 4; // 160 BPM
+
+        const labGrid = document.getElementById('sequencer-grid');
+        const labels = document.getElementById('track-labels');
+
+        // 生成网格与标签
+        labConfig.forEach((track, r) => {
+            const label = document.createElement('div'); 
+            label.className='track-label'; 
+            label.innerText=track.name; 
+            labels.appendChild(label);
+            
+            for(let c=0; c<32; c++) {
+                const step = document.createElement('div'); 
+                step.className='step'; 
+                step.dataset.row=r; 
+                step.dataset.col=c;
+                step.onclick = () => { 
+                    step.classList.toggle('active'); 
+                    if(window.navigator.vibrate) window.navigator.vibrate(5); 
+                };
+                labGrid.appendChild(step);
+            }
+        });
 
         async function initLab() {
             const status = document.getElementById('loadStatus');
-            status.innerText = "LOADING SAMPLES...";
-            for (const file of labSamples) {
+            status.innerText = "SYNCING AUDIO SAMPLES...";
+            for (const t of labConfig) {
                 try {
-                    const response = await fetch(`./${encodeURIComponent(file)}`);
-                    const arrayBuffer = await response.arrayBuffer();
-                    labBuffers[file] = await labAudioCtx.decodeAudioData(arrayBuffer);
-                } catch (e) { console.error("Load Failed:", file); }
+                    const resp = await fetch(`./${encodeURIComponent(t.file)}`);
+                    labBuffers[t.id] = await labAudioCtx.decodeAudioData(await resp.arrayBuffer());
+                } catch(e) { console.error("Error loading:", t.file); }
             }
-            status.innerText = "ENGINE READY // 160 BPM";
-            document.getElementById('lab-play-btn').innerText = "Start Engine";
-        }
-
-        const labGrid = document.getElementById('sequencer-grid');
-        for (let r = 0; r < 8; r++) {
-            for (let c = 0; c < 32; c++) {
-                const step = document.createElement('div');
-                step.classList.add('step');
-                step.dataset.row = r;
-                step.dataset.col = c;
-                step.onclick = () => { step.classList.toggle('active'); if(window.navigator.vibrate) window.navigator.vibrate(5); };
-                labGrid.appendChild(step);
-            }
-        }
-
-        function runLab() {
-            const steps = document.querySelectorAll('#sequencer-grid .step');
-            steps.forEach(s => {
-                const col = parseInt(s.dataset.col);
-                const row = parseInt(s.dataset.row);
-                if (col === (labCurrentStep + 31) % 32) s.classList.remove('playing');
-                if (col === labCurrentStep) {
-                    s.classList.add('playing');
-                    if (s.classList.contains('active') && labBuffers[labSamples[row]]) {
-                        const source = labAudioCtx.createBufferSource();
-                        source.buffer = labBuffers[labSamples[row]];
-                        source.connect(labAudioCtx.destination);
-                        source.start(labNextStepTime);
-                    }
-                }
-            });
-            labCurrentStep = (labCurrentStep + 1) % 32;
+            status.innerText = "ONLINE // 160 BPM";
         }
 
         function labScheduler() {
             while (labNextStepTime < labAudioCtx.currentTime + 0.1) {
-                runLab();
+                document.querySelectorAll('#sequencer-grid .step').forEach(s => {
+                    const r = s.dataset.row; const c = s.dataset.col;
+                    if (c == (labCurrentStep + 31) % 32) s.classList.remove('playing');
+                    if (c == labCurrentStep) {
+                        s.classList.add('playing');
+                        if (s.classList.contains('active') && labBuffers[labConfig[r].id]) {
+                            const src = labAudioCtx.createBufferSource();
+                            src.buffer = labBuffers[labConfig[r].id]; 
+                            src.connect(labAudioCtx.destination);
+                            src.start(labNextStepTime);
+                        }
+                    }
+                });
+                labCurrentStep = (labCurrentStep + 1) % 32;
                 labNextStepTime += labSecondsPerStep;
             }
             if (labIsPlaying) requestAnimationFrame(labScheduler);
         }
 
-        document.getElementById('lab-play-btn').addEventListener('click', async () => {
+        document.getElementById('lab-play-btn').onclick = async () => {
             if (labAudioCtx.state === 'suspended') await labAudioCtx.resume();
             if (Object.keys(labBuffers).length === 0) await initLab();
-            if (!labIsPlaying) {
-                labIsPlaying = true;
-                labNextStepTime = labAudioCtx.currentTime;
-                labCurrentStep = 0;
-                labScheduler();
-                document.getElementById('lab-play-btn').innerText = "Stop Engine";
-                document.getElementById('lab-play-btn').style.background = "var(--orange)";
-                document.getElementById('lab-play-btn').style.color = "#fff";
-            } else {
-                labIsPlaying = false;
-                document.getElementById('lab-play-btn').innerText = "Start Engine";
-                document.getElementById('lab-play-btn').style.background = "none";
-                document.getElementById('lab-play-btn').style.color = "var(--orange)";
+            labIsPlaying = !labIsPlaying;
+            if (labIsPlaying) { 
+                labNextStepTime = labAudioCtx.currentTime; 
+                labScheduler(); 
             }
-        });
+            document.getElementById('lab-play-btn').innerText = labIsPlaying ? "Stop Engine" : "Start Engine";
+        };
 
+        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             initTest();
             document.getElementById('stu_id').addEventListener('keypress', (e) => { if(e.key === 'Enter') runQuery(); });
