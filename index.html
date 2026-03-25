@@ -9,7 +9,7 @@
     <style>
         :root { --bg: #fbfbfd; --card: #ffffff; --text: #1d1d1f; --gray: #86868b; --accent: #ff6600; --border: rgba(0,0,0,0.1); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); background-image: radial-gradient(var(--border) 1px, transparent 0); background-size: 40px 40px; color: var(--text); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         
         nav { position: fixed; top: 0; width: 100%; height: 50px; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); }
         nav a { color: var(--text); text-decoration: none; font-size: 11px; font-weight: 600; margin: 0 25px; letter-spacing: 1px; opacity: 0.6; transition: 0.3s; }
@@ -23,9 +23,9 @@
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 100px; }
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
         
-        .card { background: var(--card); border-radius: 24px; padding: 32px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 10px 15px -3px rgba(0,0,0,0.03); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
+        .card { background: var(--card); border-radius: 24px; padding: 32px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
         .card:hover { transform: translateY(-6px); border-color: var(--accent); }
-        
+
         /* 音序器 */
         .sequencer-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
         .seq-row { display: flex; align-items: center; gap: 10px; }
@@ -35,36 +35,42 @@
         .step.active { background: var(--accent); }
         .step.playing { filter: brightness(1.3); transform: scaleY(1.1); }
 
+        /* 状态小唱片动画 */
+        .record-player { width: 40px; height: 40px; border: 3px solid #1d1d1f; border-radius: 50%; border-style: double; animation: spin 3s linear infinite; display: inline-block; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 进度条 */
+        .progress-box { height: 6px; background: #eee; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+
         .col-8 { grid-column: span 8; } .col-4 { grid-column: span 4; } .col-12 { grid-column: span 12; }
         .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: block; }
-        h2 { font-size: 28px; font-weight: 700; margin-bottom: 20px; letter-spacing: -1px; }
+        h2 { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
 
         .btn { background: var(--text); color: white; border-radius: 12px; padding: 14px 28px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; }
         .btn:hover { background: var(--accent); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        input { width: 100%; padding: 18px; background: #f5f5f7; border: 1px solid transparent; border-radius: 14px; font-size: 16px; margin-bottom: 15px; }
+        input { width: 100%; padding: 18px; background: #f5f5f7; border: 1px solid transparent; border-radius: 14px; font-size: 16px; margin-bottom: 15px; transition: 0.3s; }
         input:focus { background: white; border-color: var(--accent); outline: none; }
 
-        /* 测试题样式 */
-        .quiz-option { background: #f5f5f7; padding: 18px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; font-size: 14px; }
+        .quiz-option { background: #f5f5f7; padding: 18px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
         .quiz-option.selected { border-color: var(--accent); background: white; color: var(--accent); }
-        .progress-box { height: 6px; background: #eee; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.6s; }
 
         .radio-flex { display: flex; align-items: center; gap: 40px; }
-        .album-art { width: 140px; height: 140px; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .album-art { width: 140px; height: 140px; border-radius: 18px; overflow: hidden; }
         .track-list { flex: 1; border-left: 1px solid var(--border); padding-left: 30px; }
-        .track-item { padding: 10px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; font-size: 13px; }
+        .track-item { padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; }
         .track-item.active { color: var(--accent); font-weight: 700; background: #fff5f2; }
 
-        footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; }
-        @media (max-width: 850px) { .col-8, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; text-align: center; } .track-list { border: none; padding: 0; } }
+        footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); }
+        @media (max-width: 850px) { .col-8, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; } .track-list { border: none; padding: 0; } }
     </style>
 </head>
 
 <body>
     <nav>
-        <a href="#sequencer">BEAT</a><a href="#news">NEWS</a><a href="#radio">RADIO</a><a href="#quiz">QUIZ</a><a href="#exam">EXAM</a>
+        <a href="#sequencer">BEAT</a><a href="#news">NEWS</a><a href="#quiz">QUIZ</a><a href="#exam">EXAM</a>
     </nav>
 
     <header>
@@ -77,7 +83,7 @@
             <div class="card col-12" id="sequencer">
                 <span class="section-tag">Drum Machine</span>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2>极简步进音序器</h2>
+                    <h2>极简音序器</h2>
                     <button id="play-seq" class="btn" style="border-radius: 50px;">▶ Play Beat</button>
                 </div>
                 <div class="sequencer-grid">
@@ -90,7 +96,7 @@
             <div class="card col-8" id="news">
                 <span class="section-tag">Latest Update</span>
                 <h2>2026 春季招新公示</h2>
-                <p style="color:var(--gray); margin-bottom:30px; line-height:1.6;">每一个音轨的跳动都是灵魂的讯号。目前笔试筛选已圆满结束，感谢所有创作者的参与。</p>
+                <p style="color:var(--gray); margin-bottom:30px; line-height:1.6;">每一个音轨的跳动都是灵魂的讯号。目前笔试筛选已圆满结束。</p>
                 <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn">查看招新回顾</a>
             </div>
             
@@ -101,36 +107,22 @@
                 <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn" style="background:#f5f5f7; color:#1d1d1f">立即观看</a>
             </div>
 
-            <div class="card col-12" id="radio">
-                <span class="section-tag">Radio Channel</span>
-                <div class="radio-flex">
-                    <div class="album-art"><img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover;"></div>
-                    <div class="track-list">
-                        <div class="track-item active" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66', this)">
-                            <span>01. SPACE WALK - Tangerine Original</span><span>03:45</span>
-                        </div>
-                        <div class="track-item" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66', this)">
-                            <span>02. Moonlight - Live Session</span><span>04:12</span>
-                        </div>
-                        <iframe id="player" frameborder="no" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:20px; border-radius:14px;"></iframe>
-                    </div>
-                </div>
-            </div>
-
             <div class="card col-12" id="quiz">
                 <span class="section-tag">Skill Assessment</span>
                 <div class="progress-box"><div class="progress-fill" id="p_fill"></div></div>
+                
                 <div id="quiz_box">
-                    <div id="q_text" style="min-height:100px;"></div>
+                    <div id="q_text" style="min-height:100px;">正在加载题库...</div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:40px;">
                         <span id="q_num" style="font-size:12px; color:var(--gray); font-weight:600;">1 / 10</span>
                         <button onclick="handleNext()" class="btn" id="next_btn">下一题</button>
                     </div>
                 </div>
+
                 <div id="quiz_result" style="display:none; text-align:center;">
                     <h3 style="font-size:64px; margin-bottom:10px; letter-spacing:-2px;" id="final_score">0</h3>
-                    <div id="final_eval" style="color:var(--gray); margin-bottom:30px;">评估中...</div>
-                    <button onclick="location.reload()" class="btn" style="background:#f5f5f7; color:#1d1d1f">再试一次</button>
+                    <div id="final_eval" style="color:var(--gray); margin-bottom:30px;">评估计算中...</div>
+                    <button onclick="location.reload()" class="btn" style="background:#f5f5f7; color:#1d1d1f">换一组题挑战</button>
                 </div>
             </div>
 
@@ -139,20 +131,21 @@
                 <h2>成绩查询</h2>
                 <input type="text" id="name" placeholder="姓名">
                 <input type="text" id="stu_id" placeholder="学号">
-                <button onclick="runQuery()" class="btn" id="query_btn" style="width:100%">查询信号</button>
+                <button onclick="runQuery()" class="btn" id="query_btn" style="width:100%">同步云端数据</button>
             </div>
 
             <div class="card col-8">
-                <div id="q_res" style="display:none;">
-                    <div style="display:flex; justify-content:space-around; text-align:center;">
+                <div id="q_res" style="display:none; opacity:0; transition:0.5s;">
+                    <div style="display:flex; justify-content:space-around; text-align:center; align-items:center;">
+                        <div id="res_icon"></div> 
                         <div><span style="font-size:11px; color:var(--gray)">SCORE</span><br><b id="res_score" style="font-size:32px;">-</b></div>
                         <div><span style="font-size:11px; color:var(--gray)">RANK</span><br><b id="res_rank" style="font-size:32px;">-</b></div>
-                        <div><span style="font-size:11px; color:var(--gray)">STATUS</span><br><b id="res_status" style="font-size:24px;">-</b></div>
+                        <div><span style="font-size:11px; color:var(--gray)">STATUS</span><br><b id="res_status" style="font-size:32px;">-</b></div>
                     </div>
-                    <div id="res_detail" style="margin-top:20px; border-top:1px solid var(--border); padding-top:20px;"></div>
+                    <div id="res_detail" style="margin-top:25px; border-top:1px solid var(--border); padding-top:20px;"></div>
                 </div>
-                <div id="placeholder_res" style="height:100%; display:flex; align-items:center; justify-content:center; color:#e5e5e7; text-align:center;">
-                    <p id="sync_msg">等待信号输入...</p>
+                <div id="placeholder_res" style="height:100%; display:flex; align-items:center; justify-content:center; color:#e5e5e7; font-weight:600;">
+                    WAITING FOR SIGNAL...
                 </div>
             </div>
         </div>
@@ -161,7 +154,7 @@
     <footer><p>© 2026 Tangerine Music Club. 保持热爱，保持共鸣。</p></footer>
 
     <script>
-        // --- 音序器引擎 ---
+        // --- 音序器逻辑 ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let isPlaying = false; let currentStep = 0; let nextStepTime = 0;
         const secondsPerBeat = 60.0 / 120.0 / 4;
@@ -174,8 +167,8 @@
                 gain.gain.setValueAtTime(1, time); gain.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
                 osc.start(time); osc.stop(time + 0.5);
             } else if (type === 'snare') {
-                osc.type = 'triangle'; osc.frequency.setValueAtTime(100, time);
-                gain.gain.setValueAtTime(0.3, time); gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(120, time);
+                gain.gain.setValueAtTime(0.2, time); gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
                 osc.start(time); osc.stop(time + 0.1);
             } else if (type === 'hihat') {
                 osc.type = 'square'; osc.frequency.setValueAtTime(10000, time);
@@ -234,6 +227,7 @@
             document.getElementById('q_text').innerHTML = `<p style="font-size:18px; font-weight:700; margin-bottom:25px;">${q.q}</p>
                 ${q.o.map((o, i) => `<div class="quiz-option" onclick="pick(${i}, this)">${o}</div>`).join('')}`;
             document.getElementById('q_num').innerText = `${current + 1} / 10`;
+            // 进度条更新
             document.getElementById('p_fill').style.width = `${(current / 10) * 100}%`;
             selectedIdx = null;
         }
@@ -249,39 +243,64 @@
             if(selectedIdx === masterPool[current].a) userPt += 10;
             current++;
             if(current < 10) showQ(); else {
+                document.getElementById('p_fill').style.width = `100%`;
                 document.getElementById('quiz_box').style.display = 'none';
                 document.getElementById('quiz_result').style.display = 'block';
                 document.getElementById('final_score').innerText = userPt + " PT";
                 document.getElementById('final_eval').innerText = userPt >= 80 ? "🔥 Pro 级耳朵" : userPt >= 60 ? "🍊 合格制作人" : "🎸 纯粹的热爱者";
-                if(userPt >= 80) confetti({ particleCount: 100, spread: 60 });
+                // 烟花特效
+                if(userPt >= 80) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             }
         };
 
-        // --- 其他逻辑 ---
-        function playMusic(url, el) {
-            document.getElementById('player').src = url;
-            document.querySelectorAll('.track-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-        }
-
+        // --- 成绩查询逻辑 ---
         async function runQuery() {
             const nameVal = document.getElementById('name').value.trim();
             const idVal = document.getElementById('stu_id').value.trim();
-            if(!nameVal || !idVal) return;
-            document.getElementById('sync_msg').innerText = "SYNCING...";
+            const btn = document.getElementById('query_btn');
+            if(!nameVal || !idVal) { alert("信号接收不完整"); return; }
+            
+            btn.disabled = true; btn.innerText = "SYNCING...";
+            
             try {
                 const response = await fetch(`https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${encodeURIComponent(nameVal)}&id=${encodeURIComponent(idVal)}`);
                 const data = await response.json();
+                
                 document.getElementById('placeholder_res').style.display = 'none';
-                document.getElementById('q_res').style.display = 'block';
+                const resBox = document.getElementById('q_res');
+                resBox.style.display = 'block';
+                setTimeout(() => resBox.style.opacity = '1', 50);
+
                 if (data && data.length > 0) {
                     const s = data[0];
-                    document.getElementById('res_score').innerText = s.score;
-                    document.getElementById('res_rank').innerText = s.rank;
-                    document.getElementById('res_status').innerText = s.status;
-                    document.getElementById('res_detail').innerHTML = s.status === "通过" ? "恭喜进入复试！详情已发至邮箱。" : "未能进入轨道，感谢参与。";
+                    document.getElementById('res_score').innerText = s.score || "-";
+                    document.getElementById('res_rank').innerText = s.rank || "-";
+                    const st = document.getElementById('res_status');
+                    st.innerText = s.status || "-";
+                    
+                    const iconBox = document.getElementById('res_icon');
+                    const detail = document.getElementById('res_detail');
+
+                    if (s.status === "通过") {
+                        st.style.color = "#34c759";
+                        // 注入小唱片动画
+                        iconBox.innerHTML = `<div class="record-player"></div>`;
+                        // 烟花特效
+                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                        detail.innerHTML = `<p style="font-size:14px; line-height:1.8;"><b>🍊 复试指令：</b>恭喜进入复试轨道！信号已对接。请前往艺术楼 402 数字音频实验室。</p>`;
+                    } else {
+                        st.style.color = "#86868b";
+                        iconBox.innerHTML = `🎧`;
+                        detail.innerHTML = `<p style="font-size:14px; color:#86868b; text-align:center;">频率未能重合。期待在下个现场遇见你。</p>`;
+                    }
+                } else {
+                    resBox.style.display = 'none';
+                    document.getElementById('placeholder_res').style.display = 'flex';
+                    document.getElementById('placeholder_res').innerText = "未探测到信号。";
                 }
-            } catch (e) { alert("查询失败"); }
+            } catch (e) { alert("同步失败"); } finally {
+                btn.disabled = false; btn.innerText = "同步云端数据";
+            }
         }
 
         document.addEventListener('DOMContentLoaded', showQ);
