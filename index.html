@@ -7,84 +7,92 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --bg: #fbfbfd; --card: #ffffff; --text: #1d1d1f; --gray: #86868b; --accent: #ff6600; --border: rgba(0,0,0,0.1); }
+        :root { --bg: #0b0b0c; --card: #121214; --text: #f5f5f7; --gray: #86868b; --accent: #ff5500; --border: rgba(255,255,255,0.08); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         
-        nav { position: fixed; top: 0; width: 100%; height: 50px; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); }
+        nav { position: fixed; top: 0; width: 100%; height: 50px; background: rgba(11,11,12,0.8); backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); }
         nav a { color: var(--text); text-decoration: none; font-size: 11px; font-weight: 600; margin: 0 25px; letter-spacing: 1px; opacity: 0.6; transition: 0.3s; }
         nav a:hover { opacity: 1; color: var(--accent); }
 
-        header { padding: 100px 20px 60px; text-align: center; }
+        header { padding: 120px 20px 60px; text-align: center; }
         header h1 { font-size: 64px; font-weight: 800; letter-spacing: -3px; margin-bottom: 15px; }
         header h1 span { color: var(--accent); }
-        header p { font-size: 20px; color: var(--gray); max-width: 600px; margin: 0 auto; line-height: 1.4; }
+        header p { font-size: 18px; color: var(--gray); max-width: 600px; margin: 0 auto; line-height: 1.4; letter-spacing: 1px; }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 100px; }
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
         
-        .card { background: var(--card); border-radius: 24px; padding: 32px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
-        .card:hover { transform: translateY(-6px); border-color: var(--accent); }
+        .card { background: var(--card); border-radius: 24px; padding: 32px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
+        .card:hover { border-color: var(--accent); box-shadow: 0 15px 40px rgba(255,85,0,0.1); }
 
         /* 音序器 */
-        .sequencer-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-        .seq-row { display: flex; align-items: center; gap: 10px; }
-        .seq-label { width: 50px; font-size: 10px; font-weight: 800; color: var(--gray); }
-        .steps { display: flex; gap: 4px; flex: 1; }
-        .step { flex: 1; height: 30px; background: #f5f5f7; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .step.active { background: var(--accent); }
-        .step.playing { filter: brightness(1.3); transform: scaleY(1.1); }
+        .sequencer-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
+        .seq-row { display: flex; align-items: center; gap: 15px; }
+        .seq-label { width: 60px; font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: 1px; }
+        .steps { display: flex; gap: 6px; flex: 1; }
+        .step { flex: 1; height: 36px; background: #1c1c1e; border-radius: 8px; cursor: pointer; transition: 0.15s; border: 1px solid rgba(255,255,255,0.02); }
+        .step.active { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+        .step.playing { filter: brightness(1.4); transform: scaleY(1.08); }
+
+        /* X-Y Pad */
+        .xy-pad-container { display: flex; flex-direction: column; height: 100%; justify-content: space-between; }
+        .xy-pad { width: 100%; height: 200px; background: #1c1c1e; border-radius: 16px; border: 1px dashed var(--border); position: relative; cursor: crosshair; overflow: hidden; margin-top: 15px; }
+        .xy-cursor { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; pointer-events: none; box-shadow: 0 0 15px var(--accent); transition: left 0.1s, top 0.1s; }
+        .xy-label { position: absolute; font-size: 9px; color: var(--gray); font-weight: 600; pointer-events: none; }
 
         /* 状态小唱片动画 */
-        .record-player { width: 40px; height: 40px; border: 3px solid #1d1d1f; border-radius: 50%; border-style: double; animation: spin 3s linear infinite; display: inline-block; vertical-align: middle; }
+        .record-player { width: 45px; height: 45px; border: 4px solid var(--accent); border-radius: 50%; border-style: double; animation: spin 3s linear infinite; box-shadow: 0 0 15px var(--accent); display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* 进度条 */
-        .progress-box { height: 6px; background: #eee; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        /* 电台排版 */
+        .radio-flex { display: flex; align-items: center; gap: 40px; }
+        .album-art { width: 140px; height: 140px; border-radius: 18px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: #1c1c1e; }
+        .track-list { flex: 1; border-left: 1px solid var(--border); padding-left: 30px; }
+        .track-item { padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; transition: 0.2s; }
+        .track-item:hover { background: rgba(255,255,255,0.03); }
+        .track-item.active { color: var(--accent); font-weight: 700; background: rgba(255,85,0,0.08); }
+
+        /* 测试题进度条 */
+        .progress-box { height: 4px; background: #1c1c1e; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.4s ease; }
 
         .col-8 { grid-column: span 8; } .col-4 { grid-column: span 4; } .col-12 { grid-column: span 12; }
-        .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: block; }
-        h2 { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
+        .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; }
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 15px; }
 
-        .btn { background: var(--text); color: white; border-radius: 12px; padding: 14px 28px; font-weight: 600; font-size: 14px; border: none; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; }
-        .btn:hover { background: var(--accent); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn { background: #1c1c1e; color: white; border-radius: 12px; padding: 12px 24px; font-weight: 600; font-size: 13px; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; }
+        .btn:hover { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(255,85,0,0.4); }
+        .btn-primary { background: var(--text); color: var(--bg); }
 
-        input { width: 100%; padding: 18px; background: #f5f5f7; border: 1px solid transparent; border-radius: 14px; font-size: 16px; margin-bottom: 15px; transition: 0.3s; }
-        input:focus { background: white; border-color: var(--accent); outline: none; }
+        .quiz-option { background: #1c1c1e; padding: 16px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; color: #e5e5e7; font-size: 14px; }
+        .quiz-option.selected { border-color: var(--accent); background: rgba(255,85,0,0.05); color: var(--accent); }
 
-        .quiz-option { background: #f5f5f7; padding: 18px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
-        .quiz-option.selected { border-color: var(--accent); background: white; color: var(--accent); }
-
-        .radio-flex { display: flex; align-items: center; gap: 40px; }
-        .album-art { width: 140px; height: 140px; border-radius: 18px; overflow: hidden; }
-        .track-list { flex: 1; border-left: 1px solid var(--border); padding-left: 30px; }
-        .track-item { padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; }
-        .track-item.active { color: var(--accent); font-weight: 700; background: #fff5f2; }
-
-        footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); }
-        @media (max-width: 850px) { .col-8, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; } .track-list { border: none; padding: 0; } }
+        footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); margin-top: 50px; }
+        @media (max-width: 850px) { .col-8, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; } .track-list { border: none; padding: 0; width: 100%; } }
     </style>
 </head>
 
 <body>
     <nav>
-        <a href="#sequencer">BEAT</a><a href="#news">NEWS</a><a href="#quiz">QUIZ</a><a href="#exam">EXAM</a>
+        <a href="#sequencer">BEAT MACHINE</a><a href="#radio">RADIO</a><a href="#news">NEWS</a><a href="#quiz">ASSESSMENT</a>
     </nav>
 
     <header>
-        <h1><span>Tangerine</span> Music.</h1>
-        <p>连接音频工程与艺术灵魂的终极据点</p>
+        <h1><span>Tangerine</span> Studio.</h1>
+        <p>暗黑电子与数字音频工程实验舱</p>
     </header>
 
     <div class="container">
         <div class="grid-layout">
-            <div class="card col-12" id="sequencer">
-                <span class="section-tag">Drum Machine</span>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2>极简音序器</h2>
-                    <button id="play-seq" class="btn" style="border-radius: 50px;">▶ Play Beat</button>
+            <div class="card col-8" id="sequencer">
+                <span class="section-tag">Analog Engine</span>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>极简16步进音序器</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="randomizeBeat()" class="btn" style="border-radius: 50px;">🎲 Random</button>
+                        <button id="play-seq" class="btn btn-primary" style="border-radius: 50px;">▶ Play Beat</button>
+                    </div>
                 </div>
                 <div class="sequencer-grid">
                     <div class="seq-row" data-instrument="kick"><div class="seq-label">KICK</div><div class="steps"></div></div>
@@ -93,18 +101,59 @@
                 </div>
             </div>
 
-            <div class="card col-8" id="news">
-                <span class="section-tag">Latest Update</span>
-                <h2>2026 春季招新公示</h2>
-                <p style="color:var(--gray); margin-bottom:30px; line-height:1.6;">每一个音轨的跳动都是灵魂的讯号。目前笔试筛选已圆满结束。</p>
-                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn">查看招新回顾</a>
+            <div class="card col-4">
+                <div class="xy-pad-container">
+                    <div>
+                        <span class="section-tag">Dynamic Filter</span>
+                        <h2 style="font-size:20px; margin-bottom:5px;">X-Y 音色微调板</h2>
+                        <p style="color:var(--gray); font-size:12px;">横轴控制低通截止频率，纵轴控制共振</p>
+                    </div>
+                    <div class="xy-pad" id="xyPad">
+                        <div class="xy-label" style="bottom:10px; right:10px;">CUTOFF ➔</div>
+                        <div class="xy-label" style="top:10px; left:10px;">RESONANCE ⬆</div>
+                        <div class="xy-cursor" id="xyCursor"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card col-12" id="radio">
+                <span class="section-tag">Radio Channel</span>
+                <div class="radio-flex">
+                    <div class="album-art">
+                        <img id="cover-img" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:1; border-radius:18px;">
+                        <div class="record-player" id="recordPlayer" style="z-index:2;"></div>
+                    </div>
+                    <div class="track-list">
+                        <div class="track-item active" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66', this)">
+                            <span>01. SPACE WALK - Tangerine Original</span><span>03:45</span>
+                        </div>
+                        <div class="track-item" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66', this)">
+                            <span>02. Moonlight - Live Session</span><span>04:12</span>
+                        </div>
+                        <iframe id="player" frameborder="no" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:20px; border-radius:14px; filter: invert(0.9) hue-rotate(180deg);"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card col-4" id="news">
+                <span class="section-tag">Studio Logs</span>
+                <h2>春季招新回顾</h2>
+                <p style="color:var(--gray); margin-bottom:25px; line-height:1.6; font-size:14px;">笔试阶段已全面收官，感谢每位对波形和音频算法抱有敬畏的创作者。</p>
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn" style="width:100%; text-align:center;">读取推文日志</a>
             </div>
             
             <div class="card col-4">
                 <span class="section-tag">Backstage</span>
                 <h2>社团 VLOG</h2>
-                <p style="color:var(--gray); font-size:14px; margin-bottom:25px;">直击舞台背后的技术心跳。</p>
-                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn" style="background:#f5f5f7; color:#1d1d1f">立即观看</a>
+                <p style="color:var(--gray); font-size:14px; margin-bottom:25px; line-height:1.6;">舞台背后的声音链路搭建、音频线缆调试与信号同步直击。</p>
+                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn" style="width:100%; text-align:center;">捕获现场信号</a>
+            </div>
+
+            <div class="card col-4">
+                <span class="section-tag">Album Alpha</span>
+                <h2>GENIUS AND COWARDS</h2>
+                <p style="color:var(--gray); font-size:14px; margin-bottom:25px; line-height:1.6;">首张个人实验专辑筹备中。暗黑工业美学，打破常规轨道。</p>
+                <button class="btn" style="width:100%; cursor:default; border-color:transparent; background:rgba(255,85,0,0.1); color:var(--accent);">UNDER DEVELOPMENT</button>
             </div>
 
             <div class="card col-12" id="quiz">
@@ -112,40 +161,17 @@
                 <div class="progress-box"><div class="progress-fill" id="p_fill"></div></div>
                 
                 <div id="quiz_box">
-                    <div id="q_text" style="min-height:100px;">正在加载题库...</div>
+                    <div id="q_text" style="min-height:100px;"></div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:40px;">
                         <span id="q_num" style="font-size:12px; color:var(--gray); font-weight:600;">1 / 10</span>
                         <button onclick="handleNext()" class="btn" id="next_btn">下一题</button>
                     </div>
                 </div>
 
-                <div id="quiz_result" style="display:none; text-align:center;">
-                    <h3 style="font-size:64px; margin-bottom:10px; letter-spacing:-2px;" id="final_score">0</h3>
-                    <div id="final_eval" style="color:var(--gray); margin-bottom:30px;">评估计算中...</div>
-                    <button onclick="location.reload()" class="btn" style="background:#f5f5f7; color:#1d1d1f">换一组题挑战</button>
-                </div>
-            </div>
-
-            <div class="card col-4" id="exam">
-                <span class="section-tag">Portal</span>
-                <h2>成绩查询</h2>
-                <input type="text" id="name" placeholder="姓名">
-                <input type="text" id="stu_id" placeholder="学号">
-                <button onclick="runQuery()" class="btn" id="query_btn" style="width:100%">同步云端数据</button>
-            </div>
-
-            <div class="card col-8">
-                <div id="q_res" style="display:none; opacity:0; transition:0.5s;">
-                    <div style="display:flex; justify-content:space-around; text-align:center; align-items:center;">
-                        <div id="res_icon"></div> 
-                        <div><span style="font-size:11px; color:var(--gray)">SCORE</span><br><b id="res_score" style="font-size:32px;">-</b></div>
-                        <div><span style="font-size:11px; color:var(--gray)">RANK</span><br><b id="res_rank" style="font-size:32px;">-</b></div>
-                        <div><span style="font-size:11px; color:var(--gray)">STATUS</span><br><b id="res_status" style="font-size:32px;">-</b></div>
-                    </div>
-                    <div id="res_detail" style="margin-top:25px; border-top:1px solid var(--border); padding-top:20px;"></div>
-                </div>
-                <div id="placeholder_res" style="height:100%; display:flex; align-items:center; justify-content:center; color:#e5e5e7; font-weight:600;">
-                    WAITING FOR SIGNAL...
+                <div id="quiz_result" style="display:none; text-align:center; padding: 20px 0;">
+                    <h3 style="font-size:72px; margin-bottom:10px; letter-spacing:-2px; color:var(--accent);" id="final_score">0</h3>
+                    <div id="final_eval" style="color:var(--gray); margin-bottom:30px; font-weight:600;">评估计算中...</div>
+                    <button onclick="location.reload()" class="btn">重新激活题库</button>
                 </div>
             </div>
         </div>
@@ -154,33 +180,58 @@
     <footer><p>© 2026 Tangerine Music Club. 保持热爱，保持共鸣。</p></footer>
 
     <script>
-        // --- 音序器逻辑 ---
+        // --- 全局音频架构 ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const mainFilter = audioCtx.createBiquadFilter();
+        mainFilter.type = 'lowpass';
+        mainFilter.frequency.setValueAtTime(20000, audioCtx.currentTime); 
+        mainFilter.Q.setValueAtTime(1, audioCtx.currentTime);
+        mainFilter.connect(audioCtx.destination);
+
         let isPlaying = false; let currentStep = 0; let nextStepTime = 0;
-        const secondsPerBeat = 60.0 / 120.0 / 4;
+        const secondsPerBeat = 60.0 / 125.0 / 4; 
 
         function playSound(type, time) {
-            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
+            const oscGain = audioCtx.createGain();
+            oscGain.connect(mainFilter);
+
             if (type === 'kick') {
-                osc.frequency.setValueAtTime(150, time); osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.5);
-                gain.gain.setValueAtTime(1, time); gain.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
-                osc.start(time); osc.stop(time + 0.5);
-            } else if (type === 'snare') {
-                // 1. 模拟鼓皮的打击声 (Oscillator)
                 const osc = audioCtx.createOscillator();
-                const oscGain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(150, time); // 稍微调高一点频率
-                oscGain.gain.setValueAtTime(0.3, time);
-                oscGain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
                 osc.connect(oscGain);
-                oscGain.connect(audioCtx.destination);
-                osc.start(time);
-                osc.stop(time + 0.1);
+                osc.frequency.setValueAtTime(150, time);
+                osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.4);
+                oscGain.gain.setValueAtTime(1, time);
+                oscGain.gain.exponentialRampToValueAtTime(0.01, time + 0.4);
+                osc.start(time); osc.stop(time + 0.4);
+            } else if (type === 'snare') {
+                const osc = audioCtx.createOscillator();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(160, time);
+                const snGain = audioCtx.createGain();
+                snGain.gain.setValueAtTime(0.25, time);
+                snGain.gain.exponentialRampToValueAtTime(0.01, time + 0.12);
+                osc.connect(snGain); snGain.connect(mainFilter);
+                osc.start(time); osc.stop(time + 0.12);
+
+                const bufferSize = audioCtx.sampleRate * 0.12;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const noiseGain = audioCtx.createGain();
+                noiseGain.gain.setValueAtTime(0.18, time);
+                noiseGain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+                noise.connect(noiseGain); noiseGain.connect(mainFilter);
+                noise.start(time); noise.stop(time + 0.15);
             } else if (type === 'hihat') {
-                osc.type = 'square'; osc.frequency.setValueAtTime(10000, time);
-                gain.gain.setValueAtTime(0.05, time); gain.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+                const osc = audioCtx.createOscillator();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(9500, time);
+                osc.connect(oscGain);
+                oscGain.gain.setValueAtTime(0.04, time);
+                oscGain.gain.exponentialRampToValueAtTime(0.005, time + 0.05);
                 osc.start(time); osc.stop(time + 0.05);
             }
         }
@@ -201,7 +252,7 @@
                     const step = row.querySelector(`.step:nth-child(${currentStep + 1})`);
                     document.querySelectorAll('.step').forEach(s => s.classList.remove('playing'));
                     document.querySelectorAll(`.step:nth-child(${currentStep + 1})`).forEach(s => s.classList.add('playing'));
-                    if (step.classList.contains('active')) playSound(row.dataset.instrument, nextStepTime);
+                    if (step && step.classList.contains('active')) playSound(row.dataset.instrument, nextStepTime);
                 });
                 nextStepTime += secondsPerBeat; currentStep = (currentStep + 1) % 16;
             }
@@ -211,11 +262,61 @@
         document.getElementById('play-seq').onclick = function() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             isPlaying = !isPlaying;
-            this.innerText = isPlaying ? "■ Stop" : "▶ Play Beat";
+            this.innerText = isPlaying ? "■ Stop Beat" : "▶ Play Beat";
             if (isPlaying) { currentStep = 0; nextStepTime = audioCtx.currentTime; scheduler(); }
         };
 
-        // --- 测试题逻辑 ---
+        function randomizeBeat() {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.seq-row').forEach(row => {
+                const type = row.dataset.instrument;
+                const steps = row.querySelectorAll('.step');
+                steps.forEach((step, idx) => {
+                    if (type === 'kick' && (idx === 0 || idx === 8 || (idx === 10 && Math.random() > 0.5))) step.classList.add('active');
+                    if (type === 'snare' && (idx === 4 || idx === 12 || (idx === 14 && Math.random() > 0.6))) step.classList.add('active');
+                    if (type === 'hihat' && (idx % 2 === 0 && Math.random() > 0.3)) step.classList.add('active');
+                });
+            });
+        }
+
+        // X-Y Pad 控制
+        const pad = document.getElementById('xyPad');
+        const cursor = document.getElementById('xyCursor');
+
+        function updateFilter(e) {
+            const rect = pad.getBoundingClientRect();
+            let x = (e.clientX - rect.left) / rect.width;
+            let y = (e.clientY - rect.top) / rect.height;
+            x = Math.max(0, Math.min(1, x)); y = Math.max(0, Math.min(1, y));
+            cursor.style.left = `${x * 100}%`; cursor.style.top = `${y * 100}%`;
+            const minFreq = 40; const maxFreq = 20000;
+            const freq = minFreq * Math.pow(maxFreq / minFreq, x);
+            const resonance = 1 + (1 - y) * 24;
+            mainFilter.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.05);
+            mainFilter.Q.setTargetAtTime(resonance, audioCtx.currentTime, 0.05);
+        }
+
+        pad.addEventListener('mousedown', (e) => {
+            updateFilter(e);
+            window.addEventListener('mousemove', updateFilter);
+        });
+        window.addEventListener('mouseup', () => window.removeEventListener('mousemove', updateFilter));
+        pad.addEventListener('touchmove', (e) => { if(e.touches.length > 0) updateFilter(e.touches[0]); }, {passive: true});
+
+        // 电台互动与小唱片激活逻辑
+        function playMusic(url, el) {
+            document.getElementById('player').src = url;
+            document.querySelectorAll('.track-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            
+            // 触发小唱片彩蛋动画
+            const cover = document.getElementById('cover-img');
+            const record = document.getElementById('recordPlayer');
+            cover.style.display = 'none';
+            record.style.display = 'block';
+        }
+
+        // --- 完整测试题逻辑 ---
         const masterPool = [
             { q: "在数字音乐制作中，DAW 的全称是？", o: ["Digital Audio Workstation", "Digital Audio Web", "Dynamic Audio Work", "Digital Arrangement Work"], a: 0 },
             { q: "MIDI 协议主要传输的是什么？", o: ["控制指令数据", "音频信号", "采样波形", "电流"], a: 0 },
@@ -232,10 +333,9 @@
 
         function showQ() {
             const q = masterPool[current];
-            document.getElementById('q_text').innerHTML = `<p style="font-size:18px; font-weight:700; margin-bottom:25px;">${q.q}</p>
+            document.getElementById('q_text').innerHTML = `<p style="font-size:16px; font-weight:700; margin-bottom:20px; color:#fff;">${q.q}</p>
                 ${q.o.map((o, i) => `<div class="quiz-option" onclick="pick(${i}, this)">${o}</div>`).join('')}`;
             document.getElementById('q_num').innerText = `${current + 1} / 10`;
-            // 进度条更新
             document.getElementById('p_fill').style.width = `${(current / 10) * 100}%`;
             selectedIdx = null;
         }
@@ -255,63 +355,15 @@
                 document.getElementById('quiz_box').style.display = 'none';
                 document.getElementById('quiz_result').style.display = 'block';
                 document.getElementById('final_score').innerText = userPt + " PT";
-                document.getElementById('final_eval').innerText = userPt >= 80 ? "🔥 Pro 级耳朵" : userPt >= 60 ? "🍊 合格制作人" : "🎸 纯粹的热爱者";
-                // 烟花特效
-                if(userPt >= 80) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                document.getElementById('final_eval').innerText = userPt >= 80 ? "🔥 Pro 级耳朵 (信号完美重合)" : userPt >= 60 ? "🍊 合格制作人" : "🎸 纯粹的热爱者";
+                if(userPt >= 80) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             }
         };
 
-        // --- 成绩查询逻辑 ---
-        async function runQuery() {
-            const nameVal = document.getElementById('name').value.trim();
-            const idVal = document.getElementById('stu_id').value.trim();
-            const btn = document.getElementById('query_btn');
-            if(!nameVal || !idVal) { alert("信号接收不完整"); return; }
-            
-            btn.disabled = true; btn.innerText = "SYNCING...";
-            
-            try {
-                const response = await fetch(`https://sheetdb.io/api/v1/4x2oeeuemtkwp/search?name=${encodeURIComponent(nameVal)}&id=${encodeURIComponent(idVal)}`);
-                const data = await response.json();
-                
-                document.getElementById('placeholder_res').style.display = 'none';
-                const resBox = document.getElementById('q_res');
-                resBox.style.display = 'block';
-                setTimeout(() => resBox.style.opacity = '1', 50);
-
-                if (data && data.length > 0) {
-                    const s = data[0];
-                    document.getElementById('res_score').innerText = s.score || "-";
-                    document.getElementById('res_rank').innerText = s.rank || "-";
-                    const st = document.getElementById('res_status');
-                    st.innerText = s.status || "-";
-                    
-                    const iconBox = document.getElementById('res_icon');
-                    const detail = document.getElementById('res_detail');
-
-                    if (s.status === "通过") {
-                        st.style.color = "#34c759";
-                        // 注入小唱片动画
-                        iconBox.innerHTML = `<div class="record-player"></div>`;
-                        // 烟花特效
-                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                        detail.innerHTML = `<p style="font-size:14px; line-height:1.8;"><b>🍊 复试指令：</b>恭喜进入复试轨道！信号已对接。请前往艺术楼 402 数字音频实验室。</p>`;
-                    } else {
-                        st.style.color = "#86868b";
-                        iconBox.innerHTML = `🎧`;
-                        detail.innerHTML = `<p style="font-size:14px; color:#86868b; text-align:center;">频率未能重合。期待在下个现场遇见你。</p>`;
-                    }
-                } else {
-                    resBox.style.display = 'none';
-                    document.getElementById('placeholder_res').style.display = 'flex';
-                    document.getElementById('placeholder_res').innerText = "未探测到信号。";
-                }
-            } catch (e) { alert("同步失败"); } finally {
-                btn.disabled = false; btn.innerText = "同步云端数据";
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', showQ);
+        document.addEventListener('DOMContentLoaded', () => {
+            showQ();
+            randomizeBeat();
+        });
     </script>
 </body>
 </html>
