@@ -12,10 +12,21 @@
             --card: rgba(17, 24, 39, 0.7); 
             --text: #ffffff; 
             --gray: #94a3b8; 
-            --accent: #00ffaa; /* 极光绿作为点缀色 */
+            --accent: #00ffaa; /* 默认冷冽月光绿 */
             --accent-glow: rgba(0, 255, 170, 0.2);
             --border: rgba(255, 255, 255, 0.06); 
+            --transition-speed: 0.5s;
         }
+        
+        /* 烈焰暗黑人格样式 */
+        body.theme-flame {
+            --bg: #0d0707;
+            --card: rgba(28, 14, 14, 0.75);
+            --accent: #ff5500; /* 炙热岩浆橙 */
+            --accent-glow: rgba(255, 85, 0, 0.3);
+            --border: rgba(255, 85, 0, 0.1);
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif; 
@@ -23,22 +34,21 @@
             color: var(--text); 
             -webkit-font-smoothing: antialiased; 
             padding-bottom: 100px;
+            transition: background var(--transition-speed), color var(--transition-speed);
         }
         
-        nav { position: fixed; top: 0; width: 100%; height: 65px; background: rgba(9, 13, 22, 0.7); backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); }
+        nav { position: fixed; top: 0; width: 100%; height: 65px; background: rgba(9, 13, 22, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); transition: all var(--transition-speed); }
         nav a { color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; margin: 0 25px; letter-spacing: 1px; opacity: 0.6; transition: 0.3s; }
         nav a:hover { opacity: 1; color: var(--accent); }
 
         header { padding: 150px 20px 50px; text-align: center; }
-        header h1 { font-size: 48px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
-        header h1 span { color: var(--accent); }
+        header h1 { font-size: 48px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; transition: color var(--transition-speed); }
+        header h1 span { color: var(--accent); transition: color var(--transition-speed); }
         header p { font-size: 15px; color: var(--gray); max-width: 600px; margin: 0 auto; }
 
-        /* 核心修复：死死锁住 12 列网格架构，绝不塌陷 */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; width: 100%; }
         
-        /* 重新雕刻卡片：加入毛玻璃与呼吸质感 */
         .card { 
             background: var(--card); 
             backdrop-filter: blur(16px);
@@ -47,33 +57,59 @@
             padding: 32px; 
             border: 1px solid var(--border); 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease, border-color 0.3s ease;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         .card:hover { 
             border-color: rgba(0, 255, 170, 0.3);
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 255, 170, 0.03);
+        }
+        body.theme-flame .card:hover {
+            border-color: rgba(255, 85, 0, 0.4);
         }
 
-        /* 跨列宽度控制 */
-        .col-12 { grid-column: span 12; }
-        .col-8 { grid-column: span 8; }
-        .col-6 { grid-column: span 6; }
-        .col-4 { grid-column: span 4; }
+        .col-12 { grid-column: span 12; } .col-8 { grid-column: span 8; } .col-6 { grid-column: span 6; } .col-4 { grid-column: span 4; }
 
-        /* 新专辑中轴C位专属动效 */
+        /* 专辑卡片顶奢定制 */
         .album-center-card {
-            background: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(9, 13, 22, 0.9) 100%);
+            background: linear-gradient(135deg, var(--card) 0%, rgba(9, 13, 22, 0.9) 100%);
             border: 1px solid rgba(0, 255, 170, 0.15);
             text-align: center;
             align-items: center;
             justify-content: center;
-            padding: 48px;
+            padding: 50px;
+        }
+        body.theme-flame .album-center-card {
+            border: 1px solid rgba(255, 85, 0, 0.25);
+            background: linear-gradient(135deg, var(--card) 0%, rgba(13, 7, 7, 0.9) 100%);
         }
 
-        /* 音序器网格 */
+        /* 主题双重人格切换开关 */
+        .personality-toggle {
+            display: inline-flex;
+            background: rgba(255,255,255,0.04);
+            padding: 4px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .toggle-tab {
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gray);
+        }
+        .toggle-tab.active {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* 音序器 */
         .sequencer-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; width: 100%; }
         .seq-row { display: flex; align-items: center; gap: 16px; width: 100%; }
         .seq-label { width: 80px; font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: 1px; }
@@ -91,12 +127,13 @@
         .step.active { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
         .step.playing { filter: brightness(1.3); transform: scaleY(1.08); }
 
-        /* X-Y Pad 触控区 */
+        /* X-Y Pad 与粒子 Canvas */
         .xy-pad { width: 100%; height: 180px; background: rgba(0, 0, 0, 0.3); border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1); position: relative; cursor: crosshair; overflow: hidden; margin-top: 15px; }
-        .xy-cursor { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; pointer-events: none; box-shadow: 0 0 15px var(--accent); }
-        .xy-label { position: absolute; font-size: 10px; color: var(--gray); font-weight: 600; pointer-events: none; opacity: 0.5; }
+        .xy-canvas { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+        .xy-cursor { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; pointer-events: none; box-shadow: 0 0 15px var(--accent); z-index: 5; }
+        .xy-label { position: absolute; font-size: 10px; color: var(--gray); font-weight: 600; pointer-events: none; opacity: 0.5; z-index: 2; }
 
-        /* 电台排版 */
+        /* 电台 */
         .radio-flex { display: flex; align-items: center; gap: 32px; width: 100%; margin-top: 15px; }
         .album-art { width: 110px; height: 110px; border-radius: 16px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); flex-shrink: 0; }
         .record-player { width: 50px; height: 50px; border: 4px dashed var(--accent); border-radius: 50%; animation: spin 4s linear infinite; display: none; }
@@ -104,9 +141,9 @@
         .track-item { padding: 12px 16px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; transition: 0.2s; color: #cbd5e1; background: rgba(255,255,255,0.02); }
         .track-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
         .track-item.active { color: var(--accent); font-weight: 700; background: rgba(0, 255, 170, 0.06); }
+        body.theme-flame .track-item.active { background: rgba(255, 85, 0, 0.08); }
 
-        /* 标签与按钮 */
-        .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; }
+        .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; transition: color var(--transition-speed); }
         .btn { background: rgba(255, 255, 255, 0.05); color: white; border-radius: 12px; padding: 12px 24px; font-weight: 600; font-size: 13px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; text-decoration: none; text-align: center; }
         .btn:hover { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 5px 15px var(--accent-glow); }
         .btn-primary { background: #ffffff; color: #000; border-color: transparent; }
@@ -117,15 +154,19 @@
         .quiz-option { background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; color: #cbd5e1; }
         .quiz-option:hover { background: rgba(255, 255, 255, 0.05); }
         .quiz-option.selected { border-color: var(--accent); background: rgba(0, 255, 170, 0.04); color: var(--accent); }
+        body.theme-flame .quiz-option.selected { background: rgba(255, 85, 0, 0.05); }
+
+        /* 导出弹窗 */
+        .toast-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:2000; display:flex; justify-content:center; align-items:center; opacity:0; pointer-events:none; transition: opacity 0.3s ease; }
+        .toast-overlay.active { opacity:1; pointer-events:all; }
+        .toast-box { background: #151b26; border: 1px solid var(--border); border-radius: 20px; padding: 30px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
 
         footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; margin-top: 60px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* 响应式断点：手机屏幕自动单列竖排，绝不崩塌 */
         @media (max-width: 900px) { 
             .col-8, .col-6, .col-4 { grid-column: span 12; } 
-            .radio-flex { flex-direction: column; }
-            .track-list { width: 100%; }
+            .radio-flex { flex-direction: column; } .track-list { width: 100%; }
         }
     </style>
 </head>
@@ -147,14 +188,18 @@
         <div class="grid-layout">
             
             <div class="card col-12 album-center-card" id="album-focus">
-                <span class="section-tag" style="background: rgba(0, 255, 170, 0.1); padding: 4px 12px; border-radius: 20px;">Upcoming Album</span>
-                <h2 style="font-size: 36px; font-weight: 800; margin: 16px 0 8px;">《Moon, Flame!》</h2>
-                <p style="color: var(--accent); font-weight: 600; font-size: 14px; margin-bottom: 16px; letter-spacing: 2px;">首张个人概念实验专辑</p>
-                <p style="color: var(--gray); font-size: 15px; line-height: 1.6; max-width: 720px; margin-bottom: 28px;">
-                    冷冽如月光，炙热如烈焰。这不只是一张普通的电子乐合辑，而是一场关于失真、低频重构与随机信号对撞的现场实验。在这里，常规的编曲轨道将被揉碎，情绪在无声与轰鸣的缝隙中野蛮生长。
+                <div class="personality-toggle">
+                    <div class="toggle-tab active" id="tab-moon" onclick="switchTheme('moon')">🌙 MOON 模式</div>
+                    <div class="toggle-tab" id="tab-flame" onclick="switchTheme('flame')">🔥 FLAME 模式</div>
+                </div>
+                <span class="section-tag" id="album-tag">Upcoming Album Concept</span>
+                <h2 style="font-size: 36px; font-weight: 800; margin: 5px 0 8px;" id="album-title">《Moon, Flame!》</h2>
+                <p style="color: var(--accent); font-weight: 600; font-size: 14px; margin-bottom: 16px; letter-spacing: 2px;" id="album-sub">首张个人概念实验专辑 · 月相链路</p>
+                <p style="color: var(--gray); font-size: 15px; line-height: 1.6; max-width: 720px; margin-bottom: 28px;" id="album-desc">
+                    冷冽如月光，寂静无声。这部分链路我们正在试图捕捉深夜里微弱的高频颤音（Hi-hat）和空灵的声学环境，让电子节奏融化在冰冷的月晕里。
                 </p>
-                <button class="btn" style="cursor: default; background: rgba(0, 255, 170, 0.05); border-color: rgba(0, 255, 170, 0.2); color: var(--accent); font-size: 12px;">
-                    ⚡ 声音链路正在高能孵化中
+                <button class="btn" style="cursor: default; background: rgba(0, 255, 170, 0.05); border-color: rgba(0, 255, 170, 0.2); color: var(--accent); font-size: 12px;" id="status-tag">
+                    ⚡ 清冷极光频率加载中
                 </button>
             </div>
 
@@ -163,8 +208,9 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                     <h2>灵感切片步进器</h2>
                     <div style="display: flex; gap: 10px;">
-                        <button onclick="randomizeBeat()" class="btn" style="border-radius: 50px; padding: 8px 18px;">🎲 随机抓个律动</button>
-                        <button id="play-seq" class="btn btn-primary" style="border-radius: 50px; padding: 8px 18px;">▶ 开启节拍</button>
+                        <button onclick="captureBeat()" class="btn" style="border-radius: 50px; padding: 8px 16px;">⚡ 捕获当前律动</button>
+                        <button onclick="randomizeBeat()" class="btn" style="border-radius: 50px; padding: 8px 16px;">🎲 随机抓个节拍</button>
+                        <button id="play-seq" class="btn btn-primary" style="border-radius: 50px; padding: 8px 16px;">▶ 开启节拍</button>
                     </div>
                 </div>
                 <div class="sequencer-grid">
@@ -175,13 +221,14 @@
             </div>
 
             <div class="card col-4">
-                <div class="xy-pad-container">
+                <div class="xy-pad-container" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
                         <span class="section-tag">Dynamic Filter</span>
                         <h2 style="font-size:20px; margin-bottom:4px;">X-Y 空间滤镜</h2>
-                        <p style="color:var(--gray); font-size:12px; line-height:1.4;">点住并揉搓：横轴控制声音明暗，纵轴控制声学张力。</p>
+                        <p style="color:var(--gray); font-size:12px; line-height:1.4;">揉搓触控区：横轴切分声学明暗，纵轴扭转电路张力。</p>
                     </div>
                     <div class="xy-pad" id="xyPad">
+                        <canvas class="xy-canvas" id="xyCanvas"></canvas>
                         <div class="xy-label" style="bottom:10px; right:10px;">明暗度 ➔</div>
                         <div class="xy-label" style="top:10px; left:10px;">张力 ⬆</div>
                         <div class="xy-cursor" id="xyCursor"></div>
@@ -213,7 +260,7 @@
                 <span class="section-tag">Studio Logs</span>
                 <h2>春季招新 · 交卷时刻</h2>
                 <p style="color:var(--gray); margin-bottom:24px; line-height:1.6; font-size:14px; flex: 1;">今年的笔试阶段已经顺利收官。感谢每一位对波形和信号链路抱有好奇的创作者，每一份答卷我们都在悉心阅读。</p>
-                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VS07D6oZL5A" target="_blank" class="btn">阅读招新回顾</a>
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn">阅读招新回顾</a>
             </div>
             
             <div class="card col-6">
@@ -242,7 +289,15 @@
                     <button onclick="location.reload()" class="btn">重新测试</button>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <div class="toast-overlay" id="toastOverlay">
+        <div class="toast-box">
+            <h3 style="margin-bottom:10px; font-size:20px; color:var(--accent);">📋 律动切片已捕获</h3>
+            <p style="color:var(--gray); font-size:13px; margin-bottom:20px;">这是一段带有独立制作人印记的加密声音代码，已为您复制到剪贴板：</p>
+            <textarea id="codeArea" readonly style="width:100%; height:90px; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:10px; color:#fff; padding:10px; font-family:monospace; font-size:12px; resize:none; margin-bottom:20px; outline:none;"></textarea>
+            <button onclick="closeToast()" class="btn btn-primary" style="width:100%;">收到，拿去交流</button>
         </div>
     </div>
 
@@ -251,6 +306,8 @@
     <script>
         // --- 核心音频架构 ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let currentPersonality = 'moon'; // 默认人格为‘月’
+
         const mainFilter = audioCtx.createBiquadFilter();
         mainFilter.type = 'lowpass';
         mainFilter.frequency.setValueAtTime(20000, audioCtx.currentTime); 
@@ -267,17 +324,25 @@
             if (type === 'kick') {
                 const osc = audioCtx.createOscillator();
                 osc.connect(oscGain);
-                osc.frequency.setValueAtTime(150, time);
-                osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.4);
-                oscGain.gain.setValueAtTime(1, time);
+                
+                // 【核心变化】：如果是 Flame 暴烈模式，底鼓加入明显的模拟过载低音拉拽
+                if(currentPersonality === 'flame') {
+                    osc.frequency.setValueAtTime(260, time);
+                    osc.frequency.exponentialRampToValueAtTime(0.1, time + 0.45);
+                    oscGain.gain.setValueAtTime(1.4, time); // 增益加强
+                } else {
+                    osc.frequency.setValueAtTime(140, time);
+                    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.35);
+                    oscGain.gain.setValueAtTime(0.9, time);
+                }
                 oscGain.gain.exponentialRampToValueAtTime(0.01, time + 0.4);
                 osc.start(time); osc.stop(time + 0.4);
             } else if (type === 'snare') {
                 const osc = audioCtx.createOscillator();
-                osc.type = 'triangle';
+                osc.type = currentPersonality === 'flame' ? 'sawtooth' : 'triangle';
                 osc.frequency.setValueAtTime(160, time);
                 const snGain = audioCtx.createGain();
-                snGain.gain.setValueAtTime(0.25, time);
+                snGain.gain.setValueAtTime(0.22, time);
                 snGain.gain.exponentialRampToValueAtTime(0.01, time + 0.12);
                 osc.connect(snGain); snGain.connect(mainFilter);
                 osc.start(time); osc.stop(time + 0.12);
@@ -289,14 +354,14 @@
                 const noise = audioCtx.createBufferSource();
                 noise.buffer = buffer;
                 const noiseGain = audioCtx.createGain();
-                noiseGain.gain.setValueAtTime(0.18, time);
+                noiseGain.gain.setValueAtTime(0.16, time);
                 noiseGain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
                 noise.connect(noiseGain); noiseGain.connect(mainFilter);
                 noise.start(time); noise.stop(time + 0.15);
             } else if (type === 'hihat') {
                 const osc = audioCtx.createOscillator();
                 osc.type = 'square';
-                osc.frequency.setValueAtTime(9500, time);
+                osc.frequency.setValueAtTime(currentPersonality === 'flame' ? 7000 : 11000, time);
                 osc.connect(oscGain);
                 oscGain.gain.setValueAtTime(0.04, time);
                 oscGain.gain.exponentialRampToValueAtTime(0.005, time + 0.05);
@@ -304,7 +369,41 @@
             }
         }
 
-        // 初始化步进节点
+        // 人格一键裂变路由
+        function switchTheme(mode) {
+            currentPersonality = mode;
+            document.querySelectorAll('.toggle-tab').forEach(t => t.classList.remove('active'));
+            
+            const tag = document.getElementById('album-tag');
+            const title = document.getElementById('album-title');
+            const sub = document.getElementById('album-sub');
+            const desc = document.getElementById('album-desc');
+            const stat = document.getElementById('status-tag');
+
+            if(mode === 'flame') {
+                document.body.classList.add('theme-flame');
+                document.getElementById('tab-flame').classList.add('active');
+                tag.innerText = "Flame Overdrive Spark";
+                sub.innerText = "首张个人概念实验专辑 · 烈焰链路";
+                desc.innerText = "暴烈如火焰，失真野蛮。这部分链路我们打破了常规音轨的束缚，强行给底鼓注入了过载破音，加入了硬核粗粝的工业失真。音色更脏、更有破坏欲。";
+                stat.innerText = "🔥 熔岩电路过载运行中";
+                stat.style.color = "#ff5500";
+                stat.style.borderColor = "rgba(255, 85, 0, 0.3)";
+            } else {
+                document.body.classList.remove('theme-flame');
+                document.getElementById('tab-moon').classList.add('active');
+                tag.innerText = "Upcoming Album Concept";
+                sub.innerText = "首张个人概念实验专辑 · 月相链路";
+                desc.innerText = "冷冽如月光，寂静无声。这部分链路我们正在试图捕捉深夜里微弱的高频颤音（Hi-hat）和空灵的声学环境，让电子节奏融化在冰冷的月晕里。";
+                stat.innerText = "⚡ 清冷极光频率加载中";
+                stat.style.color = "#00ffaa";
+                stat.style.borderColor = "rgba(0, 255, 170, 0.2)";
+            }
+            // 粒子画布配色自动适配
+            initCanvasColor();
+        }
+
+        // 初始化步进器节点
         document.querySelectorAll('.seq-row').forEach(row => {
             const stepsDiv = row.querySelector('.steps');
             for (let i = 0; i < 16; i++) {
@@ -331,7 +430,7 @@
         document.getElementById('play-seq').onclick = function() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             isPlaying = !isPlaying;
-            this.innerText = isPlaying ? "■ 暂停播放" : "▶ 开启节拍";
+            this.innerText = isPlaying ? "■ 暂停节拍" : "▶ 开启节拍";
             if (isPlaying) { currentStep = 0; nextStepTime = audioCtx.currentTime; scheduler(); }
         };
 
@@ -342,15 +441,83 @@
                 const steps = row.querySelectorAll('.step');
                 steps.forEach((step, idx) => {
                     if (type === 'kick' && (idx === 0 || idx === 8 || (idx === 10 && Math.random() > 0.5))) step.classList.add('active');
-                    if (type === 'snare' && (idx === 4 || idx === 12 || (idx === 14 && Math.random() > 0.6))) step.classList.add('active');
-                    if (type === 'hihat' && (idx % 2 === 0 && Math.random() > 0.3)) step.classList.add('active');
+                    if (type === 'snare' && (idx === 4 || idx === 12)) step.classList.add('active');
+                    if (type === 'hihat' && (idx % 2 === 0 && Math.random() > 0.4)) step.classList.add('active');
                 });
             });
         }
 
-        // X-Y Pad 核心逻辑
+        // --- 律动导出捕获机制 ---
+        function captureBeat() {
+            let kickStr = "", snareStr = "", hihatStr = "";
+            document.querySelectorAll('.seq-row[data-instrument="kick"] .step').forEach(s => kickStr += s.classList.contains('active') ? "■" : "□");
+            document.querySelectorAll('.seq-row[data-instrument="snare"] .step').forEach(s => snareStr += s.classList.contains('active') ? "■" : "□");
+            document.querySelectorAll('.seq-row[data-instrument="hihat"] .step').forEach(s => hihatStr += s.classList.contains('active') ? "■" : "□");
+            
+            const comments = [
+                "这是一段极具125BPM工业故障感的极简律动，适合在副歌前做情绪冷冻。",
+                "声学骨架非常稳固，切片有很强的跳跃感，具备高级Dark Pop潜质！",
+                "低频占比很高，这是一颗极度危险的声音炸弹。"
+            ];
+            const randomComment = comments[Math.floor(Math.random() * comments.length)];
+
+            const outputCode = `// Tangerine Studio Capture\n[Personality]: ${currentPersonality.toUpperCase()}\n[Kick]:  ${kickStr}\n[Snare]: ${snareStr}\n[Hihat]: ${hihatStr}\n/* 算法评语: ${randomComment} */`;
+            
+            document.getElementById('codeArea').value = outputCode;
+            navigator.clipboard.writeText(outputCode).catch(()=>{});
+            
+            document.getElementById('toastOverlay').classList.add('active');
+        }
+        function closeToast() { document.getElementById('toastOverlay').classList.remove('active'); }
+
+        // --- X-Y Pad Canvas 涟漪动画引擎 ---
         const pad = document.getElementById('xyPad');
         const cursor = document.getElementById('xyCursor');
+        const canvas = document.getElementById('xyCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = []; let particleColor = '#00ffaa';
+
+        function initCanvasColor() {
+            particleColor = currentPersonality === 'flame' ? '#ff5500' : '#00ffaa';
+        }
+
+        function resizeCanvas() {
+            canvas.width = pad.clientWidth; canvas.height = pad.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function spawnParticles(mx, my) {
+            for(let i=0; i<3; i++) {
+                particles.push({
+                    x: mx, y: my,
+                    vx: (Math.random() - 0.5) * 3,
+                    vy: (Math.random() - 0.5) * 3,
+                    radius: Math.random() * 4 + 2,
+                    alpha: 1
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = particleColor;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                
+                p.x += p.vx; p.y += p.vy;
+                p.alpha -= 0.02;
+                if(p.alpha <= 0) { particles.splice(i, 1); i--; }
+            }
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
 
         function updateFilter(e) {
             const rect = pad.getBoundingClientRect();
@@ -358,6 +525,10 @@
             let y = (e.clientY - rect.top) / rect.height;
             x = Math.max(0, Math.min(1, x)); y = Math.max(0, Math.min(1, y));
             cursor.style.left = `${x * 100}%`; cursor.style.top = `${y * 100}%`;
+            
+            // 实时触发空气流体涟漪
+            spawnParticles(x * canvas.width, y * canvas.height);
+
             const minFreq = 40; const maxFreq = 20000;
             const freq = minFreq * Math.pow(maxFreq / minFreq, x);
             const resonance = 1 + (1 - y) * 24;
@@ -366,8 +537,7 @@
         }
 
         pad.addEventListener('mousedown', (e) => {
-            updateFilter(e);
-            window.addEventListener('mousemove', updateFilter);
+            updateFilter(e); window.addEventListener('mousemove', updateFilter);
         });
         window.addEventListener('mouseup', () => window.removeEventListener('mousemove', updateFilter));
         pad.addEventListener('touchmove', (e) => { if(e.touches.length > 0) updateFilter(e.touches[0]); }, {passive: true});
@@ -383,7 +553,7 @@
 
         // --- 考核题库 ---
         const masterPool = [
-            { q: "在数字音乐制作中，我们常说的 DAW 究竟是指什么？", o: ["Digital Audio Workstation (数字音频工作站)", "Digital Audio Web (数字音频网络供应链)", "Dynamic Audio Work (动态声音轨道)", "Digital Arrangement Work (数字编曲流)"], a: 0 },
+            { q: "在数字音乐制作中，我们常说的 DAW 究竟是指什么？", o: ["Digital Audio Workstation (数字音频工作站)", "Digital Audio Web (数字音频网络)", "Dynamic Audio Work (动态声音轨道)", "Digital Arrangement Work (数字编曲流)"], a: 0 },
             { q: "万物皆可连的 MIDI 协议，它在轨道间传输的核心其实是？", o: ["告诉乐器怎么响的控制指令数据", "纯粹的音频波形信号", "预先录制好的采样切片", "模拟电路的高低电流"], a: 0 },
             { q: "如果你看到一首歌标着 125 BPM，这代表什么？", o: ["它的现场声音增益达到了125分贝", "它每分钟会跳动 125 个节拍", "声音的每秒高频采样率", "音频压缩过程中的比特率"], a: 1 },
             { q: "在调音使用 EQ 时，切掉 100Hz 以下的低频信号通常是为了？", o: ["防止高频吉他或人声太刺耳", "把泥泞浑浊的低频杂音扫干净，给底鼓留空间", "让副歌的人声听起来更靠前", "把空间里的混响尾音收干净"], a: 1 },
@@ -421,7 +591,7 @@
             }
         };
 
-        document.addEventListener('DOMContentLoaded', () => { showQ(); randomizeBeat(); });
+        document.addEventListener('DOMContentLoaded', () => { showQ(); randomizeBeat(); initCanvasColor(); });
     </script>
 </body>
 </html>
