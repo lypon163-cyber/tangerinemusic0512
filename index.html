@@ -4,318 +4,314 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>柑橘音乐 | Tangerine Music</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Noto+Sans+SC:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
+        /* 🌙 默认：冷酷极光黑客模式 */
         :root { 
-            --bg: #090d16; 
-            --card: rgba(17, 24, 39, 0.7); 
+            --bg: #000000; 
+            --card: #0a0a0a; 
             --text: #ffffff; 
-            --gray: #94a3b8; 
-            --accent: #00ffaa; /* 默认冷冽月光绿 */
-            --accent-glow: rgba(0, 255, 170, 0.2);
-            --border: rgba(255, 255, 255, 0.06); 
-            --transition-speed: 0.5s;
+            --gray: #888888; 
+            --accent: #00ffaa; 
+            --accent-glow: rgba(0, 255, 170, 0.4);
+            --border: #111111; 
+            --radius: 16px;
+            --font-weight-title: 800;
         }
         
-        /* 烈焰暗黑人格样式 */
+        /* 🔥 暴力美学：烈焰过载人格（全屏暴力吞噬） */
         body.theme-flame {
-            --bg: #0d0707;
-            --card: rgba(28, 14, 14, 0.75);
-            --accent: #ff5500; /* 炙热岩浆橙 */
-            --accent-glow: rgba(255, 85, 0, 0.3);
-            --border: rgba(255, 85, 0, 0.1);
+            --bg: #4a0000;          /* 暴烈血红底 */
+            --card: #200000;        /* 焦黑卡片 */
+            --text: #ffff00;        /* 烈焰纯黄字，高强对比度绝对清晰 */
+            --gray: #ffaa00;        /* 警告橙 */
+            --accent: #ff4400;      /* 燃烧高能红 */
+            --accent-glow: rgba(255, 68, 0, 0.6);
+            --border: #ff4400;      /* 边框变成刺眼的通电红线 */
+            --radius: 4px;          /* 圆角彻底锐化，充满攻击性 */
+            --font-weight-title: 900;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.25s ease, border-color 0.25s ease, color 0.15s ease, border-radius 0.3s ease; }
         body { 
             font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif; 
-            background: linear-gradient(180deg, #0f1626 0%, var(--bg) 100%);
+            background: var(--bg);
             color: var(--text); 
             -webkit-font-smoothing: antialiased; 
             padding-bottom: 100px;
-            transition: background var(--transition-speed), color var(--transition-speed);
         }
         
-        nav { position: fixed; top: 0; width: 100%; height: 65px; background: rgba(9, 13, 22, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); transition: all var(--transition-speed); }
-        nav a { color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; margin: 0 25px; letter-spacing: 1px; opacity: 0.6; transition: 0.3s; }
-        nav a:hover { opacity: 1; color: var(--accent); }
+        nav { position: fixed; top: 0; width: 100%; height: 65px; background: var(--card); border-bottom: 2px solid var(--border); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        nav a { color: var(--text); text-decoration: none; font-size: 13px; font-weight: 700; margin: 0 25px; letter-spacing: 1px; opacity: 0.8; }
+        nav a:hover { color: var(--accent); opacity: 1; }
 
         header { padding: 150px 20px 50px; text-align: center; }
-        header h1 { font-size: 48px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; transition: color var(--transition-speed); }
-        header h1 span { color: var(--accent); transition: color var(--transition-speed); }
-        header p { font-size: 15px; color: var(--gray); max-width: 600px; margin: 0 auto; }
+        header h1 { font-size: 56px; font-weight: var(--font-weight-title); letter-spacing: -2px; text-transform: uppercase; }
+        header h1 span { color: var(--accent); }
+        header p { font-size: 15px; color: var(--gray); font-weight: 700; max-width: 600px; margin: 10px auto 0; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; width: 100%; }
         
         .card { 
             background: var(--card); 
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 24px; 
+            border-radius: var(--radius); 
             padding: 32px; 
-            border: 1px solid var(--border); 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
-            transition: all var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease, border-color 0.3s ease;
+            border: 2px solid var(--border); 
             display: flex;
             flex-direction: column;
             position: relative;
         }
         .card:hover { 
-            border-color: rgba(0, 255, 170, 0.3);
-            transform: translateY(-4px);
-        }
-        body.theme-flame .card:hover {
-            border-color: rgba(255, 85, 0, 0.4);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
         .col-12 { grid-column: span 12; } .col-8 { grid-column: span 8; } .col-6 { grid-column: span 6; } .col-4 { grid-column: span 4; }
 
-        /* 专辑卡片顶奢定制 */
+        /* 核心C位卡片 */
         .album-center-card {
-            background: linear-gradient(135deg, var(--card) 0%, rgba(9, 13, 22, 0.9) 100%);
-            border: 1px solid rgba(0, 255, 170, 0.15);
             text-align: center;
             align-items: center;
             justify-content: center;
-            padding: 50px;
-        }
-        body.theme-flame .album-center-card {
-            border: 1px solid rgba(255, 85, 0, 0.25);
-            background: linear-gradient(135deg, var(--card) 0%, rgba(13, 7, 7, 0.9) 100%);
+            padding: 60px 32px;
+            background: linear-gradient(180deg, var(--card) 0%, rgba(0,0,0,0.5) 100%);
+            border-width: 3px;
         }
 
-        /* 主题双重人格切换开关 */
+        /* 暴力开关：双色强力对抗 */
         .personality-toggle {
             display: inline-flex;
-            background: rgba(255,255,255,0.04);
-            padding: 4px;
-            border-radius: 50px;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
+            background: #000;
+            padding: 6px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 30px;
         }
         .toggle-tab {
-            padding: 6px 16px;
-            font-size: 12px;
-            font-weight: 700;
-            border-radius: 50px;
+            padding: 10px 24px;
+            font-size: 13px;
+            font-weight: 900;
+            border-radius: var(--radius);
             cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--gray);
+            color: #fff;
+            background: transparent;
         }
         .toggle-tab.active {
             background: var(--accent);
             color: #000;
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* 音序器 */
-        .sequencer-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; width: 100%; }
+        /* 音序器步进矩阵 */
+        .sequencer-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; width: 100%; }
         .seq-row { display: flex; align-items: center; gap: 16px; width: 100%; }
-        .seq-label { width: 80px; font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: 1px; }
+        .seq-label { width: 90px; font-size: 12px; font-weight: 900; color: var(--gray); letter-spacing: 1px; }
         .steps { display: flex; gap: 6px; flex: 1; }
         .step { 
             flex: 1; 
-            height: 38px; 
-            background: rgba(255, 255, 255, 0.03); 
-            border-radius: 8px; 
+            height: 42px; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid var(--border);
+            border-radius: calc(var(--radius) / 2); 
             cursor: pointer; 
-            transition: all 0.15s ease;
-            border: 1px solid transparent;
         }
-        .step:hover { background: rgba(255, 255, 255, 0.08); }
-        .step.active { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
-        .step.playing { filter: brightness(1.3); transform: scaleY(1.08); }
+        body.theme-flame .step { background: rgba(0, 0, 0, 0.4); }
+        .step:hover { background: rgba(255, 255, 255, 0.15); }
+        .step.active { background: var(--accent); border-color: var(--text); box-shadow: 0 0 15px var(--accent-glow); }
+        .step.playing { filter: brightness(1.6); transform: scaleY(1.1); }
 
-        /* X-Y Pad 与粒子 Canvas */
-        .xy-pad { width: 100%; height: 180px; background: rgba(0, 0, 0, 0.3); border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1); position: relative; cursor: crosshair; overflow: hidden; margin-top: 15px; }
+        /* X-Y Pad Canvas */
+        .xy-pad { width: 100%; height: 200px; background: #000000; border-radius: var(--radius); border: 2px dashed var(--border); position: relative; cursor: crosshair; overflow: hidden; margin-top: 15px; }
         .xy-canvas { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
-        .xy-cursor { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; pointer-events: none; box-shadow: 0 0 15px var(--accent); z-index: 5; }
-        .xy-label { position: absolute; font-size: 10px; color: var(--gray); font-weight: 600; pointer-events: none; opacity: 0.5; z-index: 2; }
+        .xy-cursor { width: 16px; height: 16px; background: var(--text); border: 2px solid var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; pointer-events: none; box-shadow: 0 0 20px var(--accent); z-index: 5; }
+        .xy-label { position: absolute; font-size: 11px; color: var(--accent); font-weight: 900; pointer-events: none; z-index: 2; }
 
-        /* 电台 */
+        /* 原创电台 */
         .radio-flex { display: flex; align-items: center; gap: 32px; width: 100%; margin-top: 15px; }
-        .album-art { width: 110px; height: 110px; border-radius: 16px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); flex-shrink: 0; }
-        .record-player { width: 50px; height: 50px; border: 4px dashed var(--accent); border-radius: 50%; animation: spin 4s linear infinite; display: none; }
-        .track-list { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-        .track-item { padding: 12px 16px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; transition: 0.2s; color: #cbd5e1; background: rgba(255,255,255,0.02); }
-        .track-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .track-item.active { color: var(--accent); font-weight: 700; background: rgba(0, 255, 170, 0.06); }
-        body.theme-flame .track-item.active { background: rgba(255, 85, 0, 0.08); }
+        .album-art { width: 120px; height: 120px; border: 2px solid var(--border); border-radius: var(--radius); overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: #000; flex-shrink: 0; }
+        .record-player { width: 60px; height: 60px; border: 6px dashed var(--accent); border-radius: 50%; animation: spin 2s linear infinite; display: none; }
+        .track-list { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .track-item { padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--text); background: rgba(0,0,0,0.2); }
+        .track-item:hover { border-color: var(--accent); background: rgba(255,255,255,0.05); }
+        .track-item.active { color: #000 !important; background: var(--accent) !important; font-weight: 900; border-color: var(--text); box-shadow: 0 0 15px var(--accent-glow); }
 
-        .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; transition: color var(--transition-speed); }
-        .btn { background: rgba(255, 255, 255, 0.05); color: white; border-radius: 12px; padding: 12px 24px; font-weight: 600; font-size: 13px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; text-decoration: none; text-align: center; }
-        .btn:hover { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 5px 15px var(--accent-glow); }
-        .btn-primary { background: #ffffff; color: #000; border-color: transparent; }
+        .section-tag { font-size: 11px; font-weight: 900; color: #000; background: var(--accent); padding: 2px 10px; border-radius: 4px; display: inline-block; margin-bottom: 16px; width: fit-content; text-transform: uppercase; }
+        .btn { background: #000; color: var(--text); border-radius: var(--radius); padding: 14px 28px; font-weight: 900; font-size: 13px; border: 2px solid var(--border); cursor: pointer; text-decoration: none; text-align: center; text-transform: uppercase; }
+        .btn:hover { background: var(--accent); color: #000; border-color: var(--text); box-shadow: 0 0 20px var(--accent-glow); }
+        .btn-primary { background: var(--text); color: #000; border-color: transparent; }
         .btn-primary:hover { background: var(--accent); color: #000; }
 
-        .progress-box { height: 4px; background: rgba(255,255,255,0.06); border-radius: 10px; margin-bottom: 24px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
-        .quiz-option { background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; color: #cbd5e1; }
-        .quiz-option:hover { background: rgba(255, 255, 255, 0.05); }
-        .quiz-option.selected { border-color: var(--accent); background: rgba(0, 255, 170, 0.04); color: var(--accent); }
-        body.theme-flame .quiz-option.selected { background: rgba(255, 85, 0, 0.05); }
+        .progress-box { height: 8px; background: #000; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; }
+        .quiz-option { background: rgba(0,0,0,0.3); padding: 18px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; cursor: pointer; font-weight: 700; color: var(--text); }
+        .quiz-option:hover { border-color: var(--accent); }
+        .quiz-option.selected { border-color: var(--text); background: var(--accent); color: #000; font-weight: 900; box-shadow: 0 0 15px var(--accent-glow); }
 
-        /* 导出弹窗 */
-        .toast-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:2000; display:flex; justify-content:center; align-items:center; opacity:0; pointer-events:none; transition: opacity 0.3s ease; }
+        /* 强震荡大弹窗 */
+        .toast-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:2000; display:flex; justify-content:center; align-items:center; opacity:0; pointer-events:none; }
         .toast-overlay.active { opacity:1; pointer-events:all; }
-        .toast-box { background: #151b26; border: 1px solid var(--border); border-radius: 20px; padding: 30px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .toast-box { background: var(--card); border: 3px solid var(--accent); border-radius: var(--radius); padding: 40px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 0 40px var(--accent-glow); }
 
-        footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; margin-top: 60px; }
+        footer { text-align: center; padding: 80px 20px; color: var(--gray); font-size: 12px; font-weight: 900; border-top: 2px solid var(--border); margin-top: 80px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (max-width: 900px) { 
-            .col-8, .col-6, .col-4 { grid-column: span 12; } 
-            .radio-flex { flex-direction: column; } .track-list { width: 100%; }
-        }
+        @media (max-width: 900px) { .col-8, .col-6, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; } }
     </style>
 </head>
 
 <body>
     <nav>
-        <a href="#sequencer">工作台</a>
-        <a href="#album-focus">新专辑预告</a>
-        <a href="#radio">电台</a>
-        <a href="#quiz">制作人考核</a>
+        <a href="#sequencer">// 工作台</a>
+        <a href="#album-focus">// 新专辑预告</a>
+        <a href="#radio">// 原创电台</a>
+        <a href="#quiz">// 制作人考核</a>
     </nav>
 
     <header>
-        <h1><span>Tangerine</span> Studio</h1>
-        <p>用直觉解构声音，用代码编织节拍。</p>
+        <h1><span>Tangerine</span> Overdrive</h1>
+        <p>信号过载，逻辑重构。这里拒绝一切平庸的声音律动。</p>
     </header>
 
     <div class="container">
         <div class="grid-layout">
             
+            <!-- 1. 暴力美学中轴 C 位卡片 -->
             <div class="card col-12 album-center-card" id="album-focus">
                 <div class="personality-toggle">
-                    <div class="toggle-tab active" id="tab-moon" onclick="switchTheme('moon')">🌙 MOON 模式</div>
-                    <div class="toggle-tab" id="tab-flame" onclick="switchTheme('flame')">🔥 FLAME 模式</div>
+                    <div class="toggle-tab active" id="tab-moon" onclick="switchTheme('moon')">🌙 MOON.SYS</div>
+                    <div class="toggle-tab" id="tab-flame" onclick="switchTheme('flame')">🔥 FLAME.SYS</div>
                 </div>
-                <span class="section-tag" id="album-tag">Upcoming Album Concept</span>
-                <h2 style="font-size: 36px; font-weight: 800; margin: 5px 0 8px;" id="album-title">《Moon, Flame!》</h2>
-                <p style="color: var(--accent); font-weight: 600; font-size: 14px; margin-bottom: 16px; letter-spacing: 2px;" id="album-sub">首张个人概念实验专辑 · 月相链路</p>
-                <p style="color: var(--gray); font-size: 15px; line-height: 1.6; max-width: 720px; margin-bottom: 28px;" id="album-desc">
-                    冷冽如月光，寂静无声。这部分链路我们正在试图捕捉深夜里微弱的高频颤音（Hi-hat）和空灵的声学环境，让电子节奏融化在冰冷的月晕里。
+                <div><span class="section-tag" id="album-tag">Core.Signal.In</span></div>
+                <h2 style="font-size: 42px; font-weight: var(--font-weight-title); margin: 10px 0;" id="album-title">《MOON, FLAME!》</h2>
+                <p style="color: var(--accent); font-weight: 900; font-size: 15px; margin-bottom: 20px; letter-spacing: 2px;" id="album-sub">TRACK.01 / 信号链路初始化</p>
+                <p style="font-size: 16px; line-height: 1.6; max-width: 750px; margin-bottom: 30px; font-weight: 700;" id="album-desc">
+                    冷冽如月光，寂静无声。捕捉深夜中冷冻的高频颤音矩阵，让一切数字信号在绝对零度的夜色里融化开来。
                 </p>
-                <button class="btn" style="cursor: default; background: rgba(0, 255, 170, 0.05); border-color: rgba(0, 255, 170, 0.2); color: var(--accent); font-size: 12px;" id="status-tag">
-                    ⚡ 清冷极光频率加载中
+                <button class="btn btn-primary" style="cursor: default;" id="status-tag">
+                    ⚡ SYSTEM: COLD_RUNNING
                 </button>
             </div>
 
+            <!-- 2. 音序器步进器 -->
             <div class="card col-8" id="sequencer">
-                <span class="section-tag">Analog Engine</span>
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                    <h2>灵感切片步进器</h2>
+                <div><span class="section-tag">Grid Engine</span></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 10px;">
+                    <h2>灵感切片步进矩阵</h2>
                     <div style="display: flex; gap: 10px;">
-                        <button onclick="captureBeat()" class="btn" style="border-radius: 50px; padding: 8px 16px;">⚡ 捕获当前律动</button>
-                        <button onclick="randomizeBeat()" class="btn" style="border-radius: 50px; padding: 8px 16px;">🎲 随机抓个节拍</button>
-                        <button id="play-seq" class="btn btn-primary" style="border-radius: 50px; padding: 8px 16px;">▶ 开启节拍</button>
+                        <button onclick="captureBeat()" class="btn" style="padding: 10px 20px;">⚡ 捕获代码</button>
+                        <button onclick="randomizeBeat()" class="btn" style="padding: 10px 20px;">🎲 随机对撞</button>
+                        <button id="play-seq" class="btn btn-primary" style="padding: 10px 20px;">▶ 释放节拍</button>
                     </div>
                 </div>
                 <div class="sequencer-grid">
-                    <div class="seq-row" data-instrument="kick"><div class="seq-label">KICK / 底鼓</div><div class="steps"></div></div>
-                    <div class="seq-row" data-instrument="snare"><div class="seq-label">SNARE / 军鼓</div><div class="steps"></div></div>
-                    <div class="seq-row" data-instrument="hihat"><div class="seq-label">HI-HAT / 闭镲</div><div class="steps"></div></div>
+                    <div class="seq-row" data-instrument="kick"><div class="seq-label">KICK.OSC</div><div class="steps"></div></div>
+                    <div class="seq-row" data-instrument="snare"><div class="seq-label">SNARE.TRG</div><div class="steps"></div></div>
+                    <div class="seq-row" data-instrument="hihat"><div class="seq-label">HIHAT.NSE</div><div class="steps"></div></div>
                 </div>
             </div>
 
+            <!-- 3. X-Y Pad 滤波器 -->
             <div class="card col-4">
-                <div class="xy-pad-container" style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+                <div style="height:100%; display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
-                        <span class="section-tag">Dynamic Filter</span>
-                        <h2 style="font-size:20px; margin-bottom:4px;">X-Y 空间滤镜</h2>
-                        <p style="color:var(--gray); font-size:12px; line-height:1.4;">揉搓触控区：横轴切分声学明暗，纵轴扭转电路张力。</p>
+                        <span class="section-tag">Audio VCF</span>
+                        <h2 style="font-size:22px; margin-bottom:6px;">空间频率揉搓器</h2>
+                        <p style="color:var(--gray); font-size:12px; font-weight:700; line-height:1.4;">横轴劫持明暗切分，纵轴强行扭转电路增益张力。</p>
                     </div>
                     <div class="xy-pad" id="xyPad">
                         <canvas class="xy-canvas" id="xyCanvas"></canvas>
-                        <div class="xy-label" style="bottom:10px; right:10px;">明暗度 ➔</div>
-                        <div class="xy-label" style="top:10px; left:10px;">张力 ⬆</div>
+                        <div class="xy-label" style="bottom:10px; right:10px;">FREQ ➔</div>
+                        <div class="xy-label" style="top:10px; left:10px;">RESONANCE ⬆</div>
                         <div class="xy-cursor" id="xyCursor"></div>
                     </div>
                 </div>
             </div>
 
+            <!-- 4. 电台 -->
             <div class="card col-12" id="radio">
-                <span class="section-tag">Original Tracks</span>
-                <h2>社团原创电台</h2>
+                <div><span class="section-tag">RAW AUDIO</span></div>
+                <h2>社团重工业电台</h2>
                 <div class="radio-flex">
                     <div class="album-art">
-                        <img id="cover-img" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:1; border-radius:16px;">
+                        <img id="cover-img" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:1;">
                         <div class="record-player" id="recordPlayer" style="z-index:2;"></div>
                     </div>
                     <div class="track-list">
                         <div class="track-item active" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66', this)">
-                            <span>01. SPACE WALK - 概念首发</span><span>03:45</span>
+                            <span>TRACK_01. SPACE WALK [VOLTAGE_CORE]</span><span>03:45</span>
                         </div>
                         <div class="track-item" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66', this)">
-                            <span>02. Moonlight - 现场纪实</span><span>04:12</span>
+                            <span>TRACK_02. MOONLIGHT [LIVE_RECORD]</span><span>04:12</span>
                         </div>
-                        <iframe id="player" frameborder="no" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:12px; border-radius:12px; filter: invert(0.9) hue-rotate(180deg) brightness(1.1);"></iframe>
+                        <iframe id="player" frameborder="no" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:12px; border-radius:4px; filter: invert(1) contrast(1.5);"></iframe>
                     </div>
                 </div>
             </div>
 
+            <!-- 5. 动态公告 -->
             <div class="card col-6" id="news">
-                <span class="section-tag">Studio Logs</span>
-                <h2>春季招新 · 交卷时刻</h2>
-                <p style="color:var(--gray); margin-bottom:24px; line-height:1.6; font-size:14px; flex: 1;">今年的笔试阶段已经顺利收官。感谢每一位对波形和信号链路抱有好奇的创作者，每一份答卷我们都在悉心阅读。</p>
-                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn">阅读招新回顾</a>
+                <div><span class="section-tag">LOG.01</span></div>
+                <h2>春季招新 · 信号交卷时刻</h2>
+                <p style="color:var(--gray); margin-bottom:24px; line-height:1.6; font-size:14px; font-weight:700; flex: 1;">今年的笔试技术阶段已经暴力截断收官。感谢每一位对硬件电路和低频信号链路抱有极端狂热的创作者，答卷全量审阅中。</p>
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VS07D6oZL5A" target="_blank" class="btn">解析招新数据</a>
             </div>
             
             <div class="card col-6">
-                <span class="section-tag">Backstage</span>
-                <h2>社团 VLOG · 幕后现场</h2>
-                <p style="color:var(--gray); font-size:14px; margin-bottom:24px; line-height:1.6; flex: 1;">舞台背后的浪漫，往往是从一根根音频线的对焦和多轨信号的同步开始的。点击直击演出后台实况。</p>
-                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn">捕获现场信号</a>
+                <div><span class="section-tag">LOG.02</span></div>
+                <h2>社团 VLOG · 演出极线幕后</h2>
+                <p style="color:var(--gray); font-size:14px; margin-bottom:24px; line-height:1.6; font-weight:700; flex: 1;">现场的工业浪漫，是从一根根加粗单声道音频线的暴力短路与多轨大容量时钟信号的绝对锁相同步开始的。</p>
+                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn">拦截后台信号</a>
             </div>
 
+            <!-- 6. 考核 -->
             <div class="card col-12" id="quiz">
-                <span class="section-tag">Ear Training</span>
-                <h2>耳朵灵敏度测试</h2>
+                <div><span class="section-tag">TEST.SYS</span></div>
+                <h2>高频声学解码考核</h2>
                 <div class="progress-box"><div class="progress-fill" id="p_fill"></div></div>
                 
                 <div id="quiz_box">
                     <div id="q_text" style="min-height:100px;"></div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:32px;">
-                        <span id="q_num" style="font-size:13px; color:var(--gray); font-weight:600;">进度：1 / 10</span>
-                        <button onclick="handleNext()" class="btn" id="next_btn">下一题</button>
+                        <span id="q_num" style="font-size:13px; color:var(--gray); font-weight:900;">DECODE: 1 / 10</span>
+                        <button onclick="handleNext()" class="btn btn-primary" id="next_btn">下一步验证</button>
                     </div>
                 </div>
 
                 <div id="quiz_result" style="display:none; text-align:center; padding: 20px 0;">
-                    <h3 style="font-size:64px; margin-bottom:12px; letter-spacing:-1px; color:var(--accent);" id="final_score">0</h3>
-                    <div id="final_eval" style="color:var(--text); margin-bottom:24px; font-weight:600;">正在解读你的声学潜能...</div>
-                    <button onclick="location.reload()" class="btn">重新测试</button>
+                    <h3 style="font-size:72px; margin-bottom:12px; font-weight:900; color:var(--text);" id="final_score">0 PT</h3>
+                    <div id="final_eval" style="color:var(--accent); margin-bottom:24px; font-weight:900; font-size:18px;">正在反编译你的耳朵脑电波...</div>
+                    <button onclick="location.reload()" class="btn">核心重启</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 暴力美学复制弹窗 -->
     <div class="toast-overlay" id="toastOverlay">
         <div class="toast-box">
-            <h3 style="margin-bottom:10px; font-size:20px; color:var(--accent);">📋 律动切片已捕获</h3>
-            <p style="color:var(--gray); font-size:13px; margin-bottom:20px;">这是一段带有独立制作人印记的加密声音代码，已为您复制到剪贴板：</p>
-            <textarea id="codeArea" readonly style="width:100%; height:90px; background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:10px; color:#fff; padding:10px; font-family:monospace; font-size:12px; resize:none; margin-bottom:20px; outline:none;"></textarea>
-            <button onclick="closeToast()" class="btn btn-primary" style="width:100%;">收到，拿去交流</button>
+            <h3 style="margin-bottom:15px; font-size:22px; color:var(--text); font-weight:900;">⚡ DATA_CAPTURED</h3>
+            <p style="color:var(--gray); font-size:13px; margin-bottom:20px; font-weight:700;">声音底层代码矩阵已被强制写入系统内核剪贴板：</p>
+            <textarea id="codeArea" readonly style="width:100%; height:100px; background:#000; border:2px solid var(--border); color:var(--text); padding:12px; font-family:monospace; font-size:12px; font-weight:700; resize:none; margin-bottom:20px; outline:none;"></textarea>
+            <button onclick="closeToast()" class="btn btn-primary" style="width:100%;">确认链路闭合</button>
         </div>
     </div>
 
-    <footer><p>© 2026 Tangerine Music Club. 保持共鸣。</p></footer>
+    <footer><p>SYSTEM RUNNING UNDER TANGERINE OVERDRIVE PROTOCOL © 2026. ALL CORE OPEN.</p></footer>
 
     <script>
-        // --- 核心音频架构 ---
+        // --- 核心声学引擎 ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let currentPersonality = 'moon'; // 默认人格为‘月’
+        let currentPersonality = 'moon'; 
 
         const mainFilter = audioCtx.createBiquadFilter();
         mainFilter.type = 'lowpass';
         mainFilter.frequency.setValueAtTime(20000, audioCtx.currentTime); 
-        mainFilter.Q.setValueAtTime(1, audioCtx.currentTime);
         mainFilter.connect(audioCtx.destination);
 
         let isPlaying = false; let currentStep = 0; let nextStepTime = 0;
-        const secondsPerBeat = 60.0 / 125.0 / 4; 
+        const secondsPerBeat = 60.0 / 135.0 / 4; // 暴力美学，BPM暴力提速到 135 
 
         function playSound(type, time) {
             const oscGain = audioCtx.createGain();
@@ -325,57 +321,56 @@
                 const osc = audioCtx.createOscillator();
                 osc.connect(oscGain);
                 
-                // 【核心变化】：如果是 Flame 暴烈模式，底鼓加入明显的模拟过载低音拉拽
                 if(currentPersonality === 'flame') {
-                    osc.frequency.setValueAtTime(260, time);
-                    osc.frequency.exponentialRampToValueAtTime(0.1, time + 0.45);
-                    oscGain.gain.setValueAtTime(1.4, time); // 增益加强
+                    // 🔥 FLAME 暴烈模式：超重低音撕裂过载
+                    osc.frequency.setValueAtTime(320, time);
+                    osc.frequency.exponentialRampToValueAtTime(0.001, time + 0.5);
+                    oscGain.gain.setValueAtTime(1.8, time); 
                 } else {
-                    osc.frequency.setValueAtTime(140, time);
-                    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.35);
+                    osc.frequency.setValueAtTime(130, time);
+                    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.3);
                     oscGain.gain.setValueAtTime(0.9, time);
                 }
-                oscGain.gain.exponentialRampToValueAtTime(0.01, time + 0.4);
-                osc.start(time); osc.stop(time + 0.4);
+                oscGain.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+                osc.start(time); osc.stop(time + 0.5);
             } else if (type === 'snare') {
                 const osc = audioCtx.createOscillator();
                 osc.type = currentPersonality === 'flame' ? 'sawtooth' : 'triangle';
-                osc.frequency.setValueAtTime(160, time);
+                osc.frequency.setValueAtTime(180, time);
                 const snGain = audioCtx.createGain();
-                snGain.gain.setValueAtTime(0.22, time);
-                snGain.gain.exponentialRampToValueAtTime(0.01, time + 0.12);
+                snGain.gain.setValueAtTime(0.3, time);
+                snGain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
                 osc.connect(snGain); snGain.connect(mainFilter);
-                osc.start(time); osc.stop(time + 0.12);
+                osc.start(time); osc.stop(time + 0.15);
 
-                const bufferSize = audioCtx.sampleRate * 0.12;
+                const bufferSize = audioCtx.sampleRate * 0.15;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
                 for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
                 const noise = audioCtx.createBufferSource();
                 noise.buffer = buffer;
                 const noiseGain = audioCtx.createGain();
-                noiseGain.gain.setValueAtTime(0.16, time);
-                noiseGain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+                noiseGain.gain.setValueAtTime(0.25, time);
+                noiseGain.gain.exponentialRampToValueAtTime(0.01, time + 0.18);
                 noise.connect(noiseGain); noiseGain.connect(mainFilter);
-                noise.start(time); noise.stop(time + 0.15);
+                noise.start(time); noise.stop(time + 0.18);
             } else if (type === 'hihat') {
                 const osc = audioCtx.createOscillator();
                 osc.type = 'square';
-                osc.frequency.setValueAtTime(currentPersonality === 'flame' ? 7000 : 11000, time);
+                osc.frequency.setValueAtTime(currentPersonality === 'flame' ? 4500 : 12000, time);
                 osc.connect(oscGain);
-                oscGain.gain.setValueAtTime(0.04, time);
-                oscGain.gain.exponentialRampToValueAtTime(0.005, time + 0.05);
-                osc.start(time); osc.stop(time + 0.05);
+                oscGain.gain.setValueAtTime(0.06, time);
+                oscGain.gain.exponentialRampToValueAtTime(0.001, time + 0.06);
+                osc.start(time); osc.stop(time + 0.06);
             }
         }
 
-        // 人格一键裂变路由
+        // 暴力全屏颜色重组路由
         function switchTheme(mode) {
             currentPersonality = mode;
             document.querySelectorAll('.toggle-tab').forEach(t => t.classList.remove('active'));
             
             const tag = document.getElementById('album-tag');
-            const title = document.getElementById('album-title');
             const sub = document.getElementById('album-sub');
             const desc = document.getElementById('album-desc');
             const stat = document.getElementById('status-tag');
@@ -383,27 +378,22 @@
             if(mode === 'flame') {
                 document.body.classList.add('theme-flame');
                 document.getElementById('tab-flame').classList.add('active');
-                tag.innerText = "Flame Overdrive Spark";
-                sub.innerText = "首张个人概念实验专辑 · 烈焰链路";
-                desc.innerText = "暴烈如火焰，失真野蛮。这部分链路我们打破了常规音轨的束缚，强行给底鼓注入了过载破音，加入了硬核粗粝的工业失真。音色更脏、更有破坏欲。";
-                stat.innerText = "🔥 熔岩电路过载运行中";
-                stat.style.color = "#ff5500";
-                stat.style.borderColor = "rgba(255, 85, 0, 0.3)";
+                tag.innerText = "CORE.OVERDRIVE_ACTIVE";
+                sub.innerText = "TRACK.02 / 硬件级重载短路";
+                desc.innerText = "烈焰焚面，极其粗暴。强制剥离高频滤镜，给全站注入带有侵略性的低频增益破音。在这个状态下，所有音响设备的防撕裂机制都将被强行无视。";
+                stat.innerText = "🔥 CRITICAL: OVERLOAD_RUNNING";
             } else {
                 document.body.classList.remove('theme-flame');
                 document.getElementById('tab-moon').classList.add('active');
-                tag.innerText = "Upcoming Album Concept";
-                sub.innerText = "首张个人概念实验专辑 · 月相链路";
-                desc.innerText = "冷冽如月光，寂静无声。这部分链路我们正在试图捕捉深夜里微弱的高频颤音（Hi-hat）和空灵的声学环境，让电子节奏融化在冰冷的月晕里。";
-                stat.innerText = "⚡ 清冷极光频率加载中";
-                stat.style.color = "#00ffaa";
-                stat.style.borderColor = "rgba(0, 255, 170, 0.2)";
+                tag.innerText = "Core.Signal.In";
+                sub.innerText = "TRACK.01 / 信号链路初始化";
+                desc.innerText = "冷冽如月光，寂静无声。捕捉深夜中冷冻的高频颤音矩阵，让一切数字信号在绝对零度的夜色里融化开来。";
+                stat.innerText = "⚡ SYSTEM: COLD_RUNNING";
             }
-            // 粒子画布配色自动适配
             initCanvasColor();
         }
 
-        // 初始化步进器节点
+        // 初始化步进节点
         document.querySelectorAll('.seq-row').forEach(row => {
             const stepsDiv = row.querySelector('.steps');
             for (let i = 0; i < 16; i++) {
@@ -430,7 +420,7 @@
         document.getElementById('play-seq').onclick = function() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             isPlaying = !isPlaying;
-            this.innerText = isPlaying ? "■ 暂停节拍" : "▶ 开启节拍";
+            this.innerText = isPlaying ? "■ 拦截节拍" : "▶ 释放节拍";
             if (isPlaying) { currentStep = 0; nextStepTime = audioCtx.currentTime; scheduler(); }
         };
 
@@ -440,37 +430,27 @@
                 const type = row.dataset.instrument;
                 const steps = row.querySelectorAll('.step');
                 steps.forEach((step, idx) => {
-                    if (type === 'kick' && (idx === 0 || idx === 8 || (idx === 10 && Math.random() > 0.5))) step.classList.add('active');
-                    if (type === 'snare' && (idx === 4 || idx === 12)) step.classList.add('active');
-                    if (type === 'hihat' && (idx % 2 === 0 && Math.random() > 0.4)) step.classList.add('active');
+                    if (type === 'kick' && (idx === 0 || idx === 4 || idx === 8 || idx === 12)) step.classList.add('active');
+                    if (type === 'snare' && (idx === 4 || idx === 12 || idx === 14)) step.classList.add('active');
+                    if (type === 'hihat' && (idx % 2 === 0)) step.classList.add('active');
                 });
             });
         }
 
-        // --- 律动导出捕获机制 ---
         function captureBeat() {
             let kickStr = "", snareStr = "", hihatStr = "";
             document.querySelectorAll('.seq-row[data-instrument="kick"] .step').forEach(s => kickStr += s.classList.contains('active') ? "■" : "□");
             document.querySelectorAll('.seq-row[data-instrument="snare"] .step').forEach(s => snareStr += s.classList.contains('active') ? "■" : "□");
             document.querySelectorAll('.seq-row[data-instrument="hihat"] .step').forEach(s => hihatStr += s.classList.contains('active') ? "■" : "□");
             
-            const comments = [
-                "这是一段极具125BPM工业故障感的极简律动，适合在副歌前做情绪冷冻。",
-                "声学骨架非常稳固，切片有很强的跳跃感，具备高级Dark Pop潜质！",
-                "低频占比很高，这是一颗极度危险的声音炸弹。"
-            ];
-            const randomComment = comments[Math.floor(Math.random() * comments.length)];
-
-            const outputCode = `// Tangerine Studio Capture\n[Personality]: ${currentPersonality.toUpperCase()}\n[Kick]:  ${kickStr}\n[Snare]: ${snareStr}\n[Hihat]: ${hihatStr}\n/* 算法评语: ${randomComment} */`;
-            
+            const outputCode = `// TANGERINE OVERDRIVE KERNEL\n[MODE]: ${currentPersonality.toUpperCase()}\n[KICK]:  ${kickStr}\n[SNARE]: ${snareStr}\n[HIHT]:  ${hihatStr}\n// STATUS: RAW_DYNAMIC_SIGNAL`;
             document.getElementById('codeArea').value = outputCode;
             navigator.clipboard.writeText(outputCode).catch(()=>{});
-            
             document.getElementById('toastOverlay').classList.add('active');
         }
         function closeToast() { document.getElementById('toastOverlay').classList.remove('active'); }
 
-        // --- X-Y Pad Canvas 涟漪动画引擎 ---
+        // --- X-Y Pad Canvas 流体冲击波引擎 ---
         const pad = document.getElementById('xyPad');
         const cursor = document.getElementById('xyCursor');
         const canvas = document.getElementById('xyCanvas');
@@ -478,22 +458,20 @@
         let particles = []; let particleColor = '#00ffaa';
 
         function initCanvasColor() {
-            particleColor = currentPersonality === 'flame' ? '#ff5500' : '#00ffaa';
+            particleColor = currentPersonality === 'flame' ? '#ffff00' : '#00ffaa';
         }
 
-        function resizeCanvas() {
-            canvas.width = pad.clientWidth; canvas.height = pad.clientHeight;
-        }
+        function resizeCanvas() { canvas.width = pad.clientWidth; canvas.height = pad.clientHeight; }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
         function spawnParticles(mx, my) {
-            for(let i=0; i<3; i++) {
+            for(let i=0; i<6; i++) { // 粒子翻倍，强化视觉轰炸
                 particles.push({
                     x: mx, y: my,
-                    vx: (Math.random() - 0.5) * 3,
-                    vy: (Math.random() - 0.5) * 3,
-                    radius: Math.random() * 4 + 2,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
+                    radius: Math.random() * 6 + 2,
                     alpha: 1
                 });
             }
@@ -510,9 +488,8 @@
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
-                
                 p.x += p.vx; p.y += p.vy;
-                p.alpha -= 0.02;
+                p.alpha -= 0.03;
                 if(p.alpha <= 0) { particles.splice(i, 1); i--; }
             }
             requestAnimationFrame(drawParticles);
@@ -525,20 +502,16 @@
             let y = (e.clientY - rect.top) / rect.height;
             x = Math.max(0, Math.min(1, x)); y = Math.max(0, Math.min(1, y));
             cursor.style.left = `${x * 100}%`; cursor.style.top = `${y * 100}%`;
-            
-            // 实时触发空气流体涟漪
             spawnParticles(x * canvas.width, y * canvas.height);
 
-            const minFreq = 40; const maxFreq = 20000;
+            const minFreq = 30; const maxFreq = 22000;
             const freq = minFreq * Math.pow(maxFreq / minFreq, x);
-            const resonance = 1 + (1 - y) * 24;
-            mainFilter.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.05);
-            mainFilter.Q.setTargetAtTime(resonance, audioCtx.currentTime, 0.05);
+            const resonance = 1 + (1 - y) * 32;
+            mainFilter.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.04);
+            mainFilter.Q.setTargetAtTime(resonance, audioCtx.currentTime, 0.04);
         }
 
-        pad.addEventListener('mousedown', (e) => {
-            updateFilter(e); window.addEventListener('mousemove', updateFilter);
-        });
+        pad.addEventListener('mousedown', (e) => { updateFilter(e); window.addEventListener('mousemove', updateFilter); });
         window.addEventListener('mouseup', () => window.removeEventListener('mousemove', updateFilter));
         pad.addEventListener('touchmove', (e) => { if(e.touches.length > 0) updateFilter(e.touches[0]); }, {passive: true});
 
@@ -546,14 +519,13 @@
             document.getElementById('player').src = url;
             document.querySelectorAll('.track-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            const cover = document.getElementById('cover-img');
-            const record = document.getElementById('recordPlayer');
-            cover.style.display = 'none'; record.style.display = 'block';
+            document.getElementById('cover-img').style.display = 'none'; 
+            document.getElementById('recordPlayer').style.display = 'block';
         }
 
-        // --- 考核题库 ---
+        // --- 考核编译题库 ---
         const masterPool = [
-            { q: "在数字音乐制作中，我们常说的 DAW 究竟是指什么？", o: ["Digital Audio Workstation (数字音频工作站)", "Digital Audio Web (数字音频网络)", "Dynamic Audio Work (动态声音轨道)", "Digital Arrangement Work (数字编曲流)"], a: 0 },
+            { q: "在数字音乐制作中，我们常说的 DAW 究竟是指什么？", o: ["Digital Audio Workstation (数字音频工作站)", "Digital Audio Web (数字音频网络供应链)", "Dynamic Audio Work (动态声音轨道)", "Digital Arrangement Work (数字编曲流)"], a: 0 },
             { q: "万物皆可连的 MIDI 协议，它在轨道间传输的核心其实是？", o: ["告诉乐器怎么响的控制指令数据", "纯粹的音频波形信号", "预先录制好的采样切片", "模拟电路的高低电流"], a: 0 },
             { q: "如果你看到一首歌标着 125 BPM，这代表什么？", o: ["它的现场声音增益达到了125分贝", "它每分钟会跳动 125 个节拍", "声音的每秒高频采样率", "音频压缩过程中的比特率"], a: 1 },
             { q: "在调音使用 EQ 时，切掉 100Hz 以下的低频信号通常是为了？", o: ["防止高频吉他或人声太刺耳", "把泥泞浑浊的低频杂音扫干净，给底鼓留空间", "让副歌的人声听起来更靠前", "把空间里的混响尾音收干净"], a: 1 },
@@ -568,9 +540,9 @@
 
         function showQ() {
             const q = masterPool[current];
-            document.getElementById('q_text').innerHTML = `<p style="font-size:16px; font-weight:700; margin-bottom:20px; color:#fff;">${q.q}</p>
-                ${q.o.map((o, i) => `<div class="quiz-option" onclick="pick(${i}, this)">${o}</div>`).join('')}`;
-            document.getElementById('q_num').innerText = `进度：${current + 1} / 10`;
+            document.getElementById('q_text').innerHTML = `<p style="font-size:16px; font-weight:900; margin-bottom:20px;">>> ${q.q}</p>
+                ${q.o.map((o, i) => `<div class="quiz-option" onclick="pick(${i}, this)">[${i}] ${o}</div>`).join('')}`;
+            document.getElementById('q_num').innerText = `DECODE: ${current + 1} / 10`;
             document.getElementById('p_fill').style.width = `${(current / 10) * 100}%`;
             selectedIdx = null;
         }
@@ -586,7 +558,7 @@
                 document.getElementById('quiz_box').style.display = 'none';
                 document.getElementById('quiz_result').style.display = 'block';
                 document.getElementById('final_score').innerText = userPt + " PT";
-                document.getElementById('final_eval').innerText = userPt >= 80 ? "🔥 完美的声学直觉，直接来盯混音吧！" : userPt >= 60 ? "🍊 很有sense，完全具备加入工作室的潜力。" : "🎸 纯粹的热爱者，多听歌耳朵就会越来越利索！";
+                document.getElementById('final_eval').innerText = userPt >= 80 ? "🔥 COMPILER_PASS: 完美的声学直觉，加入混音编队！" : userPt >= 60 ? "🍊 LOG: 满足系统基本阈值，具备改造潜力。" : "🎸 ERROR: 纯粹的热爱者，重启核心继续听歌！";
                 if(userPt >= 80) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             }
         };
