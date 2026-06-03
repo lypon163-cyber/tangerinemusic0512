@@ -4,158 +4,214 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>柑橘音乐 | Tangerine Music</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --bg: #0b0b0c; --card: #121214; --text: #f5f5f7; --gray: #86868b; --accent: #ff5500; --border: rgba(255,255,255,0.08); }
+        :root { 
+            --bg: #07090e; 
+            --card: rgba(22, 28, 41, 0.4); 
+            --text: #ffffff; 
+            --gray: #94a3b8; 
+            --accent: #00ffaa; /* 极具活力的荧光极光绿 */
+            --accent-glow: rgba(0, 255, 170, 0.3);
+            --border: rgba(255, 255, 255, 0.05); 
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+        body { 
+            font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif; 
+            background: radial-gradient(circle at 50% 0%, #111a2e 0%, var(--bg) 70%);
+            color: var(--text); 
+            -webkit-font-smoothing: antialiased; 
+            scroll-behavior: smooth;
+            padding-bottom: 60px;
+        }
         
-        nav { position: fixed; top: 0; width: 100%; height: 50px; background: rgba(11,11,12,0.8); backdrop-filter: blur(20px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); }
-        nav a { color: var(--text); text-decoration: none; font-size: 11px; font-weight: 600; margin: 0 25px; letter-spacing: 1px; opacity: 0.6; transition: 0.3s; }
-        nav a:hover { opacity: 1; color: var(--accent); }
+        nav { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(7, 9, 14, 0.6); backdrop-filter: blur(30px); z-index: 1000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--border); }
+        nav a { color: var(--text); text-decoration: none; font-size: 12px; font-weight: 600; margin: 0 20px; letter-spacing: 1.5px; opacity: 0.5; transition: all 0.4s; }
+        nav a:hover { opacity: 1; color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
 
-        header { padding: 120px 20px 60px; text-align: center; }
-        header h1 { font-size: 64px; font-weight: 800; letter-spacing: -3px; margin-bottom: 15px; }
-        header h1 span { color: var(--accent); }
-        header p { font-size: 18px; color: var(--gray); max-width: 600px; margin: 0 auto; line-height: 1.4; letter-spacing: 1px; }
+        header { padding: 140px 20px 40px; text-align: center; }
+        header h1 { font-size: 56px; font-weight: 800; letter-spacing: -2px; margin-bottom: 12px; }
+        header h1 span { color: var(--accent); text-shadow: 0 0 30px var(--accent-glow); }
+        header p { font-size: 16px; color: var(--gray); max-width: 600px; margin: 0 auto; letter-spacing: 0.5px; }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 100px; }
+        .container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
         .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
         
-        .card { background: var(--card); border-radius: 24px; padding: 32px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
-        .card:hover { border-color: var(--accent); box-shadow: 0 15px 40px rgba(255,85,0,0.1); }
+        /* 柔化卡片 UI */
+        .card { 
+            background: var(--card); 
+            backdrop-filter: blur(20px);
+            border-radius: 28px; 
+            padding: 32px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+            position: relative; 
+            overflow: hidden; 
+        }
+        .card:hover { 
+            border-color: rgba(0, 255, 170, 0.25); 
+            transform: translateY(-5px);
+            box-shadow: 0 30px 50px rgba(0, 255, 170, 0.04); 
+        }
 
-        /* 音序器 */
-        .sequencer-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
+        /* 音序器平滑升级 */
+        .sequencer-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
         .seq-row { display: flex; align-items: center; gap: 15px; }
-        .seq-label { width: 60px; font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: 1px; }
-        .steps { display: flex; gap: 6px; flex: 1; }
-        .step { flex: 1; height: 36px; background: #1c1c1e; border-radius: 8px; cursor: pointer; transition: 0.15s; border: 1px solid rgba(255,255,255,0.02); }
-        .step.active { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
-        .step.playing { filter: brightness(1.4); transform: scaleY(1.08); }
+        .seq-label { width: 65px; font-size: 12px; font-weight: 800; color: var(--gray); letter-spacing: 1px; }
+        .steps { display: flex; gap: 8px; flex: 1; }
+        .step { 
+            flex: 1; 
+            height: 40px; 
+            background: rgba(255, 255, 255, 0.04); 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 1px solid rgba(255,255,255,0.01); 
+        }
+        .step:hover { background: rgba(255, 255, 255, 0.08); transform: scale(1.05); }
+        .step.active { background: var(--accent); box-shadow: 0 0 15px var(--accent); border-color: transparent; }
+        .step.playing { filter: brightness(1.3); transform: scaleY(1.1); }
 
-        /* X-Y Pad */
+        /* X-Y Pad 视觉细节优化 */
         .xy-pad-container { display: flex; flex-direction: column; height: 100%; justify-content: space-between; }
-        .xy-pad { width: 100%; height: 200px; background: #1c1c1e; border-radius: 16px; border: 1px dashed var(--border); position: relative; cursor: crosshair; overflow: hidden; margin-top: 15px; }
-        .xy-cursor { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; pointer-events: none; box-shadow: 0 0 15px var(--accent); transition: left 0.1s, top 0.1s; }
-        .xy-label { position: absolute; font-size: 9px; color: var(--gray); font-weight: 600; pointer-events: none; }
+        .xy-pad { width: 100%; height: 210px; background: rgba(0, 0, 0, 0.2); border-radius: 20px; border: 1px dashed rgba(255,255,255,0.1); position: relative; cursor: crosshair; overflow: hidden; margin-top: 15px; }
+        .xy-cursor { width: 14px; height: 14px; background: var(--accent); border-radius: 50%; position: absolute; transform: translate(-50%, -50%); top: 50%; left: 50%; pointer-events: none; box-shadow: 0 0 20px var(--accent); transition: left 0.15s cubic-bezier(0.1, 0.8, 0.2, 1), top 0.15s cubic-bezier(0.1, 0.8, 0.2, 1); }
+        .xy-label { position: absolute; font-size: 10px; color: var(--gray); font-weight: 600; pointer-events: none; opacity: 0.6; }
 
-        /* 状态小唱片动画 */
-        .record-player { width: 45px; height: 45px; border: 4px solid var(--accent); border-radius: 50%; border-style: double; animation: spin 3s linear infinite; box-shadow: 0 0 15px var(--accent); display: none; }
+        /* 复古黑胶进化 */
+        .record-player { width: 60px; height: 60px; border: 4px dashed var(--accent); border-radius: 50%; animation: spin 4s linear infinite; box-shadow: 0 0 20px var(--accent-glow); display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* 电台排版 */
         .radio-flex { display: flex; align-items: center; gap: 40px; }
-        .album-art { width: 140px; height: 140px; border-radius: 18px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: #1c1c1e; }
+        .album-art { width: 140px; height: 140px; border-radius: 22px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); }
         .track-list { flex: 1; border-left: 1px solid var(--border); padding-left: 30px; }
-        .track-item { padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; transition: 0.2s; }
-        .track-item:hover { background: rgba(255,255,255,0.03); }
-        .track-item.active { color: var(--accent); font-weight: 700; background: rgba(255,85,0,0.08); }
+        .track-item { padding: 14px 18px; border-radius: 14px; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; transition: all 0.3s; color: #cbd5e1; }
+        .track-item:hover { background: rgba(255,255,255,0.04); color: #fff; }
+        .track-item.active { color: var(--accent); font-weight: 700; background: rgba(0, 255, 170, 0.08); text-shadow: 0 0 8px rgba(0, 255, 170, 0.2); }
 
-        /* 测试题进度条 */
-        .progress-box { height: 4px; background: #1c1c1e; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.4s ease; }
+        /* 呼吸感进度条 */
+        .progress-box { height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #00ff88, var(--accent)); width: 0%; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
         .col-8 { grid-column: span 8; } .col-4 { grid-column: span 4; } .col-12 { grid-column: span 12; }
-        .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; }
-        h2 { font-size: 26px; font-weight: 700; margin-bottom: 15px; }
+        .section-tag { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; display: block; opacity: 0.9; }
+        h2 { font-size: 24px; font-weight: 700; margin-bottom: 15px; letter-spacing: -0.5px; }
 
-        .btn { background: #1c1c1e; color: white; border-radius: 12px; padding: 12px 24px; font-weight: 600; font-size: 13px; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; }
-        .btn:hover { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(255,85,0,0.4); }
-        .btn-primary { background: var(--text); color: var(--bg); }
+        /* 告别机械线条的按钮 */
+        .btn { background: rgba(255, 255, 255, 0.04); color: white; border-radius: 14px; padding: 14px 28px; font-weight: 600; font-size: 13px; border: 1px solid var(--border); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none; display: inline-block; }
+        .btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); box-shadow: 0 10px 25px var(--accent-glow); transform: translateY(-2px); }
+        .btn-primary { background: var(--text); color: var(--bg); border-color: transparent; }
+        .btn-primary:hover { background: var(--accent); color: var(--bg); }
 
-        .quiz-option { background: #1c1c1e; padding: 16px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; color: #e5e5e7; font-size: 14px; }
-        .quiz-option.selected { border-color: var(--accent); background: rgba(255,85,0,0.05); color: var(--accent); }
+        .quiz-option { background: rgba(255, 255, 255, 0.03); padding: 18px; border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.25s; border: 1px solid transparent; color: #cbd5e1; font-size: 14px; }
+        .quiz-option:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+        .quiz-option.selected { border-color: var(--accent); background: rgba(0, 255, 170, 0.05); color: var(--accent); font-weight: 600; }
 
-        footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); margin-top: 50px; }
+        footer { text-align: center; padding: 60px 20px; color: var(--gray); font-size: 12px; border-top: 1px solid var(--border); margin-top: 80px; }
         @media (max-width: 850px) { .col-8, .col-4 { grid-column: span 12; } .radio-flex { flex-direction: column; } .track-list { border: none; padding: 0; width: 100%; } }
     </style>
 </head>
 
 <body>
     <nav>
-        <a href="#sequencer">BEAT MACHINE</a><a href="#radio">RADIO</a><a href="#news">NEWS</a><a href="#quiz">ASSESSMENT</a>
+        <a href="#sequencer">工作台</a><a href="#album-focus">全新专辑</a><a href="#radio">原创现场</a><a href="#quiz">制作人考核</a>
     </nav>
 
     <header>
-        <h1><span>Tangerine</span> Studio.</h1>
-        <p>暗黑电子与数字音频工程实验舱</p>
+        <h1><span>Tangerine</span> Studio</h1>
+        <p>欢迎来到声音实验舱。丢掉条条框框，用算法和直觉对撞出节奏。</p>
     </header>
 
     <div class="container">
         <div class="grid-layout">
+            <!-- 1. 音序器控制核心 -->
             <div class="card col-8" id="sequencer">
                 <span class="section-tag">Analog Engine</span>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h2>极简16步进音序器</h2>
-                    <div style="display: flex; gap: 10px;">
-                        <button onclick="randomizeBeat()" class="btn" style="border-radius: 50px;">🎲 Random</button>
-                        <button id="play-seq" class="btn btn-primary" style="border-radius: 50px;">▶ Play Beat</button>
+                    <h2>灵感切片音序器</h2>
+                    <div style="display: flex; gap: 12px;">
+                        <button onclick="randomizeBeat()" class="btn" style="border-radius: 50px; padding: 10px 22px;">🎲 随机抓个律动</button>
+                        <button id="play-seq" class="btn btn-primary" style="border-radius: 50px; padding: 10px 22px;">▶ 开启节拍</button>
                     </div>
                 </div>
                 <div class="sequencer-grid">
-                    <div class="seq-row" data-instrument="kick"><div class="seq-label">KICK</div><div class="steps"></div></div>
-                    <div class="seq-row" data-instrument="snare"><div class="seq-label">SNARE</div><div class="steps"></div></div>
-                    <div class="seq-row" data-instrument="hihat"><div class="seq-label">HI-HAT</div><div class="steps"></div></div>
+                    <div class="seq-row" data-instrument="kick"><div class="seq-label">底鼓 / KICK</div><div class="steps"></div></div>
+                    <div class="seq-row" data-instrument="snare"><div class="seq-label">军鼓 / SNARE</div><div class="steps"></div></div>
+                    <div class="seq-row" data-instrument="hihat"><div class="seq-label">闭镲 / HI-HAT</div><div class="steps"></div></div>
                 </div>
             </div>
 
+            <!-- 2. X-Y Pad 音色滤波器 -->
             <div class="card col-4">
                 <div class="xy-pad-container">
                     <div>
                         <span class="section-tag">Dynamic Filter</span>
-                        <h2 style="font-size:20px; margin-bottom:5px;">X-Y 音色微调板</h2>
-                        <p style="color:var(--gray); font-size:12px;">横轴控制低通截止频率，纵轴控制共振</p>
+                        <h2 style="font-size:20px; margin-bottom:5px;">X-Y 空间滤镜</h2>
+                        <p style="color:var(--gray); font-size:12px; line-height:1.4;">在这里滑动鼠标：左右揉捏明暗（截止频率），上下调整张力（共振）。</p>
                     </div>
                     <div class="xy-pad" id="xyPad">
-                        <div class="xy-label" style="bottom:10px; right:10px;">CUTOFF ➔</div>
-                        <div class="xy-label" style="top:10px; left:10px;">RESONANCE ⬆</div>
+                        <div class="xy-label" style="bottom:12px; right:12px;">明亮明暗 ➔</div>
+                        <div class="xy-label" style="top:12px; left:12px;">声学张力 ⬆</div>
                         <div class="xy-cursor" id="xyCursor"></div>
                     </div>
                 </div>
             </div>
 
+            <!-- 3. 【全新C位】新专辑预告移至中间 -->
+            <div class="card col-12" id="album-focus" style="background: linear-gradient(135deg, rgba(22, 28, 41, 0.6) 0%, rgba(7, 9, 14, 0.8) 100%); border: 1px solid rgba(0, 255, 170, 0.15);">
+                <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--accent-glow); filter: blur(50px); border-radius: 50%; pointer-events: none;"></div>
+                <span class="section-tag" style="background: rgba(0, 255, 170, 0.1); padding: 4px 10px; border-radius: 8px; display: inline-block;">ALBUM PREVIEW</span>
+                <h2 style="font-size: 32px; font-weight: 800; margin-top: 10px; margin-bottom: 8px; letter-spacing: -1px;">《Moon, Flame!》</h2>
+                <p style="color: var(--accent); font-weight: 600; font-size: 14px; margin-bottom: 20px; letter-spacing: 1px;">首张个人实验专辑 · 概念孵化中</p>
+                <p style="color: var(--gray); font-size: 15px; line-height: 1.7; max-width: 800px; margin-bottom: 25px;">
+                    这是一场关于冰冷月光与滚烫烈焰的声学实验。我们正在试图打破传统电子乐固化的轨道结构，引入更多粗粝的工业质感、故障美学（Glitch）以及不可预测的随机信号。所有的情绪，都在失真和延时中重新定影。
+                </p>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <span class="btn" style="cursor: default; background: rgba(0, 255, 170, 0.05); border-color: rgba(0, 255, 170, 0.2); color: var(--accent);">
+                        🔥 声音链路正在加载 (UNDER DEVELOPMENT)
+                    </span>
+                </div>
+            </div>
+
+            <!-- 4. 音乐电台 (小唱片与外链) -->
             <div class="card col-12" id="radio">
                 <span class="section-tag">Radio Channel</span>
                 <div class="radio-flex">
                     <div class="album-art">
-                        <img id="cover-img" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:1; border-radius:18px;">
+                        <img id="cover-img" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:1; border-radius:22px;">
                         <div class="record-player" id="recordPlayer" style="z-index:2;"></div>
                     </div>
                     <div class="track-list">
                         <div class="track-item active" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2165911052&auto=1&height=66', this)">
-                            <span>01. SPACE WALK - Tangerine Original</span><span>03:45</span>
+                            <span>01. SPACE WALK - 社团原创首发</span><span>03:45</span>
                         </div>
                         <div class="track-item" onclick="playMusic('https://music.163.com/outchain/player?type=2&id=2050761286&auto=1&height=66', this)">
-                            <span>02. Moonlight - Live Session</span><span>04:12</span>
+                            <span>02. Moonlight - 不插电现场纪实</span><span>04:12</span>
                         </div>
-                        <iframe id="player" frameborder="no" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:20px; border-radius:14px; filter: invert(0.9) hue-rotate(180deg);"></iframe>
+                        <iframe id="player" frameborder="no" width="100%" height="86" src="https://music.163.com/outchain/player?type=2&id=2165911052&auto=0&height=66" style="margin-top:20px; border-radius:18px; filter: invert(0.9) hue-rotate(180deg) brightness(1.2);"></iframe>
                     </div>
                 </div>
             </div>
 
-            <div class="card col-4" id="news">
+            <!-- 5. 招新与推文动态 -->
+            <div class="card col-6" id="news">
                 <span class="section-tag">Studio Logs</span>
-                <h2>春季招新回顾</h2>
-                <p style="color:var(--gray); margin-bottom:25px; line-height:1.6; font-size:14px;">笔试阶段已全面收官，感谢每位对波形和音频算法抱有敬畏的创作者。</p>
-                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn" style="width:100%; text-align:center;">读取推文日志</a>
+                <h2>春季招新·交卷时刻</h2>
+                <p style="color:var(--gray); margin-bottom:25px; line-height:1.7; font-size:14.5px;">今年的笔试阶段已经圆满收官啦！特别感谢每一位对波形、信号、音频算法抱有好奇与敬畏的创作者。我们正在仔细阅读每一份答卷。</p>
+                <a href="https://mp.weixin.qq.com/s/_tbDVSWhpb3VZ07D6oZL5A" target="_blank" class="btn" style="width:100%; text-align:center;">读一读我们的招新碎碎念</a>
             </div>
             
-            <div class="card col-4">
+            <div class="card col-6">
                 <span class="section-tag">Backstage</span>
-                <h2>社团 VLOG</h2>
-                <p style="color:var(--gray); font-size:14px; margin-bottom:25px; line-height:1.6;">舞台背后的声音链路搭建、音频线缆调试与信号同步直击。</p>
-                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn" style="width:100%; text-align:center;">捕获现场信号</a>
+                <h2>幕后：被线缆缠绕的日常</h2>
+                <p style="color:var(--gray); font-size:14.5px; margin-bottom:25px; line-height:1.7;">舞台背后的浪漫，往往是从一根根音频线的对焦开始的。链路搭建、设备调试、多轨道信号同步……戳下方视频直击我们的演出后台现场！</p>
+                <a href="https://mp.weixin.qq.com/s/ShoYrg0TgkIGfeioLXY6tg" target="_blank" class="btn" style="width:100%; text-align:center;">去后台看看现场信号捕获</a>
             </div>
 
-            <div class="card col-4">
-                <span class="section-tag">Album Alpha</span>
-                <h2>GENIUS AND COWARDS</h2>
-                <p style="color:var(--gray); font-size:14px; margin-bottom:25px; line-height:1.6;">首张个人实验专辑筹备中。暗黑工业美学，打破常规轨道。</p>
-                <button class="btn" style="width:100%; cursor:default; border-color:transparent; background:rgba(255,85,0,0.1); color:var(--accent);">UNDER DEVELOPMENT</button>
-            </div>
-
+            <!-- 6. 专业技能评估 -->
             <div class="card col-12" id="quiz">
                 <span class="section-tag">Skill Assessment</span>
                 <div class="progress-box"><div class="progress-fill" id="p_fill"></div></div>
@@ -163,21 +219,21 @@
                 <div id="quiz_box">
                     <div id="q_text" style="min-height:100px;"></div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:40px;">
-                        <span id="q_num" style="font-size:12px; color:var(--gray); font-weight:600;">1 / 10</span>
-                        <button onclick="handleNext()" class="btn" id="next_btn">下一题</button>
+                        <span id="q_num" style="font-size:13px; color:var(--gray); font-weight:600;">进度：1 / 10</span>
+                        <button onclick="handleNext()" class="btn" id="next_btn">锁定答案，下一题</button>
                     </div>
                 </div>
 
                 <div id="quiz_result" style="display:none; text-align:center; padding: 20px 0;">
                     <h3 style="font-size:72px; margin-bottom:10px; letter-spacing:-2px; color:var(--accent);" id="final_score">0</h3>
-                    <div id="final_eval" style="color:var(--gray); margin-bottom:30px; font-weight:600;">评估计算中...</div>
-                    <button onclick="location.reload()" class="btn">重新激活题库</button>
+                    <div id="final_eval" style="color:var(--text); margin-bottom:30px; font-weight:600; font-size: 16px;">正在破译你的耳朵...</div>
+                    <button onclick="location.reload()" class="btn">不服气？再测一次</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer><p>© 2026 Tangerine Music Club. 保持热爱，保持共鸣。</p></footer>
+    <footer><p>© 2026 Tangerine Music Club. 顺着声音的线索，终会相遇。</p></footer>
 
     <script>
         // --- 全局音频架构 ---
@@ -262,7 +318,7 @@
         document.getElementById('play-seq').onclick = function() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             isPlaying = !isPlaying;
-            this.innerText = isPlaying ? "■ Stop Beat" : "▶ Play Beat";
+            this.innerText = isPlaying ? "■ 暂停播放" : "▶ 开启节拍";
             if (isPlaying) { currentStep = 0; nextStepTime = audioCtx.currentTime; scheduler(); }
         };
 
@@ -303,31 +359,30 @@
         window.addEventListener('mouseup', () => window.removeEventListener('mousemove', updateFilter));
         pad.addEventListener('touchmove', (e) => { if(e.touches.length > 0) updateFilter(e.touches[0]); }, {passive: true});
 
-        // 电台互动与小唱片激活逻辑
+        // 电台互动与小唱片
         function playMusic(url, el) {
             document.getElementById('player').src = url;
             document.querySelectorAll('.track-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             
-            // 触发小唱片彩蛋动画
             const cover = document.getElementById('cover-img');
             const record = document.getElementById('recordPlayer');
             cover.style.display = 'none';
             record.style.display = 'block';
         }
 
-        // --- 完整测试题逻辑 ---
+        // --- 测试题库 ---
         const masterPool = [
-            { q: "在数字音乐制作中，DAW 的全称是？", o: ["Digital Audio Workstation", "Digital Audio Web", "Dynamic Audio Work", "Digital Arrangement Work"], a: 0 },
-            { q: "MIDI 协议主要传输的是什么？", o: ["控制指令数据", "音频信号", "采样波形", "电流"], a: 0 },
-            { q: "BPM 的含义是？", o: ["音量分贝", "每分钟节拍数", "采样频率", "比特率"], a: 1 },
-            { q: "使用 EQ 时，切掉 100Hz 以下通常是为了解决什么？", o: ["高频刺耳", "低频浑浊", "人声太小", "混响太重"], a: 1 },
-            { q: "压缩器 (Compressor) 的主要目的是？", o: ["增加混响", "控制动态范围", "改变音高", "提高采样率"], a: 1 },
-            { q: "人耳能听到的频率范围大约是？", o: ["20Hz - 20kHz", "1Hz - 100kHz", "500Hz - 5kHz", "100Hz - 10kHz"], a: 0 },
-            { q: "Pan (声像) 控制的是声音在空间中的哪个位置？", o: ["远近", "左右", "高低", "明暗"], a: 1 },
-            { q: "以下哪个是无损音频格式？", o: ["WAV", "MP3", "WMA", "AAC"], a: 0 },
-            { q: "Sidechain (侧链) 效果常用于哪种曲风处理 Kick 和 Bass？", o: ["EDM", "Jazz", "Folk", "Classical"], a: 0 },
-            { q: "Mastering (母带) 是制作的第几步？", o: ["第一步", "最后一步", "录音阶段", "创作阶段"], a: 1 }
+            { q: "在数字音乐制作中，我们常说的 DAW 究竟是指什么？", o: ["Digital Audio Workstation (数字音频工作站)", "Digital Audio Web (数字音频网络供应链)", "Dynamic Audio Work (动态声音轨道)", "Digital Arrangement Work (数字编曲流)"], a: 0 },
+            { q: "万物皆可连的 MIDI 协议，它在轨道间传输的核心其实是？", o: ["告诉乐器怎么响的控制指令数据", "纯粹的音频波形信号", "预先录制好的采样切片", "模拟电路的高低电流"], a: 0 },
+            { q: "如果你看到一首歌标着 125 BPM，这代表什么？", o: ["它的现场声音增益达到了125分贝", "它每分钟会跳动 125 个节拍", "声音的每秒高频采样率", "音频压缩过程中的比特率"], a: 1 },
+            { q: "在调音使用 EQ 时，切掉 100Hz 以下的低频信号通常是为了？", o: ["防止高频吉他或人声太刺耳", "把泥泞浑浊的低频杂音扫干净，给底鼓留空间", "让副歌的人声听起来更靠前", "把空间里的混响尾音收干净"], a: 1 },
+            { q: "压缩器 (Compressor) 在混音链路里，最不可替代的核心作用是？", o: ["给声音套上一层大厅混响", "驯服忽大忽小的声音动态，让它更平稳扎实", "强制改变歌手跑调的音高", "无损地提高音质采样率"], a: 1 },
+            { q: "人类耳朵生理极限能捕捉到的频率范围大概在？", o: ["20Hz - 20kHz", "1Hz - 100kHz", "500Hz - 5kHz", "100Hz - 10kHz"], a: 0 },
+            { q: "在声像控制里调节 Pan 的时候，你改变的是声音在空间的？", o: ["远近纵深距离", "左右舞台声场的位置", "绝对音高的高度", "音色明暗的变化"], a: 1 },
+            { q: "以下哪一个音频格式是无损的，适合用来做母带交带？", o: ["WAV", "MP3", "WMA", "AAC"], a: 0 },
+            { q: "在电子乐（EDM/Techno）里，为了让底鼓一响、贝斯就自动闪避躲开，会使用什么技巧？", o: ["Sidechain (侧链压限效果)", "Jazz 爵士切分音律动", "Folk 空间立体声打散", "Classical 均衡增益"], a: 0 },
+            { q: "通常来说，一首单曲制作的最后一道关卡是？", o: ["第一步：构思动机", "最后一步：Mastering (母带处理)", "录音棚里录人声", "灵感闪现的作词阶段"], a: 1 }
         ];
         let current = 0; let userPt = 0; let selectedIdx = null;
 
@@ -335,7 +390,7 @@
             const q = masterPool[current];
             document.getElementById('q_text').innerHTML = `<p style="font-size:16px; font-weight:700; margin-bottom:20px; color:#fff;">${q.q}</p>
                 ${q.o.map((o, i) => `<div class="quiz-option" onclick="pick(${i}, this)">${o}</div>`).join('')}`;
-            document.getElementById('q_num').innerText = `${current + 1} / 10`;
+            document.getElementById('q_num').innerText = `进度：${current + 1} / 10`;
             document.getElementById('p_fill').style.width = `${(current / 10) * 100}%`;
             selectedIdx = null;
         }
@@ -355,7 +410,7 @@
                 document.getElementById('quiz_box').style.display = 'none';
                 document.getElementById('quiz_result').style.display = 'block';
                 document.getElementById('final_score').innerText = userPt + " PT";
-                document.getElementById('final_eval').innerText = userPt >= 80 ? "🔥 Pro 级耳朵 (信号完美重合)" : userPt >= 60 ? "🍊 合格制作人" : "🎸 纯粹的热爱者";
+                document.getElementById('final_eval').innerText = userPt >= 80 ? "🔥 太强了！这个耳朵直接拉去棚里盯混音完全没问题。" : userPt >= 60 ? "🍊 很有声学sense！完全具备加入工作室的潜力。" : "🎸 热爱至上！多听一些好歌，耳朵的直觉是能练出来的。";
                 if(userPt >= 80) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             }
         };
